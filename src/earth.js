@@ -23,21 +23,35 @@ class Earth {
     
     new DragPan(this, function(deltaX, deltaY){
       if (this._sourceLayers) {
-        
-        let eye = this._camera.eye;
         let x = -deltaX % 360;
         let y = -deltaY % 360;
-        glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], y * Math.PI / 180);
-        glMatrix.vec3.rotateY(eye, eye, [0, 0, 0], x * Math.PI / 180); 
-        
-        this._camera.setEye(eye);
-        this.render();
+        this.rotate(y * Math.PI / 180, x * Math.PI / 180);
       }
     }.bind(this));
   }
   
   get context() {
     return this._context;
+  }
+  
+  rotateX(radian) {
+    this.rotate(radian);
+  }
+  
+  rotateY(radian) {
+    this.rotate(undefined, radian);
+  }
+  
+  rotate(xRadian, yRadian) {
+    let eye = this._camera.eye;
+    if (xRadian) {
+      glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
+    }
+    if (yRadian) {
+      glMatrix.vec3.rotateY(eye, eye, [0, 0, 0], yRadian);
+    }
+    this._camera.setEye(eye);
+    this.render();
   }
 
   addLayer(layer) {
@@ -48,7 +62,6 @@ class Earth {
   render() {
     this._sourceLayers.forEach(function (layer) {
       LayerRenderer.render(layer, this.context.gl, this._camera);
-//      layer.render(this.context.gl, this._camera);
     }.bind(this));
   }
 }
