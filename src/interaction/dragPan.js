@@ -6,9 +6,6 @@ export class DragPan {
     this._isMouseDown = false;
     this._prevMouseX = null;
     this._prevMouseY = null;
-  
-    this._deltaX = 0;
-    this._deltaY = 0;
     this._bindMouseEventListeners(onDragCallback);
   }
   
@@ -26,15 +23,11 @@ export class DragPan {
 
     this._earth.context.canvas.onmousemove = function (e) {
       if (self._isMouseDown) {
-        self._deltaX = self._deltaX + e.clientX - self._prevMouseX;
-        self._deltaY = self._deltaY + e.clientY - self._prevMouseY;
-        callback(self._deltaX, self._deltaY);
+        callback(e.clientX - self._prevMouseX, e.clientY - self._prevMouseY);
         self._prevMouseX = e.clientX;
         self._prevMouseY = e.clientY;
       }
     }
   }
-  
-  
 
 }
