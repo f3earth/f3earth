@@ -14,7 +14,9 @@ import {
 from './rasterTile';
 
 export class RasterTileLayer {
-  constructor(layer) {}
+  constructor(layerConfig) {
+    this._url = layerConfig.url;
+  }
 
   render(glContext) {
     this._gl = glContext;
@@ -76,7 +78,8 @@ export class RasterTileLayer {
             image.row = row;
             resolve(image);
           };
-          image.src = "http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x=" + col + "&y=" + row + "&z=3&s=Galil";
+          image.src = self._url.replace('{x}', col).replace('{y}', row).replace('{z}', 3);
+//          image.src = "http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x=" + col + "&y=" + row + "&z=3&s=Galil";
         });
         allImagePromise.push(promise);
       }

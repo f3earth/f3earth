@@ -81,7 +81,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._sourceLayers = [];
 	    this.addLayer({
 	      type: 'tile',
-	      url: ''
+	      url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
 	    });
 	    this.render();
 
@@ -143,8 +143,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  _createClass(SourceLayer, null, [{
 	    key: 'from',
-	    value: function from(layer) {
-	      return new _rasterTileLayer.RasterTileLayer();
+	    value: function from(layerConfig) {
+	      return new _rasterTileLayer.RasterTileLayer(layerConfig);
 	    }
 	  }]);
 
@@ -179,8 +179,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var RasterTileLayer = exports.RasterTileLayer = function () {
-	  function RasterTileLayer(layer) {
+	  function RasterTileLayer(layerConfig) {
 	    _classCallCheck(this, RasterTileLayer);
+
+	    this._url = layerConfig.url;
 	  }
 
 	  _createClass(RasterTileLayer, [{
@@ -241,7 +243,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	              image.row = row;
 	              resolve(image);
 	            };
-	            image.src = "http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x=" + col + "&y=" + row + "&z=3&s=Galil";
+	            image.src = self._url.replace('{x}', col).replace('{y}', row).replace('{z}', 3);
+	            //          image.src = "http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x=" + col + "&y=" + row + "&z=3&s=Galil";
 	          });
 	          allImagePromise.push(promise);
 	        };

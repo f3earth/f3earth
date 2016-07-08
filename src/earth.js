@@ -3,7 +3,7 @@ import {
 }
 from './source/sourceLayer';
 import { Context } from './context';
-import {DragPan} from './interaction/dragPan';
+import { DragPan } from './interaction/dragPan';
 
 class Earth {
   constructor(containerId) {
@@ -13,7 +13,7 @@ class Earth {
     this._sourceLayers = [];
     this.addLayer({
       type: 'tile',
-      url: ''
+      url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
     });
     this.render();
     
