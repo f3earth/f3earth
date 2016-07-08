@@ -98,20 +98,37 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    new _dragPan.DragPan(this, function (deltaX, deltaY) {
 	      if (this._sourceLayers) {
-
-	        var eye = this._camera.eye;
 	        var x = -deltaX % 360;
 	        var y = -deltaY % 360;
-	        _glMatrix2.default.vec3.rotateX(eye, eye, [0, 0, 0], y * Math.PI / 180);
-	        _glMatrix2.default.vec3.rotateY(eye, eye, [0, 0, 0], x * Math.PI / 180);
-
-	        this._camera.setEye(eye);
-	        this.render();
+	        this.rotate(y * Math.PI / 180, x * Math.PI / 180);
 	      }
 	    }.bind(this));
 	  }
 
 	  _createClass(Earth, [{
+	    key: 'rotateX',
+	    value: function rotateX(radian) {
+	      this.rotate(radian);
+	    }
+	  }, {
+	    key: 'rotateY',
+	    value: function rotateY(radian) {
+	      this.rotate(undefined, radian);
+	    }
+	  }, {
+	    key: 'rotate',
+	    value: function rotate(xRadian, yRadian) {
+	      var eye = this._camera.eye;
+	      if (xRadian) {
+	        _glMatrix2.default.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
+	      }
+	      if (yRadian) {
+	        _glMatrix2.default.vec3.rotateY(eye, eye, [0, 0, 0], yRadian);
+	      }
+	      this._camera.setEye(eye);
+	      this.render();
+	    }
+	  }, {
 	    key: 'addLayer',
 	    value: function addLayer(layer) {
 	      var sourceLayer = _sourceLayer.SourceLayer.from(layer);
@@ -122,7 +139,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      this._sourceLayers.forEach(function (layer) {
 	        _layerRenderer.LayerRenderer.render(layer, this.context.gl, this._camera);
-	        //      layer.render(this.context.gl, this._camera);
 	      }.bind(this));
 	    }
 	  }, {
