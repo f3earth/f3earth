@@ -119,16 +119,19 @@ export class RasterTile {
   }
 
   render(gl, shaderProgram) {
-    this._gl = gl;
-    this._shaderProgram = shaderProgram;
-    this.setupBuffers();
+    if (!this._gl) {
+      this._gl = gl;
+      this._shaderProgram = shaderProgram;
+      this._setupBuffers();
 
-    this.texture = this._gl.createTexture();
-    this.textureFinishedLoading(this._image, this.texture);
-    this.draw();
+      this._texture = gl.createTexture();
+      this._textureFinishedLoading(this._image, this._texture);
+    }
+    
+    this._draw();
   }
 
-  setupBuffers() {
+  _setupBuffers() {
     this.vertexPosBuffer = this._gl.createBuffer();
     this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexPosBuffer);
     this._gl.bufferData(this._gl.ARRAY_BUFFER, new Float32Array(this._vertices),
@@ -150,7 +153,7 @@ export class RasterTile {
     this.VERTEX_INDEX_BUF_NUM_ITEMS = this.elementIndexes.length;
   }
 
-  textureFinishedLoading(image, texture) {
+  _textureFinishedLoading(image, texture) {
     this._gl.bindTexture(this._gl.TEXTURE_2D, texture);
     this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, true);
 
@@ -162,7 +165,7 @@ export class RasterTile {
     this._gl.bindTexture(this._gl.TEXTURE_2D, null);
   }
 
-  draw() {
+  _draw() {
     let program = this._shaderProgram;
     let pwgl = {};
     pwgl.vertexPositionAttributeLoc = this._gl.getAttribLocation(program, "aVertexPosition");
@@ -185,38 +188,7 @@ export class RasterTile {
       this._gl.FLOAT, false, 0, 0);
 
     this._gl.activeTexture(this._gl.TEXTURE0);
-    this._gl.bindTexture(this._gl.TEXTURE_2D, this.texture);
-
-    this._gl.bindBuffer(this._gl.ELEMENT_ARRAY_BUFFER, this.vertexIndexBuffer);
-    this._gl.drawElements(this._gl.TRIANGLES, this.VERTEX_INDEX_BUF_NUM_ITEMS,
-      this._gl.UNSIGNED_SHORT, 0);
-  }
-
-  redraw() {
-    let pwgl = {};
-    let program = this._shaderProgram;
-
-    pwgl.vertexPositionAttributeLoc = this._gl.getAttribLocation(program, "aVertexPosition");
-    pwgl.vertexTextureAttributeLoc = this._gl.getAttribLocation(program, "aTextureCoordinates");
-    pwgl.uniformSamplerLoc = this._gl.getUniformLocation(program, "uSampler");
-
-    this._gl.uniform1i(pwgl.uniformSamplerLoc, 0);
-
-    this._gl.enableVertexAttribArray(pwgl.vertexPositionAttributeLoc);
-    this._gl.enableVertexAttribArray(pwgl.vertexTextureAttributeLoc);
-
-    this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexPosBuffer);
-    this._gl.vertexAttribPointer(pwgl.vertexPositionAttributeLoc,
-      this.VERTEX_POS_BUF_ITEM_SIZE,
-      this._gl.FLOAT, false, 0, 0);
-
-    this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexTextureCoordinateBuffer);
-    this._gl.vertexAttribPointer(pwgl.vertexTextureAttributeLoc,
-      this.VERTEX_TEX_COORD_BUF_ITEM_SIZE,
-      this._gl.FLOAT, false, 0, 0);
-
-    this._gl.activeTexture(this._gl.TEXTURE0);
-    this._gl.bindTexture(this._gl.TEXTURE_2D, this.texture);
+    this._gl.bindTexture(this._gl.TEXTURE_2D, this._texture);
 
     this._gl.bindBuffer(this._gl.ELEMENT_ARRAY_BUFFER, this.vertexIndexBuffer);
     this._gl.drawElements(this._gl.TRIANGLES, this.VERTEX_INDEX_BUF_NUM_ITEMS,
