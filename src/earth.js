@@ -25,10 +25,10 @@ class Earth {
       if (this._sourceLayers) {
         
         let eye = this._camera.eye;
-        let x = deltaX % 360;
-        let y = deltaY % 360;
-        glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], x * Math.PI / 180);
-        glMatrix.vec3.rotateY(eye, eye, [0, 0, 0], y * Math.PI / 180); 
+        let x = -deltaX % 360;
+        let y = -deltaY % 360;
+        glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], y * Math.PI / 180);
+        glMatrix.vec3.rotateY(eye, eye, [0, 0, 0], x * Math.PI / 180); 
         
         this._camera.setEye(eye);
         this.render();
