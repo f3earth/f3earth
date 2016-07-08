@@ -1,7 +1,7 @@
 import {
   Proj
 }
-from '../utils/proj';
+from '../util/proj';
 
 const PIXELS_PER_TILE = 256;
 const SEGMENT_COUNT = 16;

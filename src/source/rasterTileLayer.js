@@ -3,11 +3,11 @@ import glMatrix from 'gl-matrix';
 import {
   ShaderLoader
 }
-from '../shaders/shaderLoader';
+from '../shader/shaderLoader';
 import {
   RasterTileShader
 }
-from '../shaders/rasterTileShader';
+from '../shader/rasterTileShader';
 import {
   RasterTile
 }
