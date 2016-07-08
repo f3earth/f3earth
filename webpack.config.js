@@ -15,6 +15,7 @@ module.exports = {
           compact: false
         }
       }
-    ]
-  }
+    ],
+    noParse: [/proj4/]
+  },
 };
