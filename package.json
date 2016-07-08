@@ -1,0 +1,39 @@
+{
+  "name": "f3earth",
+  "version": "0.0.1",
+  "description": "It is a WEB GIS 3D engine",
+  "main": "webpack.config.js",
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-3": "^6.11.0",
+    "gl-matrix": "^2.3.2",
+    "proj4": "^2.3.14",
+    "webpack": "^1.13.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/f3earth/f3earth.git"
+  },
+  "keywords": [
+    "3D",
+    "GIS",
+    "WEB"
+  ],
+  "author": "F3Earth Team",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/f3earth/f3earth/issues"
+  },
+  "homepage": "https://github.com/f3earth/f3earth#readme"
+}
