@@ -32,7 +32,6 @@ const EARTH_RADIUS = 6378137;
 
 class Earth {
   constructor(containerId) {
-
     this._zoomDist = [];
     for (let level = 0; level < 18; level++) {
       this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
@@ -45,11 +44,6 @@ class Earth {
     this._camera.setEye([0, 0, this._zoomDist[this._zoom - 1]]);
 
     this._sourceLayers = [];
-    this.addLayer({
-      type: 'rasterTile',
-      url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
-    });
-    this.render();
 
     new DragPan(this);
     new DoubleClickZoom(this);
@@ -69,10 +63,6 @@ class Earth {
   }
 
   rotate(xRadian, yRadian) {
-    if (!this._sourceLayers) {
-      return;
-    }
-
     let eye = this._camera.eye;
     if (xRadian) {
       glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
@@ -89,12 +79,7 @@ class Earth {
   }
 
   setZoom(level) {
-    if (level > 18) {
-      level = 18;
-    } else if (level < 1) {
-      level = 1;
-    }
-
+    level = level > 18 ? 18 : level < 1 ? 1: level; 
     if (level !== this._zoom) {
       let eye = this._camera.eye;
       glMatrix.vec3.scale(eye, eye, this._zoomDist[level - 1] / this._zoomDist[this._zoom - 1]);
@@ -107,6 +92,7 @@ class Earth {
   addLayer(layer) {
     let sourceLayer = SourceLayer.from(layer);
     this._sourceLayers.push(sourceLayer);
+    this.render();
   }
 
   render() {
