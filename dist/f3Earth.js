@@ -73,21 +73,32 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _dragPan = __webpack_require__(17);
 
-	var _camera = __webpack_require__(18);
+	var _doubleClickZoom = __webpack_require__(18);
 
-	var _layerRenderer = __webpack_require__(19);
+	var _camera = __webpack_require__(19);
+
+	var _layerRenderer = __webpack_require__(20);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	var EARTH_RADIUS = 6378137;
+
 	var Earth = function () {
 	  function Earth(containerId) {
 	    _classCallCheck(this, Earth);
 
+	    this._zoomDist = [];
+	    for (var level = 0; level < 18; level++) {
+	      this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
+	    }
+
 	    this._container = document.getElementById(containerId);
 	    this._context = new _context.Context(this._container);
 	    this._camera = new _camera.Camera();
+	    this._zoom = 3;
+	    this._camera.setEye([0, 0, this._zoomDist[this._zoom - 1]]);
 
 	    this._sourceLayers = [];
 	    this.addLayer({
@@ -96,13 +107,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	    this.render();
 
-	    new _dragPan.DragPan(this, function (deltaX, deltaY) {
-	      if (this._sourceLayers) {
-	        var x = -deltaX % 360;
-	        var y = -deltaY % 360;
-	        this.rotate(y * Math.PI / 180, x * Math.PI / 180);
-	      }
-	    }.bind(this));
+	    new _dragPan.DragPan(this);
+	    new _doubleClickZoom.DoubleClickZoom(this);
 	  }
 
 	  _createClass(Earth, [{
@@ -118,6 +124,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'rotate',
 	    value: function rotate(xRadian, yRadian) {
+	      if (!this._sourceLayers) {
+	        return;
+	      }
+
 	      var eye = this._camera.eye;
 	      if (xRadian) {
 	        _glMatrix2.default.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
@@ -127,6 +137,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      this._camera.setEye(eye);
 	      this.render();
+	    }
+	  }, {
+	    key: 'setZoom',
+	    value: function setZoom(level) {
+	      if (level > 18) {
+	        level = 18;
+	      } else if (level < 1) {
+	        level = 1;
+	      }
+
+	      if (level !== this._zoom) {
+	        var eye = this._camera.eye;
+	        _glMatrix2.default.vec3.scale(eye, eye, this._zoomDist[level - 1] / this._zoomDist[this._zoom - 1]);
+	        this._zoom = level;
+	        this._camera.setEye(eye);
+	        this.render();
+	      }
 	    }
 	  }, {
 	    key: 'addLayer',
@@ -145,6 +172,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'context',
 	    get: function get() {
 	      return this._context;
+	    }
+	  }, {
+	    key: 'zoom',
+	    get: function get() {
+	      return this._zoom;
 	    }
 	  }]);
 
@@ -7231,7 +7263,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      this._earth.context.canvas.onmousemove = function (e) {
 	        if (self._isMouseDown) {
-	          callback(e.clientX - self._prevMouseX, e.clientY - self._prevMouseY);
+	          var deltaX = e.clientX - self._prevMouseX;
+	          var deltaY = e.clientY - self._prevMouseY;
+
+	          var x = -deltaX % 360;
+	          var y = -deltaY % 360;
+	          self._earth.rotate(y * Math.PI / 180, x * Math.PI / 180);
+
 	          self._prevMouseX = e.clientX;
 	          self._prevMouseY = e.clientY;
 	        }
@@ -7244,6 +7282,47 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 18 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var DoubleClickZoom = exports.DoubleClickZoom = function () {
+	  function DoubleClickZoom(earth, callback) {
+	    _classCallCheck(this, DoubleClickZoom);
+
+	    this._earth = earth;
+	    this._bindMouseEventListeners(callback);
+	  }
+
+	  _createClass(DoubleClickZoom, [{
+	    key: "_bindMouseEventListeners",
+	    value: function _bindMouseEventListeners(callback) {
+	      var self = this;
+	      this._earth.context.canvas.ondblclick = function (e) {
+	        var zoomDelta = 1;
+	        if (e.shiftKey) {
+	          zoomDelta = -1;
+	        }
+	        var zoom = self._earth.zoom + zoomDelta;
+
+	        self._earth.setZoom(zoom);
+	      };
+	    }
+	  }]);
+
+	  return DoubleClickZoom;
+	}();
+
+/***/ },
+/* 19 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7291,7 +7370,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7303,7 +7382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _rasterTileLayerRenderer = __webpack_require__(20);
+	var _rasterTileLayerRenderer = __webpack_require__(21);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -7325,7 +7404,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7341,9 +7420,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _glMatrix2 = _interopRequireDefault(_glMatrix);
 
-	var _shaderLoader = __webpack_require__(21);
+	var _shaderLoader = __webpack_require__(22);
 
-	var _rasterTileShader = __webpack_require__(22);
+	var _rasterTileShader = __webpack_require__(23);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7421,7 +7500,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7482,7 +7561,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	"use strict";
