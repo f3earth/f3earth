@@ -103,11 +103,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._camera.setEye([0, 0, this._zoomDist[this._zoom - 1]]);
 
 	    this._sourceLayers = [];
-	    this.addLayer({
-	      type: 'rasterTile',
-	      url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
-	    });
-	    this.render();
 
 	    new _dragPan.DragPan(this);
 	    new _doubleClickZoom.DoubleClickZoom(this);
@@ -127,10 +122,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'rotate',
 	    value: function rotate(xRadian, yRadian) {
-	      if (!this._sourceLayers) {
-	        return;
-	      }
-
 	      var eye = this._camera.eye;
 	      if (xRadian) {
 	        _glMatrix2.default.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
@@ -144,12 +135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'setZoom',
 	    value: function setZoom(level) {
-	      if (level > 18) {
-	        level = 18;
-	      } else if (level < 1) {
-	        level = 1;
-	      }
-
+	      level = level > 18 ? 18 : level < 1 ? 1 : level;
 	      if (level !== this._zoom) {
 	        var eye = this._camera.eye;
 	        _glMatrix2.default.vec3.scale(eye, eye, this._zoomDist[level - 1] / this._zoomDist[this._zoom - 1]);
@@ -163,6 +149,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function addLayer(layer) {
 	      var sourceLayer = _sourceLayer.SourceLayer.from(layer);
 	      this._sourceLayers.push(sourceLayer);
+	      this.render();
 	    }
 	  }, {
 	    key: 'render',
