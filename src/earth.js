@@ -16,6 +16,10 @@ import {
 }
 from './interaction/doubleClickZoom';
 import {
+  MouseWheelZoom
+}
+from './interaction/mouseWheelZoom';
+import {
   Camera
 }
 from './camera';
@@ -31,14 +35,14 @@ class Earth {
 
     this._zoomDist = [];
     for (let level = 0; level < 18; level++) {
-        this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18-level));
+      this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
     }
 
     this._container = document.getElementById(containerId);
     this._context = new Context(this._container);
     this._camera = new Camera();
     this._zoom = 3;
-    this._camera.setEye([0, 0, this._zoomDist[this._zoom-1]]);
+    this._camera.setEye([0, 0, this._zoomDist[this._zoom - 1]]);
 
     this._sourceLayers = [];
     this.addLayer({
@@ -49,6 +53,7 @@ class Earth {
 
     new DragPan(this);
     new DoubleClickZoom(this);
+    new MouseWheelZoom(this);
   }
 
   get context() {
@@ -67,7 +72,7 @@ class Earth {
     if (!this._sourceLayers) {
       return;
     }
-    
+
     let eye = this._camera.eye;
     if (xRadian) {
       glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
