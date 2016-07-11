@@ -100,7 +100,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._context = new _context.Context(this._container);
 	    this._camera = new _camera.Camera();
 	    this._zoom = 3;
-	    this._camera.setEye([0, 0, this._zoomDist[this._zoom - 1]]);
+	    this._camera.eye = [0, 0, this._zoomDist[this._zoom - 1]];
 
 	    this._sourceLayers = [];
 
@@ -122,14 +122,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'rotate',
 	    value: function rotate(xRadian, yRadian) {
-	      var eye = this._camera.eye;
-	      if (xRadian) {
-	        _glMatrix2.default.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
-	      }
-	      if (yRadian) {
-	        _glMatrix2.default.vec3.rotateY(eye, eye, [0, 0, 0], yRadian);
-	      }
-	      this._camera.setEye(eye);
+	      //    let eye = this._camera.eye;
+	      //    if (xRadian) {
+	      //      glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
+	      //    }
+	      //    if (yRadian) {
+	      //      let cross = glMatrix.vec3.create();
+	      //      glMatrix.vec3.cross(cross, eye, [0, 1, 0]);
+	      //     
+	      //      glMatrix.vec3.rotateY(eye, eye, [0, 0, 0], yRadian);
+	      //    }
+	      this._camera.rotateX = this._camera.rotateX + xRadian;
+	      this._camera.rotateY = this._camera.rotateY + yRadian;
+	      //    this._camera.setEye(eye);
 	      this.render();
 	    }
 	  }, {
@@ -137,10 +142,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function setZoom(level) {
 	      level = level > 18 ? 18 : level < 1 ? 1 : level;
 	      if (level !== this._zoom) {
-	        var eye = this._camera.eye;
-	        _glMatrix2.default.vec3.scale(eye, eye, this._zoomDist[level - 1] / this._zoomDist[this._zoom - 1]);
+	        //      let eye = this._camera.eye;
+	        //      glMatrix.vec3.scale(eye, eye, this._zoomDist[level - 1] / this._zoomDist[this._zoom - 1]);
 	        this._zoom = level;
-	        this._camera.setEye(eye);
+	        //      this._camera.setEye(eye);
+	        this._camera.eye = [0, 0, this._zoomDist[level - 1]];
 	        this.render();
 	      }
 	    }
@@ -7256,8 +7262,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var deltaX = e.clientX - self._prevMouseX;
 	          var deltaY = e.clientY - self._prevMouseY;
 
-	          var x = -deltaX % 360;
-	          var y = -deltaY % 360;
+	          var x = -deltaX / 10 % 360;
+	          var y = -deltaY / 10 % 360;
 	          self._earth.rotate(y * Math.PI / 180, x * Math.PI / 180);
 
 	          self._prevMouseX = e.clientX;
@@ -7350,15 +7356,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 20 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.Camera = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _glMatrix = __webpack_require__(1);
+
+	var _glMatrix2 = _interopRequireDefault(_glMatrix);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -7369,25 +7382,54 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._eye = [0, 0, 3 * 6378137];
 	    this._center = [0, 0, 0];
 	    this._up = [0, 1, 0];
+
+	    this._rotateX = 0;
+	    this._rotateY = 0;
+	    this._rotateZ = 0;
 	  }
 
 	  _createClass(Camera, [{
-	    key: "setEye",
-	    value: function setEye(eye) {
-	      this._eye = eye;
+	    key: 'rotateX',
+	    get: function get() {
+	      return this._rotateX;
+	    },
+	    set: function set(radian) {
+	      this._rotateX = radian;
 	    }
 	  }, {
-	    key: "center",
+	    key: 'rotateY',
+	    get: function get() {
+	      return this._rotateY;
+	    },
+	    set: function set(radian) {
+	      this._rotateY = radian;
+	    }
+	  }, {
+	    key: 'rotateZ',
+	    get: function get() {
+	      return this._rotateZ;
+	    },
+	    set: function set(radian) {
+	      this._rotateZ = radian;
+	    }
+	  }, {
+	    key: 'center',
 	    get: function get() {
 	      return this._center;
 	    }
 	  }, {
-	    key: "eye",
+	    key: 'eye',
 	    get: function get() {
-	      return this._eye;
+	      var eye = _glMatrix2.default.vec3.create();
+	      _glMatrix2.default.vec3.rotateX(eye, this._eye, [0, 0, 0], this._rotateX);
+	      _glMatrix2.default.vec3.rotateY(eye, eye, [0, 0, 0], this._rotateY);
+	      return eye;
+	    },
+	    set: function set(eye) {
+	      this._eye = eye;
 	    }
 	  }, {
-	    key: "up",
+	    key: 'up',
 	    get: function get() {
 	      return this._up;
 	    }
