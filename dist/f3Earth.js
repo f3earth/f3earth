@@ -63,11 +63,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _glMatrix = __webpack_require__(1);
-
-	var _glMatrix2 = _interopRequireDefault(_glMatrix);
-
-	var _sourceLayer = __webpack_require__(11);
+	var _sourceLayer = __webpack_require__(1);
 
 	var _context = __webpack_require__(16);
 
@@ -80,8 +76,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _camera = __webpack_require__(20);
 
 	var _layerRenderer = __webpack_require__(21);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -122,19 +116,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'rotate',
 	    value: function rotate(xRadian, yRadian) {
-	      //    let eye = this._camera.eye;
-	      //    if (xRadian) {
-	      //      glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
-	      //    }
-	      //    if (yRadian) {
-	      //      let cross = glMatrix.vec3.create();
-	      //      glMatrix.vec3.cross(cross, eye, [0, 1, 0]);
-	      //     
-	      //      glMatrix.vec3.rotateY(eye, eye, [0, 0, 0], yRadian);
-	      //    }
-	      this._camera.rotateX = this._camera.rotateX + xRadian;
-	      this._camera.rotateY = this._camera.rotateY + yRadian;
-	      //    this._camera.setEye(eye);
+	      if (xRadian) {
+	        this._camera.rotateX = this._camera.rotateX + xRadian;
+	      }
+
+	      if (yRadian) {
+	        this._camera.rotateY = this._camera.rotateY + yRadian;
+	      }
 	      this.render();
 	    }
 	  }, {
@@ -142,10 +130,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function setZoom(level) {
 	      level = level > 18 ? 18 : level < 1 ? 1 : level;
 	      if (level !== this._zoom) {
-	        //      let eye = this._camera.eye;
-	        //      glMatrix.vec3.scale(eye, eye, this._zoomDist[level - 1] / this._zoomDist[this._zoom - 1]);
 	        this._zoom = level;
-	        //      this._camera.setEye(eye);
 	        this._camera.eye = [0, 0, this._zoomDist[level - 1]];
 	        this.render();
 	      }
@@ -185,6 +170,148 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.SourceLayer = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _rasterTileLayer = __webpack_require__(2);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var SourceLayer = exports.SourceLayer = function () {
+	  function SourceLayer() {
+	    _classCallCheck(this, SourceLayer);
+	  }
+
+	  _createClass(SourceLayer, null, [{
+	    key: 'from',
+	    value: function from(layerConfig) {
+	      return new _rasterTileLayer.RasterTileLayer(layerConfig);
+	    }
+	  }]);
+
+	  return SourceLayer;
+	}();
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.RasterTileLayer = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _glMatrix = __webpack_require__(3);
+
+	var _glMatrix2 = _interopRequireDefault(_glMatrix);
+
+	var _rasterTile = __webpack_require__(13);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var EARTH_RADIUS = 6378137;
+
+	var RasterTileLayer = exports.RasterTileLayer = function () {
+	  function RasterTileLayer(layerConfig) {
+	    _classCallCheck(this, RasterTileLayer);
+
+	    this._url = layerConfig.url;
+	  }
+
+	  _createClass(RasterTileLayer, [{
+	    key: 'setGlProgram',
+	    value: function setGlProgram(program) {
+	      this._glProgram = program;
+	    }
+	  }, {
+	    key: 'isGLReady',
+	    value: function isGLReady() {
+	      return this._glProgram;
+	    }
+	  }, {
+	    key: 'setRenderTiles',
+	    value: function setRenderTiles(tiles) {
+	      this._renderTiles = tiles;
+	    }
+	  }, {
+	    key: 'getRenderTiles',
+	    value: function getRenderTiles(callback) {
+
+	      if (this._renderTiles) {
+	        callback(this._renderTiles);
+	        return;
+	      }
+
+	      var self = this;
+	      var allImagePromise = [];
+	      var zoom = 3;
+	      var count = 1 << zoom;
+
+	      var _loop = function _loop(row) {
+	        var _loop2 = function _loop2(col) {
+	          var promise = new Promise(function (resolve) {
+	            var image = new Image();
+	            image.crossOrigin = "Anonymous";
+	            image.onload = function () {
+	              image.col = col;
+	              image.row = row;
+	              resolve(image);
+	            };
+	            image.src = self._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
+	          });
+	          allImagePromise.push(promise);
+	        };
+
+	        for (var col = 0; col < count; col++) {
+	          _loop2(col);
+	        }
+	      };
+
+	      for (var row = 0; row < count; row++) {
+	        _loop(row);
+	      }
+
+	      var renderTiles = [];
+	      Promise.all(allImagePromise).then(function (images) {
+	        images.forEach(function (image) {
+	          var tile = new _rasterTile.RasterTile(zoom, image.row, image.col, image);
+	          renderTiles.push(tile);
+	        });
+	        self._renderTiles = renderTiles;
+	        callback(self._renderTiles);
+	      });
+	    }
+	  }, {
+	    key: 'type',
+	    get: function get() {
+	      return 'rasterTile';
+	    }
+	  }, {
+	    key: 'glProgram',
+	    get: function get() {
+	      return this._glProgram;
+	    }
+	  }]);
+
+	  return RasterTileLayer;
+	}();
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/**
 	 * @fileoverview gl-matrix - High performance matrix and vector operations
 	 * @author Brandon Jones
@@ -213,18 +340,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	THE SOFTWARE. */
 	// END HEADER
 
-	exports.glMatrix = __webpack_require__(2);
-	exports.mat2 = __webpack_require__(3);
-	exports.mat2d = __webpack_require__(4);
-	exports.mat3 = __webpack_require__(5);
-	exports.mat4 = __webpack_require__(6);
-	exports.quat = __webpack_require__(7);
-	exports.vec2 = __webpack_require__(10);
-	exports.vec3 = __webpack_require__(8);
-	exports.vec4 = __webpack_require__(9);
+	exports.glMatrix = __webpack_require__(4);
+	exports.mat2 = __webpack_require__(5);
+	exports.mat2d = __webpack_require__(6);
+	exports.mat3 = __webpack_require__(7);
+	exports.mat4 = __webpack_require__(8);
+	exports.quat = __webpack_require__(9);
+	exports.vec2 = __webpack_require__(12);
+	exports.vec3 = __webpack_require__(10);
+	exports.vec4 = __webpack_require__(11);
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports) {
 
 	/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
@@ -300,7 +427,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
@@ -323,7 +450,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE. */
 
-	var glMatrix = __webpack_require__(2);
+	var glMatrix = __webpack_require__(4);
 
 	/**
 	 * @class 2x2 Matrix
@@ -742,7 +869,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
@@ -765,7 +892,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE. */
 
-	var glMatrix = __webpack_require__(2);
+	var glMatrix = __webpack_require__(4);
 
 	/**
 	 * @class 2x3 Matrix
@@ -1217,7 +1344,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
@@ -1240,7 +1367,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE. */
 
-	var glMatrix = __webpack_require__(2);
+	var glMatrix = __webpack_require__(4);
 
 	/**
 	 * @class 3x3 Matrix
@@ -1969,7 +2096,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
@@ -1992,7 +2119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE. */
 
-	var glMatrix = __webpack_require__(2);
+	var glMatrix = __webpack_require__(4);
 
 	/**
 	 * @class 4x4 Matrix
@@ -4111,7 +4238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
@@ -4134,10 +4261,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE. */
 
-	var glMatrix = __webpack_require__(2);
-	var mat3 = __webpack_require__(5);
-	var vec3 = __webpack_require__(8);
-	var vec4 = __webpack_require__(9);
+	var glMatrix = __webpack_require__(4);
+	var mat3 = __webpack_require__(7);
+	var vec3 = __webpack_require__(10);
+	var vec4 = __webpack_require__(11);
 
 	/**
 	 * @class Quaternion
@@ -4717,7 +4844,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
@@ -4740,7 +4867,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE. */
 
-	var glMatrix = __webpack_require__(2);
+	var glMatrix = __webpack_require__(4);
 
 	/**
 	 * @class 3 Dimensional Vector
@@ -5500,7 +5627,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
@@ -5523,7 +5650,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE. */
 
-	var glMatrix = __webpack_require__(2);
+	var glMatrix = __webpack_require__(4);
 
 	/**
 	 * @class 4 Dimensional Vector
@@ -6115,7 +6242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
@@ -6138,7 +6265,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE. */
 
-	var glMatrix = __webpack_require__(2);
+	var glMatrix = __webpack_require__(4);
 
 	/**
 	 * @class 2 Dimensional Vector
@@ -6708,148 +6835,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.SourceLayer = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _rasterTileLayer = __webpack_require__(12);
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var SourceLayer = exports.SourceLayer = function () {
-	  function SourceLayer() {
-	    _classCallCheck(this, SourceLayer);
-	  }
-
-	  _createClass(SourceLayer, null, [{
-	    key: 'from',
-	    value: function from(layerConfig) {
-	      return new _rasterTileLayer.RasterTileLayer(layerConfig);
-	    }
-	  }]);
-
-	  return SourceLayer;
-	}();
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.RasterTileLayer = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _glMatrix = __webpack_require__(1);
-
-	var _glMatrix2 = _interopRequireDefault(_glMatrix);
-
-	var _rasterTile = __webpack_require__(13);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var EARTH_RADIUS = 6378137;
-
-	var RasterTileLayer = exports.RasterTileLayer = function () {
-	  function RasterTileLayer(layerConfig) {
-	    _classCallCheck(this, RasterTileLayer);
-
-	    this._url = layerConfig.url;
-	  }
-
-	  _createClass(RasterTileLayer, [{
-	    key: 'setGlProgram',
-	    value: function setGlProgram(program) {
-	      this._glProgram = program;
-	    }
-	  }, {
-	    key: 'isGLReady',
-	    value: function isGLReady() {
-	      return this._glProgram;
-	    }
-	  }, {
-	    key: 'setRenderTiles',
-	    value: function setRenderTiles(tiles) {
-	      this._renderTiles = tiles;
-	    }
-	  }, {
-	    key: 'getRenderTiles',
-	    value: function getRenderTiles(callback) {
-
-	      if (this._renderTiles) {
-	        callback(this._renderTiles);
-	        return;
-	      }
-
-	      var self = this;
-	      var allImagePromise = [];
-	      var zoom = 3;
-	      var count = 1 << zoom;
-
-	      var _loop = function _loop(row) {
-	        var _loop2 = function _loop2(col) {
-	          var promise = new Promise(function (resolve) {
-	            var image = new Image();
-	            image.crossOrigin = "Anonymous";
-	            image.onload = function () {
-	              image.col = col;
-	              image.row = row;
-	              resolve(image);
-	            };
-	            image.src = self._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
-	          });
-	          allImagePromise.push(promise);
-	        };
-
-	        for (var col = 0; col < count; col++) {
-	          _loop2(col);
-	        }
-	      };
-
-	      for (var row = 0; row < count; row++) {
-	        _loop(row);
-	      }
-
-	      var renderTiles = [];
-	      Promise.all(allImagePromise).then(function (images) {
-	        images.forEach(function (image) {
-	          var tile = new _rasterTile.RasterTile(zoom, image.row, image.col, image);
-	          renderTiles.push(tile);
-	        });
-	        self._renderTiles = renderTiles;
-	        callback(self._renderTiles);
-	      });
-	    }
-	  }, {
-	    key: 'type',
-	    get: function get() {
-	      return 'rasterTile';
-	    }
-	  }, {
-	    key: 'glProgram',
-	    get: function get() {
-	      return this._glProgram;
-	    }
-	  }]);
-
-	  return RasterTileLayer;
-	}();
-
-/***/ },
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7367,7 +7352,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _glMatrix = __webpack_require__(1);
+	var _glMatrix = __webpack_require__(3);
 
 	var _glMatrix2 = _interopRequireDefault(_glMatrix);
 
@@ -7394,7 +7379,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this._rotateX;
 	    },
 	    set: function set(radian) {
+	      if (radian < -Math.PI / 2) {
+	        radian = -Math.PI / 2;
+	      } else if (radian > Math.PI / 2) {
+	        radian = Math.PI / 2;
+	      }
 	      this._rotateX = radian;
+	      console.log('rotatex: ' + this._rotateX);
 	    }
 	  }, {
 	    key: 'rotateY',
@@ -7485,7 +7476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _glMatrix = __webpack_require__(1);
+	var _glMatrix = __webpack_require__(3);
 
 	var _glMatrix2 = _interopRequireDefault(_glMatrix);
 

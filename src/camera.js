@@ -16,7 +16,12 @@ export class Camera {
   }
   
   set rotateX(radian) {
-    this._rotateX = radian
+    if (radian < -Math.PI / 2) {
+      radian = -Math.PI / 2;
+    } else if (radian > Math.PI / 2) {
+      radian = Math.PI / 2;
+    }
+    this._rotateX = radian;
   }
   
   get rotateY() {
