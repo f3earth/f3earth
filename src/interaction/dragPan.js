@@ -34,6 +34,10 @@ export class DragPan {
         self._prevMouseY = e.clientY;
       }
     }
+    
+    this._earth.context.canvas.onmouseout = function (e) {
+      self._isMouseDown = false;
+    }
   }
 
 }
