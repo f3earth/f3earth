@@ -81,43 +81,32 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _layerRenderer = __webpack_require__(21);
 
-	var _observable = __webpack_require__(25);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 	var EARTH_RADIUS = 6378137;
 
-	var Earth = function (_Observable) {
-	  _inherits(Earth, _Observable);
-
+	var Earth = function () {
 	  function Earth(containerId) {
 	    _classCallCheck(this, Earth);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Earth).call(this));
-
-	    _this._zoomDist = [];
+	    this._zoomDist = [];
 	    for (var level = 0; level < 18; level++) {
-	      _this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
+	      this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
 	    }
 
-	    _this._container = document.getElementById(containerId);
-	    _this._context = new _context.Context(_this._container);
-	    _this._camera = new _camera.Camera();
-	    _this._zoom = 3;
-	    _this._camera.setEye([0, 0, _this._zoomDist[_this._zoom - 1]]);
+	    this._container = document.getElementById(containerId);
+	    this._context = new _context.Context(this._container);
+	    this._camera = new _camera.Camera();
+	    this._zoom = 3;
+	    this._camera.setEye([0, 0, this._zoomDist[this._zoom - 1]]);
 
-	    _this._sourceLayers = [];
+	    this._sourceLayers = [];
 
-	    new _dragPan.DragPan(_this);
-	    new _doubleClickZoom.DoubleClickZoom(_this);
-	    new _mouseWheelZoom.MouseWheelZoom(_this);
-	    return _this;
+	    new _dragPan.DragPan(this);
+	    new _doubleClickZoom.DoubleClickZoom(this);
+	    new _mouseWheelZoom.MouseWheelZoom(this);
 	  }
 
 	  _createClass(Earth, [{
@@ -133,7 +122,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'rotate',
 	    value: function rotate(xRadian, yRadian) {
-	      this.trigger('earth.roate', { xRadian: xRadian, yRadian: yRadian });
 	      var eye = this._camera.eye;
 	      if (xRadian) {
 	        _glMatrix2.default.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
@@ -183,7 +171,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return Earth;
-	}(_observable.Observable);
+	}();
 
 	exports.Earth = Earth;
 
@@ -7632,145 +7620,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return RasterTileShader;
 	}();
-
-/***/ },
-/* 25 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * Methods mixed in to other classes for event capabilities.
-	 * @mixin Evented
-	 */
-
-	var Observable = exports.Observable = function () {
-	    function Observable() {
-	        _classCallCheck(this, Observable);
-	    }
-	    /**
-	     * Subscribe to a specified event with a listener function the latter gets the data object that was passed to `fire` and additionally `target` and `type` properties
-	     *
-	     * @param {string} type Event type
-	     * @param {Function} listener Function to be called when the event is fired
-	     * @returns {Object} `this`
-	     */
-
-
-	    _createClass(Observable, [{
-	        key: "on",
-	        value: function on(type, listener) {
-	            this._events = this._events || {};
-	            this._events[type] = this._events[type] || [];
-	            this._events[type].push(listener);
-	            return this;
-	        }
-
-	        /**
-	         * Remove a event listener
-	         *
-	         * @param {string} [type] Event type. If none is specified, remove all listeners
-	         * @param {Function} [listener] Function to be called when the event is fired. If none is specified all listeners are removed
-	         * @returns {Object} `this`
-	         */
-
-	    }, {
-	        key: "un",
-	        value: function un(type, listener) {
-	            if (!type) {
-	                return this;
-	            }
-
-	            if (!this.hasListens(type)) return this;
-
-	            if (listener) {
-	                var idx = this._events[type].indexOf(listener);
-	                if (idx >= 0) {
-	                    this._events[type].splice(idx, 1);
-	                }
-	                if (!this._events[type].length) {
-	                    delete this._events[type];
-	                }
-	            } else {
-	                delete this._events[type];
-	            }
-
-	            return this;
-	        }
-	    }, {
-	        key: "unAll",
-	        value: function unAll() {
-	            delete this._events;
-	            return this;
-	        }
-	        /**
-	         * Call a function once when an event has fired
-	         *
-	         * @param {string} type Event type.
-	         * @param {Function} listener Function to be called once when the event is fired
-	         * @returns {Object} `this`
-	         */
-
-	    }, {
-	        key: "once",
-	        value: function once(type, listener) {
-	            var wrapper = function (data) {
-	                this.un(type, wrapper);
-	                listener.call(this, data);
-	            }.bind(this);
-	            this.on(type, wrapper);
-	            return this;
-	        }
-
-	        /**
-	         * Fire event of a given string type with the given data object
-	         *
-	         * @param {string} type Event type
-	         * @param {Object} [data] Optional data passed to the event receiver (e.g. {@link EventData})
-	         * @returns {Object} `this`
-	         */
-
-	    }, {
-	        key: "trigger",
-	        value: function trigger(type, data) {
-	            if (!this.hasListens(type)) return this;
-	            var newData = {};
-	            Object.assign(newData, data);
-	            Object.assign(newData, { type: type, target: this });
-
-	            // make sure adding/removing listeners inside other listeners won't cause infinite loop
-	            var listeners = this._events[type].slice();
-	            listeners.forEach(function (listener) {
-	                listener.call(this, newData);
-	            }, this);
-	            return this;
-	        }
-
-	        /**
-	         * Check if an event is registered to a type
-	         * @param {string} type Event type
-	         * @returns {boolean} `true` if there is at least one registered listener for events of type `type`
-	         */
-
-	    }, {
-	        key: "hasListens",
-	        value: function hasListens(type) {
-	            return !!(this._events && this._events[type]);
-	        }
-	    }]);
-
-	    return Observable;
-	}();
-
-	;
 
 /***/ }
 /******/ ])

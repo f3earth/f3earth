@@ -27,15 +27,11 @@ import {
   LayerRenderer
 }
 from './renderer/layerRenderer';
-import {
-    Observable
-} from './util/observable';
 
 const EARTH_RADIUS = 6378137;
 
-class Earth extends Observable{
+class Earth {
   constructor(containerId) {
-    super();
     this._zoomDist = [];
     for (let level = 0; level < 18; level++) {
       this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
@@ -67,7 +63,6 @@ class Earth extends Observable{
   }
 
   rotate(xRadian, yRadian) {
-    this.trigger('earth.roate',{xRadian,yRadian});
     let eye = this._camera.eye;
     if (xRadian) {
       glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
