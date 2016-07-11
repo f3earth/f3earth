@@ -16,6 +16,7 @@ export class Event {
         this._events = this._events || {};
         this._events[type] = this._events[type] || [];
         this._events[type].push(listener);
+
         return this;
     }
 
@@ -26,15 +27,17 @@ export class Event {
      * @param {Function} [listener] Function to be called when the event is fired. If none is specified all listeners are removed
      * @returns {Object} `this`
      */
-    un(type, listener) {
+    off(type, listener) {
         if (!type) {
+            // clear all listeners if no arguments specified
+            delete this._events;
             return this;
         }
 
-        if (!this.hasListens(type)) return this;
+        if (!this.listens(type)) return this;
 
         if (listener) {
-            let idx = this._events[type].indexOf(listener);
+            var idx = this._events[type].indexOf(listener);
             if (idx >= 0) {
                 this._events[type].splice(idx, 1);
             }
@@ -47,10 +50,7 @@ export class Event {
 
         return this;
     }
-    unAll() {
-        delete this._events;
-        return this;
-    }
+
     /**
      * Call a function once when an event has fired
      *
@@ -59,7 +59,7 @@ export class Event {
      * @returns {Object} `this`
      */
     once(type, listener) {
-        let wrapper = function(data) {
+        var wrapper = function(data) {
             this.off(type, wrapper);
             listener.call(this, data);
         }.bind(this);
@@ -75,16 +75,18 @@ export class Event {
      * @returns {Object} `this`
      */
     trigger(type, data) {
-        if (!this.hasListens(type)) return this;
-        let new_data={};
-        Object.assign(new_data,data);
-        Object.assign(new_data,{type: type, target: this});
+        if (!this.listens(type)) return this;
+        let _data={};
+        Object.assign(_data,data);
+        Object.assign(_data,{type: type, target: this});
 
         // make sure adding/removing listeners inside other listeners won't cause infinite loop
-        let listeners = this._events[type].slice();
-        listeners.forEach(function (listener) {
-            listener.call(this,new_data);
-        },this);
+        var listeners = this._events[type].slice();
+
+        for (var i = 0; i < listeners.length; i++) {
+            listeners[i].call(this, _data);
+        }
+
         return this;
     }
 
@@ -93,7 +95,7 @@ export class Event {
      * @param {string} type Event type
      * @returns {boolean} `true` if there is at least one registered listener for events of type `type`
      */
-    hasListens(type) {
+    listens(type) {
         return !!(this._events && this._events[type]);
     }
 };
