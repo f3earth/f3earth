@@ -7017,6 +7017,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_MAG_FILTER, this._gl.LINEAR);
 	      this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_MIN_FILTER, this._gl.LINEAR);
+	      this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_S, this._gl.CLAMP_TO_EDGE);
+	      this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_T, this._gl.CLAMP_TO_EDGE);
 
 	      this._gl.bindTexture(this._gl.TEXTURE_2D, null);
 	    }
@@ -7255,6 +7257,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	          self._prevMouseY = e.clientY;
 	        }
 	      };
+
+	      this._earth.context.canvas.onmouseout = function (e) {
+	        self._isMouseDown = false;
+	      };
 	    }
 	  }]);
 
@@ -7385,7 +7391,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        radian = Math.PI / 2;
 	      }
 	      this._rotateX = radian;
-	      console.log('rotatex: ' + this._rotateX);
 	    }
 	  }, {
 	    key: 'rotateY',
