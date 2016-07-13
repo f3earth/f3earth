@@ -16,7 +16,7 @@ export class DoubleClickZoomInteraction extends Interaction{
     }
     _doubleClick(e){
         let zoomDelta = 1;
-        if (e.shiftKey) {
+        if (e.originalEvent.shiftKey) {
             zoomDelta = -1;
         }
         let zoom = this._earth.zoom + zoomDelta;

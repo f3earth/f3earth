@@ -97,7 +97,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: '_doubleClick',
 	        value: function _doubleClick(e) {
 	            var zoomDelta = 1;
-	            if (e.shiftKey) {
+	            if (e.originalEvent.shiftKey) {
 	                zoomDelta = -1;
 	            }
 	            var zoom = this._earth.zoom + zoomDelta;

@@ -4,7 +4,6 @@ module.exports = {
     doubleClickZoomInteraction: './src/interaction/doubleClickZoomInteraction.js'
   },
   output: {
-    library: 'fe',
     libraryTarget: 'umd',
     filename: 'dist/[name].js'
   },
