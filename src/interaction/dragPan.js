@@ -26,13 +26,17 @@ export class DragPan {
         let deltaX = e.clientX - self._prevMouseX;
         let deltaY = e.clientY - self._prevMouseY;
         
-        let x = -deltaX % 360;
-        let y = -deltaY % 360;
+        let x = -deltaX / 10 % 360;
+        let y = -deltaY / 10 % 360;
         self._earth.rotate(y * Math.PI / 180, x * Math.PI / 180);
         
         self._prevMouseX = e.clientX;
         self._prevMouseY = e.clientY;
       }
+    }
+    
+    this._earth.context.canvas.onmouseout = function (e) {
+      self._isMouseDown = false;
     }
   }
 

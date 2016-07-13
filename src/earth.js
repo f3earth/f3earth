@@ -1,4 +1,3 @@
-import glMatrix from 'gl-matrix';
 import {
   SourceLayer
 }
@@ -41,7 +40,7 @@ class Earth {
     this._context = new Context(this._container);
     this._camera = new Camera();
     this._zoom = 3;
-    this._camera.setEye([0, 0, this._zoomDist[this._zoom - 1]]);
+    this._camera.eye = [0, 0, this._zoomDist[this._zoom - 1]];
 
     this._sourceLayers = [];
 
@@ -63,14 +62,13 @@ class Earth {
   }
 
   rotate(xRadian, yRadian) {
-    let eye = this._camera.eye;
     if (xRadian) {
-      glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], xRadian);
-    }
+      this._camera.rotateX = this._camera.rotateX + xRadian;
+    } 
+    
     if (yRadian) {
-      glMatrix.vec3.rotateY(eye, eye, [0, 0, 0], yRadian);
+      this._camera.rotateY = this._camera.rotateY + yRadian;
     }
-    this._camera.setEye(eye);
     this.render();
   }
 
@@ -81,10 +79,8 @@ class Earth {
   setZoom(level) {
     level = level > 18 ? 18 : level < 1 ? 1: level; 
     if (level !== this._zoom) {
-      let eye = this._camera.eye;
-      glMatrix.vec3.scale(eye, eye, this._zoomDist[level - 1] / this._zoomDist[this._zoom - 1]);
       this._zoom = level;
-      this._camera.setEye(eye);
+      this._camera.eye = [0, 0, this._zoomDist[level - 1]];
       this.render();
     }
   }
