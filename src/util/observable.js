@@ -3,15 +3,14 @@
  * @mixin Observable
  */
 export class Observable {
-    constructor() {
-    }
-    /**
-     * Subscribe to a specified observe with a listener function the latter gets the data object that was passed to `fire` and additionally `target` and `type` properties
-     *
-     * @param {string} type Observable type
-     * @param {Function} listener Function to be called when the event is fired
-     * @returns {Object} `this`
-     */
+    constructor() {}
+        /**
+         * Subscribe to a specified observe with a listener function the latter gets the data object that was passed to `fire` and additionally `target` and `type` properties
+         *
+         * @param {string} type Observable type
+         * @param {Function} listener Function to be called when the event is fired
+         * @returns {Object} `this`
+         */
     on(type, listener) {
         this._listens = this._listens || {};
         this._listens[type] = this._listens[type] || [];
@@ -48,18 +47,18 @@ export class Observable {
         return this;
     }
     unAll() {
-        delete this._listens;
-        return this;
-    }
-    /**
-     * Call a function once when an observe has trigger
-     *
-     * @param {string} type Observable type.
-     * @param {Function} listener Function to be called once when the event is trigger
-     * @returns {Object} `this`
-     */
+            delete this._listens;
+            return this;
+        }
+        /**
+         * Call a function once when an observe has trigger
+         *
+         * @param {string} type Observable type.
+         * @param {Function} listener Function to be called once when the event is trigger
+         * @returns {Object} `this`
+         */
     once(type, listener) {
-        let wrapper = function(data) {
+        let wrapper = function (data) {
             this.un(type, wrapper);
             listener.call(this, data);
         }.bind(this);
@@ -76,15 +75,18 @@ export class Observable {
      */
     trigger(type, data) {
         if (!this.hasListens(type)) return this;
-        let event={};
-        Object.assign(event,data);
-        Object.assign(event,{type: type, target: this});
+        let event = {};
+        Object.assign(event, data);
+        Object.assign(event, {
+            type: type,
+            target: this
+        });
 
         // make sure adding/removing listeners inside other listeners won't cause infinite loop
         let listeners = this._listens[type].slice();
         listeners.forEach(function (listener) {
-            listener.call(this,event);
-        },this);
+            listener.call(this, event);
+        }, this);
         return this;
     }
 
@@ -97,4 +99,3 @@ export class Observable {
         return !!(this._listens && this._listens[type]);
     }
 };
-

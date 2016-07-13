@@ -1,12 +1,12 @@
 import {
-  RasterTileLayer
+    RasterTileLayer
 }
 from './rasterTileLayer'
 
 export class SourceLayer {
-  constructor() {}
+    constructor() {}
 
-  static from(layerConfig) {
-    return new RasterTileLayer(layerConfig);
-  }
+    static from(layerConfig) {
+        return new RasterTileLayer(layerConfig);
+    }
 }
