@@ -26,11 +26,17 @@ import {
   LayerRenderer
 }
 from './renderer/layerRenderer';
-
+import {
+    Observable
+} from './util/observable';
+import {
+    DomEvent
+} from './util/domEvent';
 const EARTH_RADIUS = 6378137;
 
-class Earth {
+class Earth extends Observable{
   constructor(containerId) {
+    super();
     this._zoomDist = [];
     for (let level = 0; level < 18; level++) {
       this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
@@ -43,12 +49,14 @@ class Earth {
     this._camera.eye = [0, 0, this._zoomDist[this._zoom - 1]];
 
     this._sourceLayers = [];
-
+    this._interactions=[];
     new DragPan(this);
-    new DoubleClickZoom(this);
+    //new DoubleClickZoom(this);
     new MouseWheelZoom(this);
-  }
+    DomEvent.on(this._context.canvas,[ 'click','dblclick','mousedown','mouseup' ,
+        'mouseover','mouseout','mousemove','keypress'], this._handleDOMEvent, this);
 
+  }
   get context() {
     return this._context;
   }
@@ -95,6 +103,19 @@ class Earth {
     this._sourceLayers.forEach(function (layer) {
       LayerRenderer.render(layer, this.context.gl, this._camera);
     }.bind(this));
+  }
+  _handleDOMEvent (e) {
+    var type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
+    if (e._stopped) { return; }
+    var data = {
+      originalEvent: e
+    };
+    this.trigger(type,data);
+  }
+  addInteraction(interaction){
+    interaction.setEarth(this);
+    interaction.enable();
+    this._interactions.push(interaction);
   }
 }
 

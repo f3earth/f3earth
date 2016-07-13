@@ -1,9 +1,12 @@
 module.exports = {
-  entry: './src/earth.js',
+  entry: {
+    f3Earth: './src/earth.js',
+    doubleClickZoomInteraction: './src/interaction/doubleClickZoomInteraction.js'
+  },
   output: {
     library: 'fe',
     libraryTarget: 'umd',
-    filename: 'dist/f3Earth.js'       
+    filename: 'dist/[name].js'
   },
   module: {
     loaders: [

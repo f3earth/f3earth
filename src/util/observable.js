@@ -12,10 +12,11 @@ export class Observable {
      * @param {Function} listener Function to be called when the event is fired
      * @returns {Object} `this`
      */
-    on(type, listener) {
+    on(type, listener,context) {
         this._listens = this._listens || {};
         this._listens[type] = this._listens[type] || [];
-        this._listens[type].push(listener);
+        let newListener={fn: listener, ctx: context};
+        this._listens[type].push(newListener);
         return this;
     }
 
@@ -26,23 +27,21 @@ export class Observable {
      * @param {Function} [listener] Function to be called when the observe is trigger. If none is specified all listeners are removed
      * @returns {Object} `this`
      */
-    un(type, listener) {
+    un(type, listener,context) {
         if (!type) {
             return this;
         }
-
         if (!this.hasListens(type)) return this;
-
-        if (listener) {
-            let idx = this._listens[type].indexOf(listener);
-            if (idx >= 0) {
-                this._listens[type].splice(idx, 1);
-            }
-            if (!this._listens[type].length) {
+        for(let i=0,len=this._listens[type].length;i<len;i++){
+            let l=this._listens[type][i];
+            if(len>1) {
+                if (l.fn === listener) {
+                    this._listens[type].splice(i, 1);
+                    break;
+                }
+            }else {
                 delete this._listens[type];
             }
-        } else {
-            delete this._listens[type];
         }
 
         return this;
@@ -58,13 +57,14 @@ export class Observable {
      * @param {Function} listener Function to be called once when the event is trigger
      * @returns {Object} `this`
      */
-    once(type, listener) {
-        let wrapper = function(data) {
-            this.un(type, wrapper);
-            listener.call(this, data);
+    once(type, listener,context) {
+        let wrapper = function() {
+            this.un(type, listener,context);
+            this.un(type,wrapper,context);
         }.bind(this);
-        this.on(type, wrapper);
-        return this;
+        return this
+            .on(type,listener,context)
+            .on(type, wrapper,context);
     }
 
     /**
@@ -82,8 +82,8 @@ export class Observable {
 
         // make sure adding/removing listeners inside other listeners won't cause infinite loop
         let listeners = this._listens[type].slice();
-        listeners.forEach(function (listener) {
-            listener.call(this,event);
+        listeners.forEach(function (l) {
+            l.fn.call(l.ctx||this,event);
         },this);
         return this;
     }
