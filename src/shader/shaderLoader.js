@@ -4,10 +4,6 @@ const SHADER_TYPE = {
 };
 
 export class ShaderLoader {
-    constructor() {
-
-    }
-
     static loadVertex(glContext, Source) {
         return this.load(glContext, Source, SHADER_TYPE.VERTEX);
     }

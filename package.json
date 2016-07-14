@@ -14,6 +14,13 @@
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-3": "^6.11.0",
+    "eslint": "^3.0.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.10.2",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
+    "eslint-plugin-promise": "^2.0.0",
+    "eslint-plugin-react": "^5.2.2",
+    "eslint-plugin-standard": "^2.0.0",
     "gl-matrix": "^2.3.2",
     "proj4": "^2.3.14",
     "webpack": "^1.13.1"

@@ -18,10 +18,9 @@ export class Context {
     }
 
     _createWebGLContext() {
-
-        let names = ["webgl", "experimental-webgl"];
+        const names = ['webgl', 'experimental-webgl'];
         let context = null;
-        for (let name of names) {
+        for (const name of names) {
             try {
                 context = this._canvas.getContext(name);
             } catch (e) {
@@ -37,9 +36,8 @@ export class Context {
             context.viewportWidth = this._canvas.width;
             context.viewportHeight = this._canvas.height;
         } else {
-            console.error("Failed to create WebGL context!");
+            console.error('Failed to create WebGL context!');
         }
         return context;
     }
-
 }
