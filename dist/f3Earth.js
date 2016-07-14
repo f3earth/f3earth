@@ -67,17 +67,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _context = __webpack_require__(24);
 
-	var _dragPan = __webpack_require__(25);
-
-	var _doubleClickZoom = __webpack_require__(26);
-
-	var _mouseWheelZoom = __webpack_require__(27);
-
-	var _camera = __webpack_require__(28);
+	var _camera = __webpack_require__(25);
 
 	var _observable = __webpack_require__(23);
 
-	var _domEvent = __webpack_require__(29);
+	var _domEvent = __webpack_require__(26);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -109,9 +103,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this._sourceLayers = [];
 	        _this._interactions = [];
 
-	        //new DragPan(this);
-	        //new DoubleClickZoom(this);
-	        //new MouseWheelZoom(this);
+	        // new DragPan(this);
+	        // new DoubleClickZoom(this);
+	        // new MouseWheelZoom(this);
 	        _domEvent.DomEvent.on(_this._context.canvas, ['click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mouseout', 'mousemove', 'mousewheel', 'keypress'], _this._handleDOMEvent, _this);
 	        return _this;
 	    }
@@ -141,10 +135,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'setZoom',
 	        value: function setZoom(level) {
-	            level = level > 18 ? 18 : level < 1 ? 1 : level;
-	            if (level !== this._zoom) {
-	                this._zoom = level;
-	                this._camera.eye = [0, 0, this._zoomDist[level - 1]];
+	            var validLevel = level;
+	            if (level > 18) {
+	                validLevel = 18;
+	            } else if (level < 1) {
+	                validLevel = 1;
+	            }
+	            if (validLevel !== this._zoom) {
+	                this._zoom = validLevel;
+	                this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
 	                this.render();
 	            }
 	        }
@@ -158,9 +157,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var _this2 = this;
+
 	            this._sourceLayers.forEach(function (layer) {
-	                layer.render(this._camera);
-	            }.bind(this));
+	                return layer.render(_this2._camera);
+	            });
 	        }
 	    }, {
 	        key: '_handleDOMEvent',
@@ -241,7 +242,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(SourceLayer, null, [{
 	        key: 'from',
 	        value: function from(context, layerConfig) {
-
 	            return new _rasterTileLayer.RasterTileLayer({
 	                source: new _tileSource.TileSource(layerConfig.url),
 	                view: { zoom: 3 },
@@ -278,6 +278,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var RasterTileLayer = exports.RasterTileLayer = function () {
 	    function RasterTileLayer(options) {
+	        var _this = this;
+
 	        _classCallCheck(this, RasterTileLayer);
 
 	        this._source = options.source;
@@ -288,8 +290,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._camera = null;
 
 	        this._source.on('change', function (event) {
-	            this._rerender(this._camera);
-	        }.bind(this));
+	            return _this._rerender(_this._camera);
+	        });
 	    }
 
 	    _createClass(RasterTileLayer, [{
@@ -389,14 +391,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            gl.linkProgram(shaderProgram);
 
 	            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-	                console.error("Failed to setup shaders");
+	                console.error('Failed to setup shaders');
 	            }
 	            this._shaderProgram = shaderProgram;
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render(renderTiles, camera) {
-
 	            var gl = this._gl;
 	            var program = this._shaderProgram;
 	            gl.useProgram(program);
@@ -409,7 +410,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	            renderTiles.forEach(function (tile) {
-	                tile.render(gl, program);
+	                return tile.render(gl, program);
 	            });
 	        }
 	    }, {
@@ -418,8 +419,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var gl = this._gl;
 	            var program = this._shaderProgram;
 
-	            var uniformMVMatrixLoc = gl.getUniformLocation(program, "uMVMatrix");
-	            var uniformProjMatrixLoc = gl.getUniformLocation(program, "uPMatrix");
+	            var uniformMVMatrixLoc = gl.getUniformLocation(program, 'uMVMatrix');
+	            var uniformProjMatrixLoc = gl.getUniformLocation(program, 'uPMatrix');
 	            var modelViewMatrix = _glMatrix2.default.mat4.create();
 	            var projectionMatrix = _glMatrix2.default.mat4.create();
 
@@ -6966,7 +6967,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -6987,17 +6988,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    _createClass(ShaderLoader, null, [{
-	        key: 'loadVertex',
+	        key: "loadVertex",
 	        value: function loadVertex(glContext, Source) {
 	            return this.load(glContext, Source, SHADER_TYPE.VERTEX);
 	        }
 	    }, {
-	        key: 'loadFragment',
+	        key: "loadFragment",
 	        value: function loadFragment(glContext, Source) {
 	            return this.load(glContext, Source, SHADER_TYPE.FRAGMENT);
 	        }
 	    }, {
-	        key: 'load',
+	        key: "load",
 	        value: function load(glContext, source, type) {
 	            var shader = null;
 	            if (type === SHADER_TYPE.FRAGMENT) {
@@ -7005,7 +7006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else if (type === SHADER_TYPE.VERTEX) {
 	                shader = glContext.createShader(glContext.VERTEX_SHADER);
 	            } else {
-	                console.error('invalid shader type: ' + type);
+	                console.error("invalid shader type: " + type);
 	                return null;
 	            }
 
@@ -7030,7 +7031,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7038,33 +7039,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var RasterTileShader = exports.RasterTileShader = function () {
-	    function RasterTileShader() {
-	        _classCallCheck(this, RasterTileShader);
+	  function RasterTileShader() {
+	    _classCallCheck(this, RasterTileShader);
+	  }
+
+	  _createClass(RasterTileShader, null, [{
+	    key: "vertexSource",
+	    get: function get() {
+	      return "\n          attribute vec3 aVertexPosition;\n          attribute vec2 aTextureCoordinates;\n\n          uniform mat4 uMVMatrix;\n          uniform mat4 uPMatrix;\n\n          varying vec2 vTextureCoordinates;\n\n          void main() {\n            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\n            vTextureCoordinates = aTextureCoordinates;  \n          } \n        ";
 	    }
+	  }, {
+	    key: "fragmentSource",
+	    get: function get() {
+	      return "\n          precision mediump float;\n\n          varying vec2 vTextureCoordinates;\n          uniform sampler2D uSampler;\n          void main() {\n            gl_FragColor = texture2D(uSampler, vTextureCoordinates);\n          } \n        ";
+	    }
+	  }]);
 
-	    _createClass(RasterTileShader, null, [{
-	        key: "vertexSource",
-	        get: function get() {
-	            return "\n          attribute vec3 aVertexPosition;\n          attribute vec2 aTextureCoordinates;\n\n          uniform mat4 uMVMatrix;\n          uniform mat4 uPMatrix;\n\n          varying vec2 vTextureCoordinates;\n\n          void main() {\n            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\n            vTextureCoordinates = aTextureCoordinates;  \n          } \n        ";
-	        }
-	    }, {
-	        key: "fragmentSource",
-	        get: function get() {
-	            return "\n          precision mediump float;\n\n          varying vec2 vTextureCoordinates;\n          uniform sampler2D uSampler;\n          void main() {\n            gl_FragColor = texture2D(uSampler, vTextureCoordinates);\n          } \n        ";
-	        }
-	    }]);
-
-	    return RasterTileShader;
+	  return RasterTileShader;
 	}();
 
 /***/ },
 /* 17 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	        value: true
+	    value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7072,41 +7073,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Tile = exports.Tile = function () {
-	        function Tile(options) {
-	                _classCallCheck(this, Tile);
+	    function Tile(options) {
+	        _classCallCheck(this, Tile);
 
-	                this._mesh = options.mesh;
-	                this._material = options.material;
+	        this._mesh = options.mesh;
+	        this._material = options.material;
+	    }
+
+	    _createClass(Tile, [{
+	        key: 'render',
+	        value: function render(gl, shaderProgram) {
+	            this._mesh.setup(gl);
+	            this._material.setup(gl);
+
+	            var program = shaderProgram;
+	            var pwgl = {};
+	            pwgl.vertexPositionAttributeLoc = gl.getAttribLocation(program, 'aVertexPosition');
+	            pwgl.vertexTextureAttributeLoc = gl.getAttribLocation(program, 'aTextureCoordinates');
+	            pwgl.uniformSamplerLoc = gl.getUniformLocation(program, 'uSampler');
+
+	            gl.enableVertexAttribArray(pwgl.vertexPositionAttributeLoc);
+	            gl.enableVertexAttribArray(pwgl.vertexTextureAttributeLoc);
+
+	            this._mesh.bindPoint(gl, pwgl.vertexPositionAttributeLoc);
+	            this._mesh.bindTexture(gl, pwgl.vertexTextureAttributeLoc);
+	            this._mesh.bindIndex(gl);
+
+	            gl.uniform1i(pwgl.uniformSamplerLoc, 0);
+	            this._material.bindTexture(gl, gl.TEXTURE0);
+
+	            gl.drawElements(gl.TRIANGLES, this._mesh.triangleCount, gl.UNSIGNED_SHORT, 0);
+	            this._material.unBind(gl);
 	        }
+	    }]);
 
-	        _createClass(Tile, [{
-	                key: "render",
-	                value: function render(gl, shaderProgram) {
-	                        this._mesh.setup(gl);
-	                        this._material.setup(gl);
-
-	                        var program = shaderProgram;
-	                        var pwgl = {};
-	                        pwgl.vertexPositionAttributeLoc = gl.getAttribLocation(program, "aVertexPosition");
-	                        pwgl.vertexTextureAttributeLoc = gl.getAttribLocation(program, "aTextureCoordinates");
-	                        pwgl.uniformSamplerLoc = gl.getUniformLocation(program, "uSampler");
-
-	                        gl.enableVertexAttribArray(pwgl.vertexPositionAttributeLoc);
-	                        gl.enableVertexAttribArray(pwgl.vertexTextureAttributeLoc);
-
-	                        this._mesh.bindPoint(gl, pwgl.vertexPositionAttributeLoc);
-	                        this._mesh.bindTexture(gl, pwgl.vertexTextureAttributeLoc);
-	                        this._mesh.bindIndex(gl);
-
-	                        gl.uniform1i(pwgl.uniformSamplerLoc, 0);
-	                        this._material.bind(gl, gl.TEXTURE0);
-
-	                        gl.drawElements(gl.TRIANGLES, this._mesh.triangleCount, gl.UNSIGNED_SHORT, 0);
-	                        this._material.unBind(gl);
-	                }
-	        }]);
-
-	        return Tile;
+	    return Tile;
 	}();
 
 /***/ },
@@ -7120,9 +7121,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.TileMesh = undefined;
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); //const MERCATOR_LAT_MAX = 85.051128;
-	//const MERCATOR_LNG_MAX = 180.0;
-	//const SEGMENT_COUNT = 16;
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // const MERCATOR_LAT_MAX = 85.051128;
+	// const MERCATOR_LNG_MAX = 180.0;
+	// const SEGMENT_COUNT = 16;
 
 	var _proj = __webpack_require__(19);
 
@@ -7172,7 +7173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._bound.S = this._bound.N - PIXELS_PER_TILE * metersPerPixel;
 	        }
 
-	        /* 
+	        /*
 	         * @description get coordinate in wgs84
 	         * @param {Number} x mecator's x
 	         * @param {Number} y mecator's y
@@ -7183,12 +7184,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_calcLatLng',
 	        value: function _calcLatLng(x, y, isFirstRow, isLastRow) {
-
 	            var latLng = _proj.Proj.mercator2Wgs84(x, y);
-
-	            /*
-	             * we must process the most north edge and south edge, because the mercator's latitude range is (-85, 85), which is * smaller than earth's latitude range  (-90, 90).
-	             */
+	            // we must process the most north edge and south edge,
+	            // because the mercator's latitude range is (-85, 85),
+	            // which is * smaller than earth's latitude range  (-90, 90).
 	            if (isFirstRow) {
 	                latLng.lat = 90;
 	            } else if (isLastRow) {
@@ -7199,20 +7198,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_createMesh',
 	        value: function _createMesh() {
-
 	            this._calcMercatorBound();
 	            // make SEGMENT_COUNT*SEGMENT_COUNT square mesh
 	            var intervalMeters = Math.abs(this._bound.E - this._bound.W) / SEGMENT_COUNT;
 	            var maxRow = (1 << this._zoom) - 1;
 
 	            var verticeIndexes = [];
-	            for (var _y = 0; _y <= SEGMENT_COUNT; _y++) {
+	            for (var y = 0; y <= SEGMENT_COUNT; y++) {
 	                var verticeIndex = [];
 
-	                for (var _x = 0; _x <= SEGMENT_COUNT; _x++) {
-	                    var pointN = this._bound.N - _y * intervalMeters;
-	                    var pointW = this._bound.W + _x * intervalMeters;
-	                    var latLng = this._calcLatLng(pointW, pointN, this._row === 0 && _y === 0, this._row === maxRow && _y === SEGMENT_COUNT);
+	                for (var x = 0; x <= SEGMENT_COUNT; x++) {
+	                    var pointN = this._bound.N - y * intervalMeters;
+	                    var pointW = this._bound.W + x * intervalMeters;
+	                    var latLng = this._calcLatLng(pointW, pointN, this._row === 0 && y === 0, this._row === maxRow && y === SEGMENT_COUNT);
 
 	                    var pointX = this._radius * Math.sin(latLng.lng * Math.PI / 180) * Math.cos(latLng.lat * Math.PI / 180);
 	                    var pointY = this._radius * Math.sin(latLng.lat * Math.PI / 180);
@@ -7220,8 +7218,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this._vertices.push(pointX, pointY, pointZ);
 	                    verticeIndex.push(this._vertices.length / 3 - 1);
 
-	                    var u = _x / SEGMENT_COUNT;
-	                    var v = _y / SEGMENT_COUNT;
+	                    var u = x / SEGMENT_COUNT;
+	                    var v = y / SEGMENT_COUNT;
 	                    this._uvs.push(u, 1 - v);
 	                }
 
@@ -7230,54 +7228,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // make element index
 	            var elementIndexes = [];
-	            for (var y = 0; y < SEGMENT_COUNT; y++) {
-
-	                var startIndex = y * SEGMENT_COUNT;
-	                for (var x = 0; x < SEGMENT_COUNT; x++) {
-	                    elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y][x], verticeIndexes[y + 1][x]);
-	                    elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y + 1][x], verticeIndexes[y + 1][x + 1]);
+	            for (var _y = 0; _y < SEGMENT_COUNT; _y++) {
+	                for (var _x = 0; _x < SEGMENT_COUNT; _x++) {
+	                    elementIndexes.push(verticeIndexes[_y][_x + 1], verticeIndexes[_y][_x], verticeIndexes[_y + 1][_x]);
+	                    elementIndexes.push(verticeIndexes[_y][_x + 1], verticeIndexes[_y + 1][_x], verticeIndexes[_y + 1][_x + 1]);
 	                }
 	            }
 	            this._elementIndexes = elementIndexes;
 	        }
-
-	        //  constructor(points) {
-	        //    this._radius = 6378137;
-	        //    this._points = points;
-	        //    this._vertices = [];
-	        //    this._uvs = [];
-	        //   
-	        //    let verticeIndexes = [];
-	        //    for (let y = 0; y < this._points.length; y++) {
-	        //      let verticeIndex = [];
-	        //        for (let x = 0; x < this._points[y].length; x++) {
-	        //          let point = this._points[y][x];
-	        //          let pointX = this._radius * Math.sin(point.lng * Math.PI / 180) * Math.cos(point.lat * Math.PI / 180);
-	        //          let pointY = this._radius * Math.sin(point.lat * Math.PI / 180);
-	        //          let pointZ = this._radius * Math.cos(point.lng * Math.PI / 180) * Math.cos(point.lat * Math.PI / 180);
-	        //          this._vertices.push(pointX, pointY, pointZ);
-	        //          verticeIndex.push(this._vertices.length / 3 - 1);
-	        //
-	        //          var u = x / SEGMENT_COUNT;
-	        //          var v = y / SEGMENT_COUNT;
-	        //          this._uvs.push(u, 1 - v);
-	        //        }
-	        //      verticeIndexes.push(verticeIndex);
-	        //    }
-	        //
-	        //    // make element index
-	        //    let elementIndexes = [];
-	        //    for (var y = 0; y < SEGMENT_COUNT; y++) {
-	        //
-	        //      let startIndex = y * SEGMENT_COUNT;
-	        //      for (var x = 0; x < SEGMENT_COUNT; x++) {
-	        //        elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y][x], verticeIndexes[y + 1][x]);
-	        //        elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y + 1][x], verticeIndexes[y + 1][x + 1]);
-	        //      }
-	        //    }
-	        //    this._elementIndexes = elementIndexes;
-	        //  }
-
 	    }, {
 	        key: 'setup',
 	        value: function setup(gl) {
@@ -7324,51 +7282,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        get: function get() {
 	            return this.VERTEX_INDEX_BUF_NUM_ITEMS;
 	        }
-	        //
-	        //  static createMeshes(zoom) {
-	        //    let count = 1 << (zoom);
-	        //    let perTileLngRange = MERCATOR_LNG_MAX * 2 / count;
-	        //    let tileLngStep = perTileLngRange / SEGMENT_COUNT;
-	        //   
-	        //    let perTileLatRange = MERCATOR_LAT_MAX * 2 / count;
-	        //    let tileLatStep = perTileLatRange / SEGMENT_COUNT;
-	        //   
-	        //    let tileLngBegin = -MERCATOR_LNG_MAX;
-	        //    let tileLatBegin = MERCATOR_LAT_MAX;
-	        //   
-	        //    // calc points position by row
-	        //    let rows = [];
-	        //    for (let y = 0; y <= count * SEGMENT_COUNT; y++) {
-	        //      let row = [];
-	        //      for (let x = 0; x <= SEGMENT_COUNT; x++) {
-	        //        row.push({
-	        //          lat: tileLatBegin - y * tileLatStep,
-	        //          lng: tileLngBegin + x * tileLngStep
-	        //        })
-	        //      }
-	        //      rows.push(row);
-	        //    }
-	        //   
-	        //    // calc tiles
-	        //    let tileMeshes = {};
-	        //    for (let row = 0; row < count; row++) {
-	        //
-	        //      let mesh = new MercatorTileMesh(rows.slice(row*SEGMENT_COUNT, row*SEGMENT_COUNT+SEGMENT_COUNT + 1));
-	        //      for (let col = 0; col < count; col++) {
-	        ////        mesh.tileCol = col;
-	        ////        mesh.tileRow = row;
-	        //        tileMeshes[zoom+'+'+col+'+'+row] = {
-	        //          tileCol: col,
-	        //          tileRow: row,
-	        //          zoom: zoom,
-	        //          mesh: mesh
-	        //        };
-	        //      }
-	        //    }
-	        //   
-	        //    return tileMeshes;
-	        //  }
-
 	    }]);
 
 	    return TileMesh;
@@ -7378,7 +7291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -7395,7 +7308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var MERCATOR_PROJECTION = "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs";
+	var MERCATOR_PROJECTION = '+proj=merc +lon_0=0 +k=1 ' + '+x_0=0 +y_0=0 +a=6378137 +b=6378137 ' + '+towgs84=0,0,0,0,0,0,0 +units=m +no_defs';
 
 	var MERCATOR_PROJ = (0, _proj2.default)(MERCATOR_PROJECTION);
 
@@ -7404,16 +7317,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _classCallCheck(this, Proj);
 	    }
 
-	    /*
-	     * convert mercator coordinate to wgs84
-	     * @param {Number} x mercator
-	     * @param {Number} y 
-	     * @return {lat, lng}
-	     */
-
-
 	    _createClass(Proj, null, [{
-	        key: "mercator2Wgs84",
+	        key: 'mercator2Wgs84',
+
+	        /*
+	         * convert mercator coordinate to wgs84
+	         * @param {Number} x mercator
+	         * @param {Number} y
+	         * @return {lat, lng}
+	         */
 	        value: function mercator2Wgs84(x, y) {
 	            // more detail: https://github.com/proj4js/proj4js
 	            //   http://api.geo.admin.ch/main/wsgi/lib/proj4js/proj4js/
@@ -7443,7 +7355,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7451,46 +7363,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var ImageMaterial = exports.ImageMaterial = function () {
-	  function ImageMaterial(image) {
-	    _classCallCheck(this, ImageMaterial);
+	    function ImageMaterial(image) {
+	        _classCallCheck(this, ImageMaterial);
 
-	    this._image = image;
-	  }
-
-	  _createClass(ImageMaterial, [{
-	    key: "setup",
-	    value: function setup(gl) {
-	      if (this._texture) {
-	        return;
-	      }
-
-	      this._texture = gl.createTexture();
-	      gl.bindTexture(gl.TEXTURE_2D, this._texture);
-	      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-
-	      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._image);
-
-	      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-	      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-	      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-	      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-	      gl.bindTexture(gl.TEXTURE_2D, null);
+	        this._image = image;
 	    }
-	  }, {
-	    key: "bind",
-	    value: function bind(gl, textureNo) {
-	      gl.activeTexture(textureNo);
-	      gl.bindTexture(gl.TEXTURE_2D, this._texture);
-	    }
-	  }, {
-	    key: "unBind",
-	    value: function unBind(gl) {
-	      gl.bindTexture(gl.TEXTURE_2D, null);
-	    }
-	  }]);
 
-	  return ImageMaterial;
+	    _createClass(ImageMaterial, [{
+	        key: "setup",
+	        value: function setup(gl) {
+	            if (this._texture) {
+	                return;
+	            }
+
+	            this._texture = gl.createTexture();
+	            gl.bindTexture(gl.TEXTURE_2D, this._texture);
+	            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+	            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._image);
+
+	            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+	            gl.bindTexture(gl.TEXTURE_2D, null);
+	        }
+	    }, {
+	        key: "bindTexture",
+	        value: function bindTexture(gl, textureNo) {
+	            gl.activeTexture(textureNo);
+	            gl.bindTexture(gl.TEXTURE_2D, this._texture);
+	        }
+	    }, {
+	        key: "unBind",
+	        value: function unBind(gl) {
+	            gl.bindTexture(gl.TEXTURE_2D, null);
+	        }
+	    }]);
+
+	    return ImageMaterial;
 	}();
 
 /***/ },
@@ -7531,6 +7443,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(TileSource, [{
 	        key: 'getTileImage',
 	        value: function getTileImage(zoom, row, col) {
+	            var _this2 = this;
+
 	            var key = zoom + '-' + row + '-' + col;
 
 	            if (this._images[key]) {
@@ -7540,21 +7454,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            var imageUrl = this._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
-	            new Promise(function (resolve) {
+	            new Promise(function (resolve, reject) {
 	                var image = new Image();
-	                image.crossOrigin = "Anonymous";
+	                image.crossOrigin = 'Anonymous';
 	                image.onload = function () {
 	                    resolve(image);
 	                };
 	                image.onerror = function () {
-	                    reject("error");
+	                    reject('error');
 	                };
 	                image.src = imageUrl;
 	            }).then(function (image) {
-	                this._images[key] = image;
-	                delete this._imageLoading[key];
-	                this.trigger('change', { zoom: zoom, row: row, col: col, image: image });
-	            }.bind(this));
+	                _this2._images[key] = image;
+	                delete _this2._imageLoading[key];
+	                _this2.trigger('change', { zoom: zoom, row: row, col: col, image: image });
+	            });
 	            this._imageLoading[key] = true;
 
 	            return null;
@@ -7587,21 +7501,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function Observable() {
 	        _classCallCheck(this, Observable);
 	    }
-	    /**
-	     * Subscribe to a specified observe with a listener function the latter gets the data object that was passed to `fire` and additionally `target` and `type` properties
-	     *
-	     * @param {string} type Observable type
-	     * @param {Function} listener Function to be called when the event is fired
-	     * @returns {Object} `this`
-	     */
-
 
 	    _createClass(Observable, [{
 	        key: "on",
-	        value: function on(type, listener, context) {
+
+	        /**
+	         * Subscribe to a specified observe with a listener function
+	         * the latter gets the data object that was passed to `fire`
+	         * and additionally `target` and `type` properties
+	         *
+	         * @param {string} type Observable type
+	         * @param {Function} listener Function to be called when the event is fired
+	         * @returns {Object} `this`
+	         */
+	        value: function on(type, listener, thisObj) {
 	            this._listens = this._listens || {};
 	            this._listens[type] = this._listens[type] || [];
-	            var newListener = { fn: listener, ctx: context };
+	            var newListener = { fn: listener, ctx: thisObj };
 	            this._listens[type].push(newListener);
 	            return this;
 	        }
@@ -7610,13 +7526,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Remove a observe listener
 	         *
 	         * @param {string} [type] Observable type. If none is specified, remove all listeners
-	         * @param {Function} [listener] Function to be called when the observe is trigger. If none is specified all listeners are removed
+	         * @param {Function} [listener] Function to be called when the observe is trigger.
+	         * If none is specified all listeners are removed
 	         * @returns {Object} `this`
 	         */
 
 	    }, {
 	        key: "un",
-	        value: function un(type, listener, context) {
+	        value: function un(type, listener, thisObj) {
 	            if (!type) {
 	                return this;
 	            }
@@ -7651,12 +7568,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    }, {
 	        key: "once",
-	        value: function once(type, listener, context) {
-	            var wrapper = function () {
-	                this.un(type, listener, context);
-	                this.un(type, wrapper, context);
-	            }.bind(this);
-	            return this.on(type, listener, context).on(type, wrapper, context);
+	        value: function once(type, listener, thisObj) {
+	            var _this = this;
+
+	            var wrapper = function wrapper() {
+	                _this.un(type, listener, thisObj);
+	                _this.un(type, wrapper, thisObj);
+	            };
+	            return this.on(type, listener, thisObj).on(type, wrapper, thisObj);
 	        }
 
 	        /**
@@ -7670,6 +7589,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "trigger",
 	        value: function trigger(type, data) {
+	            var _this2 = this;
+
 	            if (!this.hasListens(type)) return this;
 	            var event = {};
 	            Object.assign(event, data);
@@ -7678,15 +7599,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // make sure adding/removing listeners inside other listeners won't cause infinite loop
 	            var listeners = this._listens[type].slice();
 	            listeners.forEach(function (l) {
-	                l.fn.call(l.ctx || this, event);
-	            }, this);
+	                return l.fn.call(l.ctx || _this2, event);
+	            });
 	            return this;
 	        }
 
 	        /**
 	         * Check if an observe is registered to a type
 	         * @param {string} type Observable type
-	         * @returns {boolean} `true` if there is at least one registered listener for events of type `type`
+	         * @returns {boolean} `true`
+	         *  if there is at least one registered listener for events of type `type`
 	         */
 
 	    }, {
@@ -7699,13 +7621,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Observable;
 	}();
 
-	;
-
 /***/ },
 /* 24 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -7728,10 +7648,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    _createClass(Context, [{
-	        key: "_createWebGLContext",
+	        key: '_createWebGLContext',
 	        value: function _createWebGLContext() {
-
-	            var names = ["webgl", "experimental-webgl"];
+	            var names = ['webgl', 'experimental-webgl'];
 	            var context = null;
 	            var _iteratorNormalCompletion = true;
 	            var _didIteratorError = false;
@@ -7770,17 +7689,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                context.viewportWidth = this._canvas.width;
 	                context.viewportHeight = this._canvas.height;
 	            } else {
-	                console.error("Failed to create WebGL context!");
+	                console.error('Failed to create WebGL context!');
 	            }
 	            return context;
 	        }
 	    }, {
-	        key: "gl",
+	        key: 'gl',
 	        get: function get() {
 	            return this._gl;
 	        }
 	    }, {
-	        key: "canvas",
+	        key: 'canvas',
 	        get: function get() {
 	            return this._canvas;
 	        }
@@ -7791,147 +7710,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 25 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var DragPan = exports.DragPan = function () {
-	    function DragPan(earth, onDragCallback) {
-	        _classCallCheck(this, DragPan);
-
-	        this._earth = earth;
-
-	        this._isMouseDown = false;
-	        this._prevMouseX = null;
-	        this._prevMouseY = null;
-	        this._bindMouseEventListeners(onDragCallback);
-	    }
-
-	    _createClass(DragPan, [{
-	        key: "_bindMouseEventListeners",
-	        value: function _bindMouseEventListeners(callback) {
-	            var self = this;
-	            this._earth.context.canvas.onmousedown = function (e) {
-	                self._isMouseDown = true;
-	                self._prevMouseX = e.clientX;
-	                self._prevMouseY = e.clientY;
-	            };
-
-	            this._earth.context.canvas.onmouseup = function (e) {
-	                self._isMouseDown = false;
-	            };
-
-	            this._earth.context.canvas.onmousemove = function (e) {
-	                if (self._isMouseDown) {
-	                    var deltaX = e.clientX - self._prevMouseX;
-	                    var deltaY = e.clientY - self._prevMouseY;
-
-	                    var x = -deltaX / 10 % 360;
-	                    var y = -deltaY / 10 % 360;
-	                    self._earth.rotate(y * Math.PI / 180, x * Math.PI / 180);
-
-	                    self._prevMouseX = e.clientX;
-	                    self._prevMouseY = e.clientY;
-	                }
-	            };
-
-	            this._earth.context.canvas.onmouseout = function (e) {
-	                self._isMouseDown = false;
-	            };
-	        }
-	    }]);
-
-	    return DragPan;
-	}();
-
-/***/ },
-/* 26 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var DoubleClickZoom = exports.DoubleClickZoom = function () {
-	    function DoubleClickZoom(earth, callback) {
-	        _classCallCheck(this, DoubleClickZoom);
-
-	        this._earth = earth;
-	        this._bindMouseEventListeners(callback);
-	    }
-
-	    _createClass(DoubleClickZoom, [{
-	        key: "_bindMouseEventListeners",
-	        value: function _bindMouseEventListeners(callback) {
-	            var self = this;
-	            this._earth.context.canvas.ondblclick = function (e) {
-	                var zoomDelta = 1;
-	                if (e.shiftKey) {
-	                    zoomDelta = -1;
-	                }
-	                var zoom = self._earth.zoom + zoomDelta;
-
-	                self._earth.setZoom(zoom);
-	            };
-	        }
-	    }]);
-
-	    return DoubleClickZoom;
-	}();
-
-/***/ },
-/* 27 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var MouseWheelZoom = exports.MouseWheelZoom = function () {
-	    function MouseWheelZoom(earth) {
-	        _classCallCheck(this, MouseWheelZoom);
-
-	        this._earth = earth;
-	        this._bindMouseEventListener();
-	    }
-
-	    _createClass(MouseWheelZoom, [{
-	        key: "_bindMouseEventListener",
-	        value: function _bindMouseEventListener() {
-	            var self = this;
-	            this._earth.context.canvas.onmousewheel = function (e) {
-	                var zoomDelta = -e.deltaY / 100;
-	                var zoom = self._earth.zoom + zoomDelta;
-	                self._earth.setZoom(zoom);
-	            };
-	        }
-	    }]);
-
-	    return MouseWheelZoom;
-	}();
-
-/***/ },
-/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7970,12 +7748,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return this._rotateX;
 	        },
 	        set: function set(radian) {
+	            var validRadian = radian;
 	            if (radian < -Math.PI / 2) {
-	                radian = -Math.PI / 2;
+	                validRadian = -Math.PI / 2;
 	            } else if (radian > Math.PI / 2) {
-	                radian = Math.PI / 2;
+	                validRadian = Math.PI / 2;
 	            }
-	            this._rotateX = radian;
+	            this._rotateX = validRadian;
 	        }
 	    }, {
 	        key: 'rotateY',
@@ -8020,7 +7799,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 29 */
+/* 26 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -8045,28 +7824,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(DomEvent, null, [{
 	        key: 'on',
 
-	        // @function on(obj: HTMLElement, types: [], fn: Function, context?: Object): this
-	        // Adds a listener function (`fn`) to a particular DOM event type of the
-	        // element `obj`. You can optionally specify the context of the listener
-	        // (object the `this` keyword will point to).
+	        /**
+	         * @function on(obj: HTMLElement, types: [], fn: Function, context?: Object): this
+	         * Adds a listener function (`fn`) to a particular DOM event type of the
+	         * element `obj`. You can optionally specify the context of the listener
+	         * (object the `this` keyword will point to).
+	        */
 	        value: function on(obj, types, fn, context) {
-	            for (var type in types) {
-	                this._on(obj, types[type], fn, context);
-	            }
+	            var _this = this;
+
+	            types.forEach(function (type) {
+	                return _this._on(obj, type, fn, context);
+	            });
 	            return this;
 	        }
-	        // @function un(obj: HTMLElement, types: [], fn: Function, context?: Object): this
-	        // Removes a previously added listener function. If no function is specified,
-	        // it will remove all the listeners of that particular DOM event from the element.
-	        // Note that if you passed a custom context to on, you must pass the same
-	        // context to `un` in order to remove the listener.
+	        /**
+	         * @function un(obj: HTMLElement, types: [], fn: Function, context?: Object): this
+	         * Removes a previously added listener function. If no function is specified,
+	         * it will remove all the listeners of that particular DOM event from the element.
+	         * Note that if you passed a custom context to on, you must pass the same
+	         * context to `un` in order to remove the listener.
+	         */
 
 	    }, {
 	        key: 'un',
 	        value: function un(obj, types, fn, context) {
-	            for (var type in types) {
-	                this._un(obj, types[type], fn, context);
-	            }
+	            var _this2 = this;
+
+	            types.forEach(function (type) {
+	                return _this2._un(obj, type, fn, context);
+	            });
 	            return this;
 	        }
 	    }, {
@@ -8080,14 +7867,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var originalHandler = handler;
 
 	            if ('addEventListener' in obj) {
-
 	                if (type === 'mousewheel') {
 	                    obj.addEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
 	                } else if (type === 'mouseenter' || type === 'mouseleave') {
 	                    handler = function handler(e) {
-	                        e = e || window.event;
-	                        if (self._isExternalTarget(obj, e)) {
-	                            originalHandler(e);
+	                        var event = e || window.event;
+	                        if (self._isExternalTarget(obj, event)) {
+	                            originalHandler(event);
 	                        }
 	                    };
 	                    obj.addEventListener(type === 'mouseenter' ? 'mouseover' : 'mouseout', handler, false);
@@ -8102,25 +7888,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_un',
 	        value: function _un(obj, type, fn, context) {
-
 	            if ('removeEventListener' in obj) {
-
 	                if (type === 'mousewheel') {
-	                    obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
+	                    obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', fn, false);
 	                } else {
-	                    obj.removeEventListener(type === 'mouseenter' ? 'mouseover' : type === 'mouseleave' ? 'mouseout' : type, handler, false);
+	                    var eventType = type;
+	                    if (type === 'mouseenter') {
+	                        eventType = 'mouseover';
+	                    } else if (type === 'mouseleave') {
+	                        eventType = 'mouseout';
+	                    }
+	                    obj.removeEventListener(eventType, fn, false);
 	                }
 	            } else if ('detachEvent' in obj) {
-	                obj.detachEvent('on' + type, handler);
+	                obj.detachEvent('on' + type, fn);
 	            }
 	            return this;
 	        }
-	        // check if element really left/entered the event target (for mouseenter/mouseleave)
+	        /**
+	         * check if element really left/entered the event target (for mouseenter/mouseleave)
+	         */
 
 	    }, {
 	        key: '_isExternalTarget',
 	        value: function _isExternalTarget(el, e) {
-
 	            var related = e.relatedTarget;
 
 	            if (!related) {

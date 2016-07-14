@@ -4,10 +4,6 @@ const SHADER_TYPE = {
 };
 
 export class ShaderLoader {
-    constructor() {
-
-    }
-
     static loadVertex(glContext, Source) {
         return this.load(glContext, Source, SHADER_TYPE.VERTEX);
     }
@@ -23,7 +19,7 @@ export class ShaderLoader {
         } else if (type === SHADER_TYPE.VERTEX) {
             shader = glContext.createShader(glContext.VERTEX_SHADER);
         } else {
-            console.error('invalid shader type: ' + type);
+            console.error(`invalid shader type: ${type}`);
             return null;
         }
 

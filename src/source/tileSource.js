@@ -7,34 +7,34 @@ export class TileSource extends Observable {
         this._images = {};
         this._imageLoading = {};
     }
-    
+
     getTileImage(zoom, row, col) {
-        let key = zoom + '-' + row + '-' + col;
-        
+        const key = `${zoom}-${row}-${col}`;
+
         if (this._images[key]) {
             return this._images[key];
         } else if (this._imageLoading[key]) {
             return null;
         }
-        
-        let imageUrl = this._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
-        new Promise(function (resolve) {
-            let image = new Image();
-            image.crossOrigin = "Anonymous";
-            image.onload = function () {
+
+        const imageUrl = this._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
+        new Promise((resolve, reject) => {
+            const image = new Image();
+            image.crossOrigin = 'Anonymous';
+            image.onload = () => {
                 resolve(image);
             };
-            image.onerror = function(){
-                reject("error");
-            }
+            image.onerror = () => {
+                reject('error');
+            };
             image.src = imageUrl;
-        }).then(function(image){
+        }).then(image => {
             this._images[key] = image;
             delete this._imageLoading[key];
-            this.trigger('change', {zoom: zoom, row: row, col: col, image: image});
-        }.bind(this));
+            this.trigger('change', { zoom, row, col, image });
+        });
         this._imageLoading[key] = true;
-            
+
         return null;
     }
 }

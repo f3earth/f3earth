@@ -4,24 +4,24 @@
  * Abstract class for earth interaction handlers
  */
 
-export class Interaction{
+export class Interaction {
     constructor() {
         this._earth = null;
-        this._enabled=false;
+        this._enabled = false;
     }
-    setEarth(earth){
-        this._earth=earth;
+    setEarth(earth) {
+        this._earth = earth;
     }
-    getEarth(){
-       return this._earth;
+    getEarth() {
+        return this._earth;
     }
-    enable(){
-        if(this._enabled){return this;}
-        this._enabled=true;
+    enable() {
+        if (this._enabled) { return this; }
+        this._enabled = true;
         this.addHandle();
         return this;
     }
-    disable () {
+    disable() {
         if (!this._enabled) {
             return this;
         }
@@ -30,8 +30,7 @@ export class Interaction{
         this.removeHandle();
         return this;
     }
-    enabled () {
+    enabled() {
         return !!this._enabled;
     }
-
 }

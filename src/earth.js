@@ -1,37 +1,12 @@
-import {
-    SourceLayer
-}
-from './source/sourceLayer';
-import {
-    Context
-}
-from './context';
-import {
-    DragPan
-}
-from './interaction/dragPan';
-import {
-    DoubleClickZoom
-}
-from './interaction/doubleClickZoom';
-import {
-    MouseWheelZoom
-}
-from './interaction/mouseWheelZoom';
-import {
-    Camera
-}
-from './camera';
-import {
-    Observable
-} from './util/observable';
-import {
-    DomEvent
-} from './util/domEvent';
+import { SourceLayer } from './source/sourceLayer';
+import { Context } from './context';
+import { Camera } from './camera';
+import { Observable } from './util/observable';
+import { DomEvent } from './util/domEvent';
 
 const EARTH_RADIUS = 6378137;
 
-class Earth extends Observable{
+class Earth extends Observable {
     constructor(containerId) {
         super();
         this._zoomDist = [];
@@ -46,13 +21,21 @@ class Earth extends Observable{
         this._camera.eye = [0, 0, this._zoomDist[this._zoom - 1]];
 
         this._sourceLayers = [];
-        this._interactions=[];
+        this._interactions = [];
 
-        //new DragPan(this);
-        //new DoubleClickZoom(this);
-        //new MouseWheelZoom(this);
-        DomEvent.on(this._context.canvas,[ 'click','dblclick','mousedown','mouseup' ,
-            'mouseover','mouseout','mousemove','mousewheel','keypress'], this._handleDOMEvent, this);
+        // new DragPan(this);
+        // new DoubleClickZoom(this);
+        // new MouseWheelZoom(this);
+        DomEvent.on(this._context.canvas, [
+            'click',
+            'dblclick',
+            'mousedown',
+            'mouseup',
+            'mouseover',
+            'mouseout',
+            'mousemove',
+            'mousewheel',
+            'keypress'], this._handleDOMEvent, this);
     }
 
     get context() {
@@ -83,46 +66,49 @@ class Earth extends Observable{
     }
 
     setZoom(level) {
-        level = level > 18 ? 18 : level < 1 ? 1 : level;
-        if (level !== this._zoom) {
-            this._zoom = level;
-            this._camera.eye = [0, 0, this._zoomDist[level - 1]];
+        let validLevel = level;
+        if (level > 18) {
+            validLevel = 18;
+        } else if (level < 1) {
+            validLevel = 1;
+        }
+        if (validLevel !== this._zoom) {
+            this._zoom = validLevel;
+            this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
             this.render();
         }
     }
 
     addLayer(layer) {
-        let sourceLayer = SourceLayer.from(this._context, layer);
+        const sourceLayer = SourceLayer.from(this._context, layer);
         this._sourceLayers.push(sourceLayer);
         this.render();
     }
 
     render() {
-        this._sourceLayers.forEach(function (layer) {
-            layer.render(this._camera);
-        }.bind(this));
+        this._sourceLayers.forEach(layer => layer.render(this._camera));
     }
-    _handleDOMEvent (e) {
+    _handleDOMEvent(e) {
         let type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
-        type =type==='wheel'?'mousewheel':type;
+        type = type === 'wheel' ? 'mousewheel' : type;
         if (e._stopped) { return; }
-        var data = {
+        const data = {
             originalEvent: e
         };
-        this.trigger(type,data);
+        this.trigger(type, data);
     }
-    addInteraction(interaction){
+    addInteraction(interaction) {
         interaction.setEarth(this);
         interaction.enable();
         this._interactions.push(interaction);
         return this;
     }
-    removeInteraction(interaction){
-        for(let i=0,len=this._interactions.length;i<len;i++){
-            if(this._interactions[i]===interaction){
+    removeInteraction(interaction) {
+        for (let i = 0, len = this._interactions.length; i < len; i++) {
+            if (this._interactions[i] === interaction) {
                 interaction.disable();
                 interaction.setEarth(null);
-                this._interactions.splice(i,1);
+                this._interactions.splice(i, 1);
                 break;
             }
         }
@@ -131,5 +117,5 @@ class Earth extends Observable{
 }
 
 export {
-    Earth
+Earth
 };
