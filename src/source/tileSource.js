@@ -21,10 +21,10 @@ export class TileSource extends Observable {
         new Promise((resolve, reject) => {
             const image = new Image();
             image.crossOrigin = 'Anonymous';
-            image.onload = function () {
+            image.onload = () => {
                 resolve(image);
             };
-            image.onerror = function () {
+            image.onerror = () => {
                 reject('error');
             };
             image.src = imageUrl;

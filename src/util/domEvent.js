@@ -25,9 +25,7 @@ export class DomEvent {
     }
     static _on(obj, type, fn, context) {
         const self = this;
-        let handler = function (e) {
-            return fn.call(context || obj, e || window.event);
-        };
+        let handler = (e) => fn.call(context || obj, e || window.event);
 
         const originalHandler = handler;
 
@@ -35,7 +33,7 @@ export class DomEvent {
             if (type === 'mousewheel') {
                 obj.addEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
             } else if ((type === 'mouseenter') || (type === 'mouseleave')) {
-                handler = function (e) {
+                handler = (e) => {
                     const event = e || window.event;
                     if (self._isExternalTarget(obj, event)) {
                         originalHandler(event);
