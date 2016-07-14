@@ -22,10 +22,6 @@ import {
     Camera
 }
 from './camera';
-import {
-    LayerRenderer
-}
-from './renderer/layerRenderer';
 
 const EARTH_RADIUS = 6378137;
 
@@ -86,14 +82,14 @@ class Earth {
     }
 
     addLayer(layer) {
-        let sourceLayer = SourceLayer.from(layer);
+        let sourceLayer = SourceLayer.from(this._context, layer);
         this._sourceLayers.push(sourceLayer);
         this.render();
     }
 
     render() {
         this._sourceLayers.forEach(function (layer) {
-            LayerRenderer.render(layer, this.context.gl, this._camera);
+            layer.render(this._camera);
         }.bind(this));
     }
 }

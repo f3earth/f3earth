@@ -14,9 +14,8 @@ export class Proj {
      * @return {lat, lng}
      */
     static mercator2Wgs84(x, y) {
-        /* more detail: https://github.com/proj4js/proj4js
-         *    http://api.geo.admin.ch/main/wsgi/lib/proj4js/proj4js/
-         */
+        // more detail: https://github.com/proj4js/proj4js
+        //   http://api.geo.admin.ch/main/wsgi/lib/proj4js/proj4js/
         var point = MERCATOR_PROJ.inverse([x, y]);
         return {
             lat: point[1],

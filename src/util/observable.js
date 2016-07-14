@@ -4,13 +4,14 @@
  */
 export class Observable {
     constructor() {}
-        /**
-         * Subscribe to a specified observe with a listener function the latter gets the data object that was passed to `fire` and additionally `target` and `type` properties
-         *
-         * @param {string} type Observable type
-         * @param {Function} listener Function to be called when the event is fired
-         * @returns {Object} `this`
-         */
+
+    /**
+     * Subscribe to a specified observe with a listener function the latter gets the data object that was passed to `fire` and additionally `target` and `type` properties
+     *
+     * @param {string} type Observable type
+     * @param {Function} listener Function to be called when the event is fired
+     * @returns {Object} `this`
+     */
     on(type, listener) {
         this._listens = this._listens || {};
         this._listens[type] = this._listens[type] || [];
@@ -46,17 +47,19 @@ export class Observable {
 
         return this;
     }
+
     unAll() {
-            delete this._listens;
-            return this;
-        }
-        /**
-         * Call a function once when an observe has trigger
-         *
-         * @param {string} type Observable type.
-         * @param {Function} listener Function to be called once when the event is trigger
-         * @returns {Object} `this`
-         */
+        delete this._listens;
+        return this;
+    }
+
+    /**
+     * Call a function once when an observe has trigger
+     *
+     * @param {string} type Observable type.
+     * @param {Function} listener Function to be called once when the event is trigger
+     * @returns {Object} `this`
+     */
     once(type, listener) {
         let wrapper = function (data) {
             this.un(type, wrapper);
