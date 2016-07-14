@@ -1,22 +1,20 @@
 <html>
 
 <head>
-  <meta http-equiv="content-type" content="text/html" charset="utf-8" />
-  <title>interactionSimple F3Earth</title>
-  <script type="text/javascript" src="../dist/f3Earth.js" charset="utf-8"></script>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+    <title>interactionSimple F3Earth</title>
+    <script type="text/javascript" src="../dist/f3Earth.js" charset="utf-8"></script>
     <script type="text/javascript" src="../dist/mouseWheelZoomInteraction.js" charset="utf-8"></script>
     <script type="text/javascript" src="../dist/doubleClickZoomInteraction.js" charset="utf-8"></script>
     <script type="text/javascript" src="../dist/dragInteraction.js" charset="utf-8"></script>
-
-   <style>
-      body {
-        margin:0;
-      }
-
-      #earth {
+    <style>
+        body {
+            margin: 0;
+        }
+        #earth {
         height: 100vh;
       }
-  </style>
+    </style>
 </head>
 
 <body>
@@ -28,17 +26,13 @@
     <button id="addMouseWheelZoomInteraction" onclick="addMouseWheelZoomInteraction()">增加鼠标滚动Interaction</button>
     <button id="delMouseWheelZoomInteraction" onclick="delMouseWheelZoomInteraction()">删除鼠标滚动Interaction</button>
 </div>
-  <div id="earth"></div>
-  <script type="application/javascript">
-
+<div id="earth"></div>
+<script type="application/javascript">
     var earth = new Earth("earth");
     earth.addLayer({
-      type: 'rasterTile',
-      url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
+        type: 'rasterTile',
+        url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
     });
-
-
-
     var dragInteraction,mouseWheelZoomInteraction,doubleClickZoomInteraction;
     function addDoubleClickZoomInteraction () {
         doubleClickZoomInteraction=doubleClickZoomInteraction||new DoubleClickZoomInteraction();
@@ -61,7 +55,7 @@
     function delMouseWheelZoomInteraction() {
         earth.removeInteraction(mouseWheelZoomInteraction);
     }
-  </script>
+</script>
 </body>
 
 </html>

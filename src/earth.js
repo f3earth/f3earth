@@ -103,7 +103,7 @@ class Earth extends Observable{
         }.bind(this));
     }
     _handleDOMEvent (e) {
-        var type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
+        let type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
         type =type==='wheel'?'mousewheel':type;
         if (e._stopped) { return; }
         var data = {
