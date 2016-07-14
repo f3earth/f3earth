@@ -5,6 +5,10 @@ import {
 }
 from './rasterTile';
 
+import { Tile as RenderTile } from '../renderable/tile';
+import { TileMesh } from '../mesh/tileMesh';
+import { ImageMaterial } from '../material/imageMaterial';
+
 const EARTH_RADIUS = 6378137;
 
 export class RasterTileLayer {
@@ -62,7 +66,14 @@ export class RasterTileLayer {
         let renderTiles = [];
         Promise.all(allImagePromise).then(function (images) {
             images.forEach(function (image) {
-                let tile = new RasterTile(zoom, image.row, image.col, image);
+                let tile = new RenderTile({
+                    mesh: new TileMesh({
+                        zoom: zoom, 
+                        row: image.row, 
+                        col: image.col
+                    }),
+                    material: new ImageMaterial(image) 
+                });
                 renderTiles.push(tile);
             })
             self._renderTiles = renderTiles;

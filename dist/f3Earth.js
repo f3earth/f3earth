@@ -57,7 +57,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.Earth = undefined;
 
@@ -65,103 +65,103 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _sourceLayer = __webpack_require__(1);
 
-	var _context = __webpack_require__(16);
+	var _context = __webpack_require__(19);
 
-	var _dragPan = __webpack_require__(17);
+	var _dragPan = __webpack_require__(20);
 
-	var _doubleClickZoom = __webpack_require__(18);
+	var _doubleClickZoom = __webpack_require__(21);
 
-	var _mouseWheelZoom = __webpack_require__(19);
+	var _mouseWheelZoom = __webpack_require__(22);
 
-	var _camera = __webpack_require__(20);
+	var _camera = __webpack_require__(23);
 
-	var _layerRenderer = __webpack_require__(21);
+	var _layerRenderer = __webpack_require__(24);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var EARTH_RADIUS = 6378137;
 
 	var Earth = function () {
-	  function Earth(containerId) {
-	    _classCallCheck(this, Earth);
+	    function Earth(containerId) {
+	        _classCallCheck(this, Earth);
 
-	    this._zoomDist = [];
-	    for (var level = 0; level < 18; level++) {
-	      this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
+	        this._zoomDist = [];
+	        for (var level = 0; level < 18; level++) {
+	            this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
+	        }
+
+	        this._container = document.getElementById(containerId);
+	        this._context = new _context.Context(this._container);
+	        this._camera = new _camera.Camera();
+	        this._zoom = 3;
+	        this._camera.eye = [0, 0, this._zoomDist[this._zoom - 1]];
+
+	        this._sourceLayers = [];
+
+	        new _dragPan.DragPan(this);
+	        new _doubleClickZoom.DoubleClickZoom(this);
+	        new _mouseWheelZoom.MouseWheelZoom(this);
 	    }
 
-	    this._container = document.getElementById(containerId);
-	    this._context = new _context.Context(this._container);
-	    this._camera = new _camera.Camera();
-	    this._zoom = 3;
-	    this._camera.eye = [0, 0, this._zoomDist[this._zoom - 1]];
+	    _createClass(Earth, [{
+	        key: 'rotateX',
+	        value: function rotateX(radian) {
+	            this.rotate(radian);
+	        }
+	    }, {
+	        key: 'rotateY',
+	        value: function rotateY(radian) {
+	            this.rotate(undefined, radian);
+	        }
+	    }, {
+	        key: 'rotate',
+	        value: function rotate(xRadian, yRadian) {
+	            if (xRadian) {
+	                this._camera.rotateX = this._camera.rotateX + xRadian;
+	            }
 
-	    this._sourceLayers = [];
+	            if (yRadian) {
+	                this._camera.rotateY = this._camera.rotateY + yRadian;
+	            }
+	            this.render();
+	        }
+	    }, {
+	        key: 'setZoom',
+	        value: function setZoom(level) {
+	            level = level > 18 ? 18 : level < 1 ? 1 : level;
+	            if (level !== this._zoom) {
+	                this._zoom = level;
+	                this._camera.eye = [0, 0, this._zoomDist[level - 1]];
+	                this.render();
+	            }
+	        }
+	    }, {
+	        key: 'addLayer',
+	        value: function addLayer(layer) {
+	            var sourceLayer = _sourceLayer.SourceLayer.from(layer);
+	            this._sourceLayers.push(sourceLayer);
+	            this.render();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            this._sourceLayers.forEach(function (layer) {
+	                _layerRenderer.LayerRenderer.render(layer, this.context.gl, this._camera);
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'context',
+	        get: function get() {
+	            return this._context;
+	        }
+	    }, {
+	        key: 'zoom',
+	        get: function get() {
+	            return this._zoom;
+	        }
+	    }]);
 
-	    new _dragPan.DragPan(this);
-	    new _doubleClickZoom.DoubleClickZoom(this);
-	    new _mouseWheelZoom.MouseWheelZoom(this);
-	  }
-
-	  _createClass(Earth, [{
-	    key: 'rotateX',
-	    value: function rotateX(radian) {
-	      this.rotate(radian);
-	    }
-	  }, {
-	    key: 'rotateY',
-	    value: function rotateY(radian) {
-	      this.rotate(undefined, radian);
-	    }
-	  }, {
-	    key: 'rotate',
-	    value: function rotate(xRadian, yRadian) {
-	      if (xRadian) {
-	        this._camera.rotateX = this._camera.rotateX + xRadian;
-	      }
-
-	      if (yRadian) {
-	        this._camera.rotateY = this._camera.rotateY + yRadian;
-	      }
-	      this.render();
-	    }
-	  }, {
-	    key: 'setZoom',
-	    value: function setZoom(level) {
-	      level = level > 18 ? 18 : level < 1 ? 1 : level;
-	      if (level !== this._zoom) {
-	        this._zoom = level;
-	        this._camera.eye = [0, 0, this._zoomDist[level - 1]];
-	        this.render();
-	      }
-	    }
-	  }, {
-	    key: 'addLayer',
-	    value: function addLayer(layer) {
-	      var sourceLayer = _sourceLayer.SourceLayer.from(layer);
-	      this._sourceLayers.push(sourceLayer);
-	      this.render();
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      this._sourceLayers.forEach(function (layer) {
-	        _layerRenderer.LayerRenderer.render(layer, this.context.gl, this._camera);
-	      }.bind(this));
-	    }
-	  }, {
-	    key: 'context',
-	    get: function get() {
-	      return this._context;
-	    }
-	  }, {
-	    key: 'zoom',
-	    get: function get() {
-	      return this._zoom;
-	    }
-	  }]);
-
-	  return Earth;
+	    return Earth;
 	}();
 
 	exports.Earth = Earth;
@@ -173,7 +173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.SourceLayer = undefined;
 
@@ -184,18 +184,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var SourceLayer = exports.SourceLayer = function () {
-	  function SourceLayer() {
-	    _classCallCheck(this, SourceLayer);
-	  }
-
-	  _createClass(SourceLayer, null, [{
-	    key: 'from',
-	    value: function from(layerConfig) {
-	      return new _rasterTileLayer.RasterTileLayer(layerConfig);
+	    function SourceLayer() {
+	        _classCallCheck(this, SourceLayer);
 	    }
-	  }]);
 
-	  return SourceLayer;
+	    _createClass(SourceLayer, null, [{
+	        key: 'from',
+	        value: function from(layerConfig) {
+	            return new _rasterTileLayer.RasterTileLayer(layerConfig);
+	        }
+	    }]);
+
+	    return SourceLayer;
 	}();
 
 /***/ },
@@ -205,7 +205,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.RasterTileLayer = undefined;
 
@@ -217,6 +217,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _rasterTile = __webpack_require__(13);
 
+	var _tile = __webpack_require__(16);
+
+	var _tileMesh = __webpack_require__(17);
+
+	var _imageMaterial = __webpack_require__(18);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -224,88 +230,95 @@ return /******/ (function(modules) { // webpackBootstrap
 	var EARTH_RADIUS = 6378137;
 
 	var RasterTileLayer = exports.RasterTileLayer = function () {
-	  function RasterTileLayer(layerConfig) {
-	    _classCallCheck(this, RasterTileLayer);
+	    function RasterTileLayer(layerConfig) {
+	        _classCallCheck(this, RasterTileLayer);
 
-	    this._url = layerConfig.url;
-	  }
-
-	  _createClass(RasterTileLayer, [{
-	    key: 'setGlProgram',
-	    value: function setGlProgram(program) {
-	      this._glProgram = program;
+	        this._url = layerConfig.url;
 	    }
-	  }, {
-	    key: 'isGLReady',
-	    value: function isGLReady() {
-	      return this._glProgram;
-	    }
-	  }, {
-	    key: 'setRenderTiles',
-	    value: function setRenderTiles(tiles) {
-	      this._renderTiles = tiles;
-	    }
-	  }, {
-	    key: 'getRenderTiles',
-	    value: function getRenderTiles(callback) {
 
-	      if (this._renderTiles) {
-	        callback(this._renderTiles);
-	        return;
-	      }
-
-	      var self = this;
-	      var allImagePromise = [];
-	      var zoom = 3;
-	      var count = 1 << zoom;
-
-	      var _loop = function _loop(row) {
-	        var _loop2 = function _loop2(col) {
-	          var promise = new Promise(function (resolve) {
-	            var image = new Image();
-	            image.crossOrigin = "Anonymous";
-	            image.onload = function () {
-	              image.col = col;
-	              image.row = row;
-	              resolve(image);
-	            };
-	            image.src = self._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
-	          });
-	          allImagePromise.push(promise);
-	        };
-
-	        for (var col = 0; col < count; col++) {
-	          _loop2(col);
+	    _createClass(RasterTileLayer, [{
+	        key: 'setGlProgram',
+	        value: function setGlProgram(program) {
+	            this._glProgram = program;
 	        }
-	      };
+	    }, {
+	        key: 'isGLReady',
+	        value: function isGLReady() {
+	            return this._glProgram;
+	        }
+	    }, {
+	        key: 'setRenderTiles',
+	        value: function setRenderTiles(tiles) {
+	            this._renderTiles = tiles;
+	        }
+	    }, {
+	        key: 'getRenderTiles',
+	        value: function getRenderTiles(callback) {
 
-	      for (var row = 0; row < count; row++) {
-	        _loop(row);
-	      }
+	            if (this._renderTiles) {
+	                callback(this._renderTiles);
+	                return;
+	            }
 
-	      var renderTiles = [];
-	      Promise.all(allImagePromise).then(function (images) {
-	        images.forEach(function (image) {
-	          var tile = new _rasterTile.RasterTile(zoom, image.row, image.col, image);
-	          renderTiles.push(tile);
-	        });
-	        self._renderTiles = renderTiles;
-	        callback(self._renderTiles);
-	      });
-	    }
-	  }, {
-	    key: 'type',
-	    get: function get() {
-	      return 'rasterTile';
-	    }
-	  }, {
-	    key: 'glProgram',
-	    get: function get() {
-	      return this._glProgram;
-	    }
-	  }]);
+	            var self = this;
+	            var allImagePromise = [];
+	            var zoom = 3;
+	            var count = 1 << zoom;
 
-	  return RasterTileLayer;
+	            var _loop = function _loop(row) {
+	                var _loop2 = function _loop2(col) {
+	                    var promise = new Promise(function (resolve) {
+	                        var image = new Image();
+	                        image.crossOrigin = "Anonymous";
+	                        image.onload = function () {
+	                            image.col = col;
+	                            image.row = row;
+	                            resolve(image);
+	                        };
+	                        image.src = self._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
+	                    });
+	                    allImagePromise.push(promise);
+	                };
+
+	                for (var col = 0; col < count; col++) {
+	                    _loop2(col);
+	                }
+	            };
+
+	            for (var row = 0; row < count; row++) {
+	                _loop(row);
+	            }
+
+	            var renderTiles = [];
+	            Promise.all(allImagePromise).then(function (images) {
+	                images.forEach(function (image) {
+	                    var tile = new _tile.Tile({
+	                        mesh: new _tileMesh.TileMesh({
+	                            zoom: zoom,
+	                            row: image.row,
+	                            col: image.col
+	                        }),
+	                        material: new _imageMaterial.ImageMaterial(image)
+	                    });
+	                    renderTiles.push(tile);
+	                });
+	                self._renderTiles = renderTiles;
+	                callback(self._renderTiles);
+	            });
+	        }
+	    }, {
+	        key: 'type',
+	        get: function get() {
+	            return 'rasterTile';
+	        }
+	    }, {
+	        key: 'glProgram',
+	        get: function get() {
+	            return this._glProgram;
+	        }
+	    }]);
+
+	    return RasterTileLayer;
 	}();
 
 /***/ },
@@ -6841,7 +6854,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.RasterTile = undefined;
 
@@ -6855,202 +6868,202 @@ return /******/ (function(modules) { // webpackBootstrap
 	var SEGMENT_COUNT = 16;
 
 	var RasterTile = exports.RasterTile = function () {
-	  function RasterTile(zoom, row, col, image, radius) {
-	    _classCallCheck(this, RasterTile);
+	    function RasterTile(zoom, row, col, image, radius) {
+	        _classCallCheck(this, RasterTile);
 
-	    this._zoom = zoom;
-	    this._image = image;
+	        this._zoom = zoom;
+	        this._image = image;
 
-	    this._row = row;
-	    this._col = col;
-	    this._radius = 6378137;
-	    this._bound = {
-	      N: 0,
-	      W: 0,
-	      E: 0,
-	      S: 0
-	    };
-	    this._latLng = {
-	      lat: 0,
-	      lng: 0
-	    };
+	        this._row = row;
+	        this._col = col;
+	        this._radius = 6378137;
+	        this._bound = {
+	            N: 0,
+	            W: 0,
+	            E: 0,
+	            S: 0
+	        };
+	        this._latLng = {
+	            lat: 0,
+	            lng: 0
+	        };
 
-	    this._vertices = [];
-	    this._uvs = [];
-	    this.calcMercatorBound();
-	    this.createMesh();
-	  }
-
-	  _createClass(RasterTile, [{
-	    key: "getMetersPerPixel",
-	    value: function getMetersPerPixel(zoom) {
-	      return this._radius * 2.0 * Math.PI / (Math.pow(2, zoom) * PIXELS_PER_TILE);
-	    }
-	  }, {
-	    key: "calcMercatorBound",
-	    value: function calcMercatorBound() {
-	      // get tile's topleft coordinate in mercator projection
-	      var metersPerPixel = this.getMetersPerPixel(this._zoom);
-	      var totalTilesPerEdge = Math.pow(2, this._zoom);
-	      var totalMeters = totalTilesPerEdge * PIXELS_PER_TILE * metersPerPixel;
-	      var halfMeters = totalMeters / 2;
-
-	      this._bound.N = this._row * (PIXELS_PER_TILE * metersPerPixel);
-	      this._bound.W = this._col * (PIXELS_PER_TILE * metersPerPixel);
-
-	      // get tile's bound
-	      this._bound.N = halfMeters - this._bound.N;
-	      this._bound.W = this._bound.W - halfMeters;
-	      this._bound.E = this._bound.W + PIXELS_PER_TILE * metersPerPixel;
-	      this._bound.S = this._bound.N - PIXELS_PER_TILE * metersPerPixel;
+	        this._vertices = [];
+	        this._uvs = [];
+	        this.calcMercatorBound();
+	        this.createMesh();
 	    }
 
-	    /* 
-	     * @description get coordinate in wgs84
-	     * @param {Number} x mecator's x
-	     * @param {Number} y mecator's y
-	     * @param {Boolean} isFirstRow, true if the point is on the most north edge
-	     * @param {Boolean} isLastRow, true if the point is on the most south edge
-	     */
+	    _createClass(RasterTile, [{
+	        key: "getMetersPerPixel",
+	        value: function getMetersPerPixel(zoom) {
+	            return this._radius * 2.0 * Math.PI / (Math.pow(2, zoom) * PIXELS_PER_TILE);
+	        }
+	    }, {
+	        key: "calcMercatorBound",
+	        value: function calcMercatorBound() {
+	            // get tile's topleft coordinate in mercator projection
+	            var metersPerPixel = this.getMetersPerPixel(this._zoom);
+	            var totalTilesPerEdge = Math.pow(2, this._zoom);
+	            var totalMeters = totalTilesPerEdge * PIXELS_PER_TILE * metersPerPixel;
+	            var halfMeters = totalMeters / 2;
 
-	  }, {
-	    key: "calcLatLng",
-	    value: function calcLatLng(x, y, isFirstRow, isLastRow) {
+	            this._bound.N = this._row * (PIXELS_PER_TILE * metersPerPixel);
+	            this._bound.W = this._col * (PIXELS_PER_TILE * metersPerPixel);
 
-	      this._latLng = _proj.Proj.mercator2Wgs84(x, y);
-
-	      /*
-	       * we must process the most north edge and south edge, because the mercator's latitude range is (-85, 85), which is * smaller than earth's latitude range  (-90, 90).
-	       */
-	      if (isFirstRow) {
-	        this._latLng.lat = 90;
-	      } else if (isLastRow) {
-	        this._latLng.lat = -90;
-	      }
-	    }
-	  }, {
-	    key: "createMesh",
-	    value: function createMesh() {
-
-	      // make SEGMENT_COUNT*SEGMENT_COUNT square mesh
-	      var intervalMeters = Math.abs(this._bound.E - this._bound.W) / SEGMENT_COUNT;
-	      var maxRow = Math.pow(2, this._zoom) - 1;
-	      this._vertices = [];
-	      this._uvs = [];
-
-	      var verticeIndexes = [];
-	      for (var _y = 0; _y <= SEGMENT_COUNT; _y++) {
-	        var verticeIndex = [];
-
-	        for (var _x = 0; _x <= SEGMENT_COUNT; _x++) {
-	          var pointN = this._bound.N - _y * intervalMeters;
-	          var pointW = this._bound.W + _x * intervalMeters;
-	          this.calcLatLng(pointW, pointN, this._row === 0 && _y === 0, this._row === maxRow && _y === SEGMENT_COUNT);
-
-	          var pointX = this._radius * Math.sin(this._latLng.lng * Math.PI / 180) * Math.cos(this._latLng.lat * Math.PI / 180);
-	          var pointY = this._radius * Math.sin(this._latLng.lat * Math.PI / 180);
-	          var pointZ = this._radius * Math.cos(this._latLng.lng * Math.PI / 180) * Math.cos(this._latLng.lat * Math.PI / 180);
-	          this._vertices.push(pointX, pointY, pointZ);
-	          verticeIndex.push(this._vertices.length / 3 - 1);
-
-	          var u = _x / SEGMENT_COUNT;
-	          var v = _y / SEGMENT_COUNT;
-	          this._uvs.push(u, 1 - v);
+	            // get tile's bound
+	            this._bound.N = halfMeters - this._bound.N;
+	            this._bound.W = this._bound.W - halfMeters;
+	            this._bound.E = this._bound.W + PIXELS_PER_TILE * metersPerPixel;
+	            this._bound.S = this._bound.N - PIXELS_PER_TILE * metersPerPixel;
 	        }
 
-	        verticeIndexes.push(verticeIndex);
-	      }
+	        /* 
+	         * @description get coordinate in wgs84
+	         * @param {Number} x mecator's x
+	         * @param {Number} y mecator's y
+	         * @param {Boolean} isFirstRow, true if the point is on the most north edge
+	         * @param {Boolean} isLastRow, true if the point is on the most south edge
+	         */
 
-	      // make element index
-	      var elementIndexes = [];
-	      for (var y = 0; y < SEGMENT_COUNT; y++) {
+	    }, {
+	        key: "calcLatLng",
+	        value: function calcLatLng(x, y, isFirstRow, isLastRow) {
 
-	        var startIndex = y * SEGMENT_COUNT;
-	        for (var x = 0; x < SEGMENT_COUNT; x++) {
-	          elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y][x], verticeIndexes[y + 1][x]);
-	          elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y + 1][x], verticeIndexes[y + 1][x + 1]);
+	            this._latLng = _proj.Proj.mercator2Wgs84(x, y);
+
+	            /*
+	             * we must process the most north edge and south edge, because the mercator's latitude range is (-85, 85), which is * smaller than earth's latitude range  (-90, 90).
+	             */
+	            if (isFirstRow) {
+	                this._latLng.lat = 90;
+	            } else if (isLastRow) {
+	                this._latLng.lat = -90;
+	            }
 	        }
-	      }
-	      this.elementIndexes = elementIndexes;
-	    }
-	  }, {
-	    key: "render",
-	    value: function render(gl, shaderProgram) {
-	      if (!this._gl) {
-	        this._gl = gl;
-	        this._shaderProgram = shaderProgram;
-	        this._setupBuffers();
+	    }, {
+	        key: "createMesh",
+	        value: function createMesh() {
 
-	        this._texture = gl.createTexture();
-	        this._textureFinishedLoading(this._image, this._texture);
-	      }
+	            // make SEGMENT_COUNT*SEGMENT_COUNT square mesh
+	            var intervalMeters = Math.abs(this._bound.E - this._bound.W) / SEGMENT_COUNT;
+	            var maxRow = Math.pow(2, this._zoom) - 1;
+	            this._vertices = [];
+	            this._uvs = [];
 
-	      this._draw();
-	    }
-	  }, {
-	    key: "_setupBuffers",
-	    value: function _setupBuffers() {
-	      this.vertexPosBuffer = this._gl.createBuffer();
-	      this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexPosBuffer);
-	      this._gl.bufferData(this._gl.ARRAY_BUFFER, new Float32Array(this._vertices), this._gl.STATIC_DRAW);
-	      this.VERTEX_POS_BUF_ITEM_SIZE = 3;
+	            var verticeIndexes = [];
+	            for (var _y = 0; _y <= SEGMENT_COUNT; _y++) {
+	                var verticeIndex = [];
 
-	      this.vertexTextureCoordinateBuffer = this._gl.createBuffer();
-	      this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexTextureCoordinateBuffer);
-	      this._gl.bufferData(this._gl.ARRAY_BUFFER, new Float32Array(this._uvs), this._gl.STATIC_DRAW);
-	      this.VERTEX_TEX_COORD_BUF_ITEM_SIZE = 2;
+	                for (var _x = 0; _x <= SEGMENT_COUNT; _x++) {
+	                    var pointN = this._bound.N - _y * intervalMeters;
+	                    var pointW = this._bound.W + _x * intervalMeters;
+	                    this.calcLatLng(pointW, pointN, this._row === 0 && _y === 0, this._row === maxRow && _y === SEGMENT_COUNT);
 
-	      this.vertexIndexBuffer = this._gl.createBuffer();
-	      this._gl.bindBuffer(this._gl.ELEMENT_ARRAY_BUFFER, this.vertexIndexBuffer);
-	      this._gl.bufferData(this._gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.elementIndexes), this._gl.STATIC_DRAW);
+	                    var pointX = this._radius * Math.sin(this._latLng.lng * Math.PI / 180) * Math.cos(this._latLng.lat * Math.PI / 180);
+	                    var pointY = this._radius * Math.sin(this._latLng.lat * Math.PI / 180);
+	                    var pointZ = this._radius * Math.cos(this._latLng.lng * Math.PI / 180) * Math.cos(this._latLng.lat * Math.PI / 180);
+	                    this._vertices.push(pointX, pointY, pointZ);
+	                    verticeIndex.push(this._vertices.length / 3 - 1);
 
-	      this.VERTEX_INDEX_BUF_ITEM_SIZE = 1;
-	      this.VERTEX_INDEX_BUF_NUM_ITEMS = this.elementIndexes.length;
-	    }
-	  }, {
-	    key: "_textureFinishedLoading",
-	    value: function _textureFinishedLoading(image, texture) {
-	      this._gl.bindTexture(this._gl.TEXTURE_2D, texture);
-	      this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, true);
+	                    var u = _x / SEGMENT_COUNT;
+	                    var v = _y / SEGMENT_COUNT;
+	                    this._uvs.push(u, 1 - v);
+	                }
 
-	      this._gl.texImage2D(this._gl.TEXTURE_2D, 0, this._gl.RGBA, this._gl.RGBA, this._gl.UNSIGNED_BYTE, image);
+	                verticeIndexes.push(verticeIndex);
+	            }
 
-	      this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_MAG_FILTER, this._gl.LINEAR);
-	      this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_MIN_FILTER, this._gl.LINEAR);
-	      this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_S, this._gl.CLAMP_TO_EDGE);
-	      this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_T, this._gl.CLAMP_TO_EDGE);
+	            // make element index
+	            var elementIndexes = [];
+	            for (var y = 0; y < SEGMENT_COUNT; y++) {
 
-	      this._gl.bindTexture(this._gl.TEXTURE_2D, null);
-	    }
-	  }, {
-	    key: "_draw",
-	    value: function _draw() {
-	      var program = this._shaderProgram;
-	      var pwgl = {};
-	      pwgl.vertexPositionAttributeLoc = this._gl.getAttribLocation(program, "aVertexPosition");
-	      pwgl.vertexTextureAttributeLoc = this._gl.getAttribLocation(program, "aTextureCoordinates");
-	      pwgl.uniformSamplerLoc = this._gl.getUniformLocation(program, "uSampler");
+	                var startIndex = y * SEGMENT_COUNT;
+	                for (var x = 0; x < SEGMENT_COUNT; x++) {
+	                    elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y][x], verticeIndexes[y + 1][x]);
+	                    elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y + 1][x], verticeIndexes[y + 1][x + 1]);
+	                }
+	            }
+	            this.elementIndexes = elementIndexes;
+	        }
+	    }, {
+	        key: "render",
+	        value: function render(gl, shaderProgram) {
+	            if (!this._gl) {
+	                this._gl = gl;
+	                this._shaderProgram = shaderProgram;
+	                this._setupBuffers();
 
-	      this._gl.uniform1i(pwgl.uniformSamplerLoc, 0);
+	                this._texture = gl.createTexture();
+	                this._textureFinishedLoading(this._image, this._texture);
+	            }
 
-	      this._gl.enableVertexAttribArray(pwgl.vertexPositionAttributeLoc);
-	      this._gl.enableVertexAttribArray(pwgl.vertexTextureAttributeLoc);
+	            this._draw();
+	        }
+	    }, {
+	        key: "_setupBuffers",
+	        value: function _setupBuffers() {
+	            this.vertexPosBuffer = this._gl.createBuffer();
+	            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexPosBuffer);
+	            this._gl.bufferData(this._gl.ARRAY_BUFFER, new Float32Array(this._vertices), this._gl.STATIC_DRAW);
+	            this.VERTEX_POS_BUF_ITEM_SIZE = 3;
 
-	      this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexPosBuffer);
-	      this._gl.vertexAttribPointer(pwgl.vertexPositionAttributeLoc, this.VERTEX_POS_BUF_ITEM_SIZE, this._gl.FLOAT, false, 0, 0);
+	            this.vertexTextureCoordinateBuffer = this._gl.createBuffer();
+	            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexTextureCoordinateBuffer);
+	            this._gl.bufferData(this._gl.ARRAY_BUFFER, new Float32Array(this._uvs), this._gl.STATIC_DRAW);
+	            this.VERTEX_TEX_COORD_BUF_ITEM_SIZE = 2;
 
-	      this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexTextureCoordinateBuffer);
-	      this._gl.vertexAttribPointer(pwgl.vertexTextureAttributeLoc, this.VERTEX_TEX_COORD_BUF_ITEM_SIZE, this._gl.FLOAT, false, 0, 0);
+	            this.vertexIndexBuffer = this._gl.createBuffer();
+	            this._gl.bindBuffer(this._gl.ELEMENT_ARRAY_BUFFER, this.vertexIndexBuffer);
+	            this._gl.bufferData(this._gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.elementIndexes), this._gl.STATIC_DRAW);
 
-	      this._gl.activeTexture(this._gl.TEXTURE0);
-	      this._gl.bindTexture(this._gl.TEXTURE_2D, this._texture);
+	            this.VERTEX_INDEX_BUF_ITEM_SIZE = 1;
+	            this.VERTEX_INDEX_BUF_NUM_ITEMS = this.elementIndexes.length;
+	        }
+	    }, {
+	        key: "_textureFinishedLoading",
+	        value: function _textureFinishedLoading(image, texture) {
+	            this._gl.bindTexture(this._gl.TEXTURE_2D, texture);
+	            this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, true);
 
-	      this._gl.bindBuffer(this._gl.ELEMENT_ARRAY_BUFFER, this.vertexIndexBuffer);
-	      this._gl.drawElements(this._gl.TRIANGLES, this.VERTEX_INDEX_BUF_NUM_ITEMS, this._gl.UNSIGNED_SHORT, 0);
-	    }
-	  }]);
+	            this._gl.texImage2D(this._gl.TEXTURE_2D, 0, this._gl.RGBA, this._gl.RGBA, this._gl.UNSIGNED_BYTE, image);
 
-	  return RasterTile;
+	            this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_MAG_FILTER, this._gl.LINEAR);
+	            this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_MIN_FILTER, this._gl.LINEAR);
+	            this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_S, this._gl.CLAMP_TO_EDGE);
+	            this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_T, this._gl.CLAMP_TO_EDGE);
+
+	            this._gl.bindTexture(this._gl.TEXTURE_2D, null);
+	        }
+	    }, {
+	        key: "_draw",
+	        value: function _draw() {
+	            var program = this._shaderProgram;
+	            var pwgl = {};
+	            pwgl.vertexPositionAttributeLoc = this._gl.getAttribLocation(program, "aVertexPosition");
+	            pwgl.vertexTextureAttributeLoc = this._gl.getAttribLocation(program, "aTextureCoordinates");
+	            pwgl.uniformSamplerLoc = this._gl.getUniformLocation(program, "uSampler");
+
+	            this._gl.uniform1i(pwgl.uniformSamplerLoc, 0);
+
+	            this._gl.enableVertexAttribArray(pwgl.vertexPositionAttributeLoc);
+	            this._gl.enableVertexAttribArray(pwgl.vertexTextureAttributeLoc);
+
+	            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexPosBuffer);
+	            this._gl.vertexAttribPointer(pwgl.vertexPositionAttributeLoc, this.VERTEX_POS_BUF_ITEM_SIZE, this._gl.FLOAT, false, 0, 0);
+
+	            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this.vertexTextureCoordinateBuffer);
+	            this._gl.vertexAttribPointer(pwgl.vertexTextureAttributeLoc, this.VERTEX_TEX_COORD_BUF_ITEM_SIZE, this._gl.FLOAT, false, 0, 0);
+
+	            this._gl.activeTexture(this._gl.TEXTURE0);
+	            this._gl.bindTexture(this._gl.TEXTURE_2D, this._texture);
+
+	            this._gl.bindBuffer(this._gl.ELEMENT_ARRAY_BUFFER, this.vertexIndexBuffer);
+	            this._gl.drawElements(this._gl.TRIANGLES, this.VERTEX_INDEX_BUF_NUM_ITEMS, this._gl.UNSIGNED_SHORT, 0);
+	        }
+	    }]);
+
+	    return RasterTile;
 	}();
 
 /***/ },
@@ -7060,7 +7073,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.Proj = undefined;
 
@@ -7079,33 +7092,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	var MERCATOR_PROJ = (0, _proj2.default)(MERCATOR_PROJECTION);
 
 	var Proj = exports.Proj = function () {
-	  function Proj() {
-	    _classCallCheck(this, Proj);
-	  }
-
-	  /*
-	   * convert mercator coordinate to wgs84
-	   * @param {Number} x mercator
-	   * @param {Number} y 
-	   * @return {lat, lng}
-	   */
-
-
-	  _createClass(Proj, null, [{
-	    key: "mercator2Wgs84",
-	    value: function mercator2Wgs84(x, y) {
-	      /* more detail: https://github.com/proj4js/proj4js
-	       *    http://api.geo.admin.ch/main/wsgi/lib/proj4js/proj4js/
-	       */
-	      var point = MERCATOR_PROJ.inverse([x, y]);
-	      return {
-	        lat: point[1],
-	        lng: point[0]
-	      };
+	    function Proj() {
+	        _classCallCheck(this, Proj);
 	    }
-	  }]);
 
-	  return Proj;
+	    /*
+	     * convert mercator coordinate to wgs84
+	     * @param {Number} x mercator
+	     * @param {Number} y 
+	     * @return {lat, lng}
+	     */
+
+
+	    _createClass(Proj, null, [{
+	        key: "mercator2Wgs84",
+	        value: function mercator2Wgs84(x, y) {
+	            /* more detail: https://github.com/proj4js/proj4js
+	             *    http://api.geo.admin.ch/main/wsgi/lib/proj4js/proj4js/
+	             */
+	            var point = MERCATOR_PROJ.inverse([x, y]);
+	            return {
+	                lat: point[1],
+	                lng: point[0]
+	            };
+	        }
+	    }]);
+
+	    return Proj;
 	}();
 
 /***/ },
@@ -7123,148 +7136,314 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	        value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Context = exports.Context = function () {
-	  function Context(container) {
-	    _classCallCheck(this, Context);
+	var Tile = exports.Tile = function () {
+	        function Tile(options) {
+	                _classCallCheck(this, Tile);
 
-	    this._container = container;
-	    this._canvas = document.createElement('canvas');
-	    this._container.appendChild(this._canvas);
-	    this._canvas.width = this._container.offsetWidth;
-	    this._canvas.height = this._container.offsetHeight;
-	    this._gl = this._createWebGLContext();
-	  }
-
-	  _createClass(Context, [{
-	    key: "_createWebGLContext",
-	    value: function _createWebGLContext() {
-
-	      var names = ["webgl", "experimental-webgl"];
-	      var context = null;
-	      var _iteratorNormalCompletion = true;
-	      var _didIteratorError = false;
-	      var _iteratorError = undefined;
-
-	      try {
-	        for (var _iterator = names[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	          var name = _step.value;
-
-	          try {
-	            context = this._canvas.getContext(name);
-	          } catch (e) {
-	            console.error('failed to get context: ' + e);
-	          }
-
-	          if (context) {
-	            break;
-	          }
+	                this._mesh = options.mesh;
+	                this._material = options.material;
 	        }
-	      } catch (err) {
-	        _didIteratorError = true;
-	        _iteratorError = err;
-	      } finally {
-	        try {
-	          if (!_iteratorNormalCompletion && _iterator.return) {
-	            _iterator.return();
-	          }
-	        } finally {
-	          if (_didIteratorError) {
-	            throw _iteratorError;
-	          }
-	        }
-	      }
 
-	      if (context) {
-	        context.viewportWidth = this._canvas.width;
-	        context.viewportHeight = this._canvas.height;
-	      } else {
-	        console.error("Failed to create WebGL context!");
-	      }
-	      return context;
-	    }
-	  }, {
-	    key: "gl",
-	    get: function get() {
-	      return this._gl;
-	    }
-	  }, {
-	    key: "canvas",
-	    get: function get() {
-	      return this._canvas;
-	    }
-	  }]);
+	        _createClass(Tile, [{
+	                key: "render",
+	                value: function render(gl, shaderProgram) {
+	                        this._mesh.setup(gl);
+	                        this._material.setup(gl);
 
-	  return Context;
+	                        var program = shaderProgram;
+	                        var pwgl = {};
+	                        pwgl.vertexPositionAttributeLoc = gl.getAttribLocation(program, "aVertexPosition");
+	                        pwgl.vertexTextureAttributeLoc = gl.getAttribLocation(program, "aTextureCoordinates");
+	                        pwgl.uniformSamplerLoc = gl.getUniformLocation(program, "uSampler");
+
+	                        gl.enableVertexAttribArray(pwgl.vertexPositionAttributeLoc);
+	                        gl.enableVertexAttribArray(pwgl.vertexTextureAttributeLoc);
+
+	                        this._mesh.bindPoint(gl, pwgl.vertexPositionAttributeLoc);
+	                        this._mesh.bindTexture(gl, pwgl.vertexTextureAttributeLoc);
+	                        this._mesh.bindIndex(gl);
+
+	                        gl.uniform1i(pwgl.uniformSamplerLoc, 0);
+	                        this._material.bind(gl, gl.TEXTURE0);
+
+	                        gl.drawElements(gl.TRIANGLES, this._mesh.triangleCount, gl.UNSIGNED_SHORT, 0);
+	                        this._material.unBind(gl);
+	                }
+	        }]);
+
+	        return Tile;
 	}();
 
 /***/ },
 /* 17 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
+	exports.TileMesh = undefined;
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); //const MERCATOR_LAT_MAX = 85.051128;
+	//const MERCATOR_LNG_MAX = 180.0;
+	//const SEGMENT_COUNT = 16;
+
+	var _proj = __webpack_require__(14);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var DragPan = exports.DragPan = function () {
-	  function DragPan(earth, onDragCallback) {
-	    _classCallCheck(this, DragPan);
+	var PIXELS_PER_TILE = 256;
+	var SEGMENT_COUNT = 16;
 
-	    this._earth = earth;
+	var TileMesh = exports.TileMesh = function () {
+	    function TileMesh(options) {
+	        _classCallCheck(this, TileMesh);
 
-	    this._isMouseDown = false;
-	    this._prevMouseX = null;
-	    this._prevMouseY = null;
-	    this._bindMouseEventListeners(onDragCallback);
-	  }
+	        this._zoom = options.zoom;
+	        this._row = options.row;
+	        this._col = options.col;
 
-	  _createClass(DragPan, [{
-	    key: "_bindMouseEventListeners",
-	    value: function _bindMouseEventListeners(callback) {
-	      var self = this;
-	      this._earth.context.canvas.onmousedown = function (e) {
-	        self._isMouseDown = true;
-	        self._prevMouseX = e.clientX;
-	        self._prevMouseY = e.clientY;
-	      };
+	        this._vertices = [];
+	        this._uvs = [];
+	        this._elementIndexes = [];
 
-	      this._earth.context.canvas.onmouseup = function (e) {
-	        self._isMouseDown = false;
-	      };
-
-	      this._earth.context.canvas.onmousemove = function (e) {
-	        if (self._isMouseDown) {
-	          var deltaX = e.clientX - self._prevMouseX;
-	          var deltaY = e.clientY - self._prevMouseY;
-
-	          var x = -deltaX / 10 % 360;
-	          var y = -deltaY / 10 % 360;
-	          self._earth.rotate(y * Math.PI / 180, x * Math.PI / 180);
-
-	          self._prevMouseX = e.clientX;
-	          self._prevMouseY = e.clientY;
-	        }
-	      };
-
-	      this._earth.context.canvas.onmouseout = function (e) {
-	        self._isMouseDown = false;
-	      };
+	        this._radius = 6378137;
+	        this._bound = {};
+	        this._createMesh();
 	    }
-	  }]);
 
-	  return DragPan;
+	    _createClass(TileMesh, [{
+	        key: '_getMetersPerPixel',
+	        value: function _getMetersPerPixel(zoom) {
+	            return this._radius * 2.0 * Math.PI / (Math.pow(2, zoom) * PIXELS_PER_TILE);
+	        }
+	    }, {
+	        key: '_calcMercatorBound',
+	        value: function _calcMercatorBound() {
+	            // get tile's topleft coordinate in mercator projection
+	            var metersPerPixel = this._getMetersPerPixel(this._zoom);
+	            var totalTilesPerEdge = Math.pow(2, this._zoom);
+	            var totalMeters = totalTilesPerEdge * PIXELS_PER_TILE * metersPerPixel;
+	            var halfMeters = totalMeters / 2;
+
+	            this._bound.N = this._row * (PIXELS_PER_TILE * metersPerPixel);
+	            this._bound.W = this._col * (PIXELS_PER_TILE * metersPerPixel);
+
+	            // get tile's bound
+	            this._bound.N = halfMeters - this._bound.N;
+	            this._bound.W = this._bound.W - halfMeters;
+	            this._bound.E = this._bound.W + PIXELS_PER_TILE * metersPerPixel;
+	            this._bound.S = this._bound.N - PIXELS_PER_TILE * metersPerPixel;
+	        }
+
+	        /* 
+	         * @description get coordinate in wgs84
+	         * @param {Number} x mecator's x
+	         * @param {Number} y mecator's y
+	         * @param {Boolean} isFirstRow, true if the point is on the most north edge
+	         * @param {Boolean} isLastRow, true if the point is on the most south edge
+	         */
+
+	    }, {
+	        key: '_calcLatLng',
+	        value: function _calcLatLng(x, y, isFirstRow, isLastRow) {
+
+	            var latLng = _proj.Proj.mercator2Wgs84(x, y);
+
+	            /*
+	             * we must process the most north edge and south edge, because the mercator's latitude range is (-85, 85), which is * smaller than earth's latitude range  (-90, 90).
+	             */
+	            if (isFirstRow) {
+	                latLng.lat = 90;
+	            } else if (isLastRow) {
+	                latLng.lat = -90;
+	            }
+	            return latLng;
+	        }
+	    }, {
+	        key: '_createMesh',
+	        value: function _createMesh() {
+
+	            this._calcMercatorBound();
+	            // make SEGMENT_COUNT*SEGMENT_COUNT square mesh
+	            var intervalMeters = Math.abs(this._bound.E - this._bound.W) / SEGMENT_COUNT;
+	            var maxRow = (1 << this._zoom) - 1;
+
+	            var verticeIndexes = [];
+	            for (var _y = 0; _y <= SEGMENT_COUNT; _y++) {
+	                var verticeIndex = [];
+
+	                for (var _x = 0; _x <= SEGMENT_COUNT; _x++) {
+	                    var pointN = this._bound.N - _y * intervalMeters;
+	                    var pointW = this._bound.W + _x * intervalMeters;
+	                    var latLng = this._calcLatLng(pointW, pointN, this._row === 0 && _y === 0, this._row === maxRow && _y === SEGMENT_COUNT);
+
+	                    var pointX = this._radius * Math.sin(latLng.lng * Math.PI / 180) * Math.cos(latLng.lat * Math.PI / 180);
+	                    var pointY = this._radius * Math.sin(latLng.lat * Math.PI / 180);
+	                    var pointZ = this._radius * Math.cos(latLng.lng * Math.PI / 180) * Math.cos(latLng.lat * Math.PI / 180);
+	                    this._vertices.push(pointX, pointY, pointZ);
+	                    verticeIndex.push(this._vertices.length / 3 - 1);
+
+	                    var u = _x / SEGMENT_COUNT;
+	                    var v = _y / SEGMENT_COUNT;
+	                    this._uvs.push(u, 1 - v);
+	                }
+
+	                verticeIndexes.push(verticeIndex);
+	            }
+
+	            // make element index
+	            var elementIndexes = [];
+	            for (var y = 0; y < SEGMENT_COUNT; y++) {
+
+	                var startIndex = y * SEGMENT_COUNT;
+	                for (var x = 0; x < SEGMENT_COUNT; x++) {
+	                    elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y][x], verticeIndexes[y + 1][x]);
+	                    elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y + 1][x], verticeIndexes[y + 1][x + 1]);
+	                }
+	            }
+	            this._elementIndexes = elementIndexes;
+	        }
+
+	        //  constructor(points) {
+	        //    this._radius = 6378137;
+	        //    this._points = points;
+	        //    this._vertices = [];
+	        //    this._uvs = [];
+	        //   
+	        //    let verticeIndexes = [];
+	        //    for (let y = 0; y < this._points.length; y++) {
+	        //      let verticeIndex = [];
+	        //        for (let x = 0; x < this._points[y].length; x++) {
+	        //          let point = this._points[y][x];
+	        //          let pointX = this._radius * Math.sin(point.lng * Math.PI / 180) * Math.cos(point.lat * Math.PI / 180);
+	        //          let pointY = this._radius * Math.sin(point.lat * Math.PI / 180);
+	        //          let pointZ = this._radius * Math.cos(point.lng * Math.PI / 180) * Math.cos(point.lat * Math.PI / 180);
+	        //          this._vertices.push(pointX, pointY, pointZ);
+	        //          verticeIndex.push(this._vertices.length / 3 - 1);
+	        //
+	        //          var u = x / SEGMENT_COUNT;
+	        //          var v = y / SEGMENT_COUNT;
+	        //          this._uvs.push(u, 1 - v);
+	        //        }
+	        //      verticeIndexes.push(verticeIndex);
+	        //    }
+	        //
+	        //    // make element index
+	        //    let elementIndexes = [];
+	        //    for (var y = 0; y < SEGMENT_COUNT; y++) {
+	        //
+	        //      let startIndex = y * SEGMENT_COUNT;
+	        //      for (var x = 0; x < SEGMENT_COUNT; x++) {
+	        //        elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y][x], verticeIndexes[y + 1][x]);
+	        //        elementIndexes.push(verticeIndexes[y][x + 1], verticeIndexes[y + 1][x], verticeIndexes[y + 1][x + 1]);
+	        //      }
+	        //    }
+	        //    this._elementIndexes = elementIndexes;
+	        //  }
+
+	    }, {
+	        key: 'setup',
+	        value: function setup(gl) {
+	            if (this.vertexIndexBuffer) {
+	                return;
+	            }
+
+	            this.vertexPosBuffer = gl.createBuffer();
+	            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPosBuffer);
+	            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._vertices), gl.STATIC_DRAW);
+	            this.VERTEX_POS_BUF_ITEM_SIZE = 3;
+
+	            this.vertexTextureCoordinateBuffer = gl.createBuffer();
+	            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexTextureCoordinateBuffer);
+	            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._uvs), gl.STATIC_DRAW);
+	            this.VERTEX_TEX_COORD_BUF_ITEM_SIZE = 2;
+
+	            this.vertexIndexBuffer = gl.createBuffer();
+	            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertexIndexBuffer);
+	            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this._elementIndexes), gl.STATIC_DRAW);
+
+	            this.VERTEX_INDEX_BUF_ITEM_SIZE = 1;
+	            this.VERTEX_INDEX_BUF_NUM_ITEMS = this._elementIndexes.length;
+	        }
+	    }, {
+	        key: 'bindPoint',
+	        value: function bindPoint(gl, loc) {
+	            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPosBuffer);
+	            gl.vertexAttribPointer(loc, this.VERTEX_POS_BUF_ITEM_SIZE, gl.FLOAT, false, 0, 0);
+	        }
+	    }, {
+	        key: 'bindTexture',
+	        value: function bindTexture(gl, loc) {
+	            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexTextureCoordinateBuffer);
+	            gl.vertexAttribPointer(loc, this.VERTEX_TEX_COORD_BUF_ITEM_SIZE, gl.FLOAT, false, 0, 0);
+	        }
+	    }, {
+	        key: 'bindIndex',
+	        value: function bindIndex(gl) {
+	            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertexIndexBuffer);
+	        }
+	    }, {
+	        key: 'triangleCount',
+	        get: function get() {
+	            return this.VERTEX_INDEX_BUF_NUM_ITEMS;
+	        }
+	        //
+	        //  static createMeshes(zoom) {
+	        //    let count = 1 << (zoom);
+	        //    let perTileLngRange = MERCATOR_LNG_MAX * 2 / count;
+	        //    let tileLngStep = perTileLngRange / SEGMENT_COUNT;
+	        //   
+	        //    let perTileLatRange = MERCATOR_LAT_MAX * 2 / count;
+	        //    let tileLatStep = perTileLatRange / SEGMENT_COUNT;
+	        //   
+	        //    let tileLngBegin = -MERCATOR_LNG_MAX;
+	        //    let tileLatBegin = MERCATOR_LAT_MAX;
+	        //   
+	        //    // calc points position by row
+	        //    let rows = [];
+	        //    for (let y = 0; y <= count * SEGMENT_COUNT; y++) {
+	        //      let row = [];
+	        //      for (let x = 0; x <= SEGMENT_COUNT; x++) {
+	        //        row.push({
+	        //          lat: tileLatBegin - y * tileLatStep,
+	        //          lng: tileLngBegin + x * tileLngStep
+	        //        })
+	        //      }
+	        //      rows.push(row);
+	        //    }
+	        //   
+	        //    // calc tiles
+	        //    let tileMeshes = {};
+	        //    for (let row = 0; row < count; row++) {
+	        //
+	        //      let mesh = new MercatorTileMesh(rows.slice(row*SEGMENT_COUNT, row*SEGMENT_COUNT+SEGMENT_COUNT + 1));
+	        //      for (let col = 0; col < count; col++) {
+	        ////        mesh.tileCol = col;
+	        ////        mesh.tileRow = row;
+	        //        tileMeshes[zoom+'+'+col+'+'+row] = {
+	        //          tileCol: col,
+	        //          tileRow: row,
+	        //          zoom: zoom,
+	        //          mesh: mesh
+	        //        };
+	        //      }
+	        //    }
+	        //   
+	        //    return tileMeshes;
+	        //  }
+
+	    }]);
+
+	    return TileMesh;
 	}();
 
 /***/ },
@@ -7281,31 +7460,47 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var DoubleClickZoom = exports.DoubleClickZoom = function () {
-	  function DoubleClickZoom(earth, callback) {
-	    _classCallCheck(this, DoubleClickZoom);
+	var ImageMaterial = exports.ImageMaterial = function () {
+	  function ImageMaterial(image) {
+	    _classCallCheck(this, ImageMaterial);
 
-	    this._earth = earth;
-	    this._bindMouseEventListeners(callback);
+	    this._image = image;
 	  }
 
-	  _createClass(DoubleClickZoom, [{
-	    key: "_bindMouseEventListeners",
-	    value: function _bindMouseEventListeners(callback) {
-	      var self = this;
-	      this._earth.context.canvas.ondblclick = function (e) {
-	        var zoomDelta = 1;
-	        if (e.shiftKey) {
-	          zoomDelta = -1;
-	        }
-	        var zoom = self._earth.zoom + zoomDelta;
+	  _createClass(ImageMaterial, [{
+	    key: "setup",
+	    value: function setup(gl) {
+	      if (this._texture) {
+	        return;
+	      }
 
-	        self._earth.setZoom(zoom);
-	      };
+	      this._texture = gl.createTexture();
+	      gl.bindTexture(gl.TEXTURE_2D, this._texture);
+	      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+	      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._image);
+
+	      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+	      gl.bindTexture(gl.TEXTURE_2D, null);
+	    }
+	  }, {
+	    key: "bind",
+	    value: function bind(gl, textureNo) {
+	      gl.activeTexture(textureNo);
+	      gl.bindTexture(gl.TEXTURE_2D, this._texture);
+	    }
+	  }, {
+	    key: "unBind",
+	    value: function unBind(gl) {
+	      gl.bindTexture(gl.TEXTURE_2D, null);
 	    }
 	  }]);
 
-	  return DoubleClickZoom;
+	  return ImageMaterial;
 	}();
 
 /***/ },
@@ -7315,7 +7510,199 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Context = exports.Context = function () {
+	    function Context(container) {
+	        _classCallCheck(this, Context);
+
+	        this._container = container;
+	        this._canvas = document.createElement('canvas');
+	        this._container.appendChild(this._canvas);
+	        this._canvas.width = this._container.offsetWidth;
+	        this._canvas.height = this._container.offsetHeight;
+	        this._gl = this._createWebGLContext();
+	    }
+
+	    _createClass(Context, [{
+	        key: "_createWebGLContext",
+	        value: function _createWebGLContext() {
+
+	            var names = ["webgl", "experimental-webgl"];
+	            var context = null;
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+
+	            try {
+	                for (var _iterator = names[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var name = _step.value;
+
+	                    try {
+	                        context = this._canvas.getContext(name);
+	                    } catch (e) {
+	                        console.error('failed to get context: ' + e);
+	                    }
+
+	                    if (context) {
+	                        break;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+
+	            if (context) {
+	                context.viewportWidth = this._canvas.width;
+	                context.viewportHeight = this._canvas.height;
+	            } else {
+	                console.error("Failed to create WebGL context!");
+	            }
+	            return context;
+	        }
+	    }, {
+	        key: "gl",
+	        get: function get() {
+	            return this._gl;
+	        }
+	    }, {
+	        key: "canvas",
+	        get: function get() {
+	            return this._canvas;
+	        }
+	    }]);
+
+	    return Context;
+	}();
+
+/***/ },
+/* 20 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var DragPan = exports.DragPan = function () {
+	    function DragPan(earth, onDragCallback) {
+	        _classCallCheck(this, DragPan);
+
+	        this._earth = earth;
+
+	        this._isMouseDown = false;
+	        this._prevMouseX = null;
+	        this._prevMouseY = null;
+	        this._bindMouseEventListeners(onDragCallback);
+	    }
+
+	    _createClass(DragPan, [{
+	        key: "_bindMouseEventListeners",
+	        value: function _bindMouseEventListeners(callback) {
+	            var self = this;
+	            this._earth.context.canvas.onmousedown = function (e) {
+	                self._isMouseDown = true;
+	                self._prevMouseX = e.clientX;
+	                self._prevMouseY = e.clientY;
+	            };
+
+	            this._earth.context.canvas.onmouseup = function (e) {
+	                self._isMouseDown = false;
+	            };
+
+	            this._earth.context.canvas.onmousemove = function (e) {
+	                if (self._isMouseDown) {
+	                    var deltaX = e.clientX - self._prevMouseX;
+	                    var deltaY = e.clientY - self._prevMouseY;
+
+	                    var x = -deltaX / 10 % 360;
+	                    var y = -deltaY / 10 % 360;
+	                    self._earth.rotate(y * Math.PI / 180, x * Math.PI / 180);
+
+	                    self._prevMouseX = e.clientX;
+	                    self._prevMouseY = e.clientY;
+	                }
+	            };
+
+	            this._earth.context.canvas.onmouseout = function (e) {
+	                self._isMouseDown = false;
+	            };
+	        }
+	    }]);
+
+	    return DragPan;
+	}();
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var DoubleClickZoom = exports.DoubleClickZoom = function () {
+	    function DoubleClickZoom(earth, callback) {
+	        _classCallCheck(this, DoubleClickZoom);
+
+	        this._earth = earth;
+	        this._bindMouseEventListeners(callback);
+	    }
+
+	    _createClass(DoubleClickZoom, [{
+	        key: "_bindMouseEventListeners",
+	        value: function _bindMouseEventListeners(callback) {
+	            var self = this;
+	            this._earth.context.canvas.ondblclick = function (e) {
+	                var zoomDelta = 1;
+	                if (e.shiftKey) {
+	                    zoomDelta = -1;
+	                }
+	                var zoom = self._earth.zoom + zoomDelta;
+
+	                self._earth.setZoom(zoom);
+	            };
+	        }
+	    }]);
+
+	    return DoubleClickZoom;
+	}();
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7323,36 +7710,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var MouseWheelZoom = exports.MouseWheelZoom = function () {
-	  function MouseWheelZoom(earth) {
-	    _classCallCheck(this, MouseWheelZoom);
+	    function MouseWheelZoom(earth) {
+	        _classCallCheck(this, MouseWheelZoom);
 
-	    this._earth = earth;
-	    this._bindMouseEventListener();
-	  }
-
-	  _createClass(MouseWheelZoom, [{
-	    key: "_bindMouseEventListener",
-	    value: function _bindMouseEventListener() {
-	      var self = this;
-	      this._earth.context.canvas.onmousewheel = function (e) {
-	        var zoomDelta = -e.deltaY / 100;
-	        var zoom = self._earth.zoom + zoomDelta;
-	        self._earth.setZoom(zoom);
-	      };
+	        this._earth = earth;
+	        this._bindMouseEventListener();
 	    }
-	  }]);
 
-	  return MouseWheelZoom;
+	    _createClass(MouseWheelZoom, [{
+	        key: "_bindMouseEventListener",
+	        value: function _bindMouseEventListener() {
+	            var self = this;
+	            this._earth.context.canvas.onmousewheel = function (e) {
+	                var zoomDelta = -e.deltaY / 100;
+	                var zoom = self._earth.zoom + zoomDelta;
+	                self._earth.setZoom(zoom);
+	            };
+	        }
+	    }]);
+
+	    return MouseWheelZoom;
 	}();
 
 /***/ },
-/* 20 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.Camera = undefined;
 
@@ -7367,115 +7754,115 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Camera = exports.Camera = function () {
-	  function Camera() {
-	    _classCallCheck(this, Camera);
+	    function Camera() {
+	        _classCallCheck(this, Camera);
 
-	    this._eye = [0, 0, 3 * 6378137];
-	    this._center = [0, 0, 0];
-	    this._up = [0, 1, 0];
+	        this._eye = [0, 0, 3 * 6378137];
+	        this._center = [0, 0, 0];
+	        this._up = [0, 1, 0];
 
-	    this._rotateX = 0;
-	    this._rotateY = 0;
-	    this._rotateZ = 0;
-	  }
+	        this._rotateX = 0;
+	        this._rotateY = 0;
+	        this._rotateZ = 0;
+	    }
 
-	  _createClass(Camera, [{
-	    key: 'rotateX',
-	    get: function get() {
-	      return this._rotateX;
-	    },
-	    set: function set(radian) {
-	      if (radian < -Math.PI / 2) {
-	        radian = -Math.PI / 2;
-	      } else if (radian > Math.PI / 2) {
-	        radian = Math.PI / 2;
-	      }
-	      this._rotateX = radian;
-	    }
-	  }, {
-	    key: 'rotateY',
-	    get: function get() {
-	      return this._rotateY;
-	    },
-	    set: function set(radian) {
-	      this._rotateY = radian;
-	    }
-	  }, {
-	    key: 'rotateZ',
-	    get: function get() {
-	      return this._rotateZ;
-	    },
-	    set: function set(radian) {
-	      this._rotateZ = radian;
-	    }
-	  }, {
-	    key: 'center',
-	    get: function get() {
-	      return this._center;
-	    }
-	  }, {
-	    key: 'eye',
-	    get: function get() {
-	      var eye = _glMatrix2.default.vec3.create();
-	      _glMatrix2.default.vec3.rotateX(eye, this._eye, [0, 0, 0], this._rotateX);
-	      _glMatrix2.default.vec3.rotateY(eye, eye, [0, 0, 0], this._rotateY);
-	      return eye;
-	    },
-	    set: function set(eye) {
-	      this._eye = eye;
-	    }
-	  }, {
-	    key: 'up',
-	    get: function get() {
-	      return this._up;
-	    }
-	  }]);
+	    _createClass(Camera, [{
+	        key: 'rotateX',
+	        get: function get() {
+	            return this._rotateX;
+	        },
+	        set: function set(radian) {
+	            if (radian < -Math.PI / 2) {
+	                radian = -Math.PI / 2;
+	            } else if (radian > Math.PI / 2) {
+	                radian = Math.PI / 2;
+	            }
+	            this._rotateX = radian;
+	        }
+	    }, {
+	        key: 'rotateY',
+	        get: function get() {
+	            return this._rotateY;
+	        },
+	        set: function set(radian) {
+	            this._rotateY = radian;
+	        }
+	    }, {
+	        key: 'rotateZ',
+	        get: function get() {
+	            return this._rotateZ;
+	        },
+	        set: function set(radian) {
+	            this._rotateZ = radian;
+	        }
+	    }, {
+	        key: 'center',
+	        get: function get() {
+	            return this._center;
+	        }
+	    }, {
+	        key: 'eye',
+	        get: function get() {
+	            var eye = _glMatrix2.default.vec3.create();
+	            _glMatrix2.default.vec3.rotateX(eye, this._eye, [0, 0, 0], this._rotateX);
+	            _glMatrix2.default.vec3.rotateY(eye, eye, [0, 0, 0], this._rotateY);
+	            return eye;
+	        },
+	        set: function set(eye) {
+	            this._eye = eye;
+	        }
+	    }, {
+	        key: 'up',
+	        get: function get() {
+	            return this._up;
+	        }
+	    }]);
 
-	  return Camera;
+	    return Camera;
 	}();
 
 /***/ },
-/* 21 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.LayerRenderer = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _rasterTileLayerRenderer = __webpack_require__(22);
+	var _rasterTileLayerRenderer = __webpack_require__(25);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var LayerRenderer = exports.LayerRenderer = function () {
-	  function LayerRenderer() {
-	    _classCallCheck(this, LayerRenderer);
-	  }
-
-	  _createClass(LayerRenderer, null, [{
-	    key: 'render',
-	    value: function render(layer, gl, camera) {
-	      if (layer.type === 'rasterTile') {
-	        _rasterTileLayerRenderer.RasterTileLayerRenderer.render(layer, gl, camera);
-	      }
+	    function LayerRenderer() {
+	        _classCallCheck(this, LayerRenderer);
 	    }
-	  }]);
 
-	  return LayerRenderer;
+	    _createClass(LayerRenderer, null, [{
+	        key: 'render',
+	        value: function render(layer, gl, camera) {
+	            if (layer.type === 'rasterTile') {
+	                _rasterTileLayerRenderer.RasterTileLayerRenderer.render(layer, gl, camera);
+	            }
+	        }
+	    }]);
+
+	    return LayerRenderer;
 	}();
 
 /***/ },
-/* 22 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.RasterTileLayerRenderer = undefined;
 
@@ -7485,9 +7872,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _glMatrix2 = _interopRequireDefault(_glMatrix);
 
-	var _shaderLoader = __webpack_require__(23);
+	var _shaderLoader = __webpack_require__(26);
 
-	var _rasterTileShader = __webpack_require__(24);
+	var _rasterTileShader = __webpack_require__(27);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7496,82 +7883,82 @@ return /******/ (function(modules) { // webpackBootstrap
 	var EARTH_RADIUS = 6378137;
 
 	var RasterTileLayerRenderer = exports.RasterTileLayerRenderer = function () {
-	  function RasterTileLayerRenderer() {
-	    _classCallCheck(this, RasterTileLayerRenderer);
-	  }
-
-	  _createClass(RasterTileLayerRenderer, null, [{
-	    key: 'render',
-	    value: function render(layer, gl, camera) {
-	      this._setupGl(layer, gl);
-	      gl.useProgram(layer.glProgram);
-	      this._draw(layer, gl, camera);
+	    function RasterTileLayerRenderer() {
+	        _classCallCheck(this, RasterTileLayerRenderer);
 	    }
-	  }, {
-	    key: '_setupGl',
-	    value: function _setupGl(layer, gl) {
-	      if (!layer.isGLReady()) {
-	        this._setupShaders(layer, gl);
-	      }
-	    }
-	  }, {
-	    key: '_setupShaders',
-	    value: function _setupShaders(layer, gl) {
-	      var vertexShader = _shaderLoader.ShaderLoader.loadVertex(gl, _rasterTileShader.RasterTileShader.vertexSource);
-	      var fragmentShader = _shaderLoader.ShaderLoader.loadFragment(gl, _rasterTileShader.RasterTileShader.fragmentSource);
 
-	      var shaderProgram = gl.createProgram();
-	      gl.attachShader(shaderProgram, vertexShader);
-	      gl.attachShader(shaderProgram, fragmentShader);
-	      gl.linkProgram(shaderProgram);
+	    _createClass(RasterTileLayerRenderer, null, [{
+	        key: 'render',
+	        value: function render(layer, gl, camera) {
+	            this._setupGl(layer, gl);
+	            gl.useProgram(layer.glProgram);
+	            this._draw(layer, gl, camera);
+	        }
+	    }, {
+	        key: '_setupGl',
+	        value: function _setupGl(layer, gl) {
+	            if (!layer.isGLReady()) {
+	                this._setupShaders(layer, gl);
+	            }
+	        }
+	    }, {
+	        key: '_setupShaders',
+	        value: function _setupShaders(layer, gl) {
+	            var vertexShader = _shaderLoader.ShaderLoader.loadVertex(gl, _rasterTileShader.RasterTileShader.vertexSource);
+	            var fragmentShader = _shaderLoader.ShaderLoader.loadFragment(gl, _rasterTileShader.RasterTileShader.fragmentSource);
 
-	      if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-	        console.error("Failed to setup shaders");
-	      }
-	      layer.setGlProgram(shaderProgram);
-	    }
-	  }, {
-	    key: '_draw',
-	    value: function _draw(layer, gl, camera) {
+	            var shaderProgram = gl.createProgram();
+	            gl.attachShader(shaderProgram, vertexShader);
+	            gl.attachShader(shaderProgram, fragmentShader);
+	            gl.linkProgram(shaderProgram);
 
-	      layer.getRenderTiles(function (tiles) {
+	            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+	                console.error("Failed to setup shaders");
+	            }
+	            layer.setGlProgram(shaderProgram);
+	        }
+	    }, {
+	        key: '_draw',
+	        value: function _draw(layer, gl, camera) {
 
-	        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-	        gl.clearColor(0.0, 0.0, 0.0, 1.0);
-	        gl.enable(gl.CULL_FACE);
+	            layer.getRenderTiles(function (tiles) {
 
-	        var uniformMVMatrixLoc = gl.getUniformLocation(layer.glProgram, "uMVMatrix");
-	        var uniformProjMatrixLoc = gl.getUniformLocation(layer.glProgram, "uPMatrix");
-	        var modelViewMatrix = _glMatrix2.default.mat4.create();
-	        var projectionMatrix = _glMatrix2.default.mat4.create();
+	                gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+	                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+	                gl.enable(gl.CULL_FACE);
 
-	        _glMatrix2.default.mat4.perspective(projectionMatrix, 60 * Math.PI / 180, gl.viewportWidth / gl.viewportHeight, 0.001, 18 * EARTH_RADIUS);
+	                var uniformMVMatrixLoc = gl.getUniformLocation(layer.glProgram, "uMVMatrix");
+	                var uniformProjMatrixLoc = gl.getUniformLocation(layer.glProgram, "uPMatrix");
+	                var modelViewMatrix = _glMatrix2.default.mat4.create();
+	                var projectionMatrix = _glMatrix2.default.mat4.create();
 
-	        _glMatrix2.default.mat4.identity(modelViewMatrix);
-	        _glMatrix2.default.mat4.lookAt(modelViewMatrix, camera.eye, camera.center, camera.up);
+	                _glMatrix2.default.mat4.perspective(projectionMatrix, 60 * Math.PI / 180, gl.viewportWidth / gl.viewportHeight, 0.001, 18 * EARTH_RADIUS);
 
-	        gl.uniformMatrix4fv(uniformMVMatrixLoc, false, modelViewMatrix);
-	        gl.uniformMatrix4fv(uniformProjMatrixLoc, false, projectionMatrix);
+	                _glMatrix2.default.mat4.identity(modelViewMatrix);
+	                _glMatrix2.default.mat4.lookAt(modelViewMatrix, camera.eye, camera.center, camera.up);
 
-	        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-	        tiles.forEach(function (tile) {
-	          tile.render(gl, layer.glProgram);
-	        });
-	      });
-	    }
-	  }]);
+	                gl.uniformMatrix4fv(uniformMVMatrixLoc, false, modelViewMatrix);
+	                gl.uniformMatrix4fv(uniformProjMatrixLoc, false, projectionMatrix);
 
-	  return RasterTileLayerRenderer;
+	                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	                tiles.forEach(function (tile) {
+	                    tile.render(gl, layer.glProgram);
+	                });
+	            });
+	        }
+	    }]);
+
+	    return RasterTileLayerRenderer;
 	}();
 
 /***/ },
-/* 23 */
+/* 26 */
 /***/ function(module, exports) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7579,60 +7966,60 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var SHADER_TYPE = {
-	  FRAGMENT: Symbol(),
-	  VERTEX: Symbol()
+	    FRAGMENT: Symbol(),
+	    VERTEX: Symbol()
 	};
 
 	var ShaderLoader = exports.ShaderLoader = function () {
-	  function ShaderLoader() {
-	    _classCallCheck(this, ShaderLoader);
-	  }
-
-	  _createClass(ShaderLoader, null, [{
-	    key: 'loadVertex',
-	    value: function loadVertex(glContext, Source) {
-	      return this.load(glContext, Source, SHADER_TYPE.VERTEX);
+	    function ShaderLoader() {
+	        _classCallCheck(this, ShaderLoader);
 	    }
-	  }, {
-	    key: 'loadFragment',
-	    value: function loadFragment(glContext, Source) {
-	      return this.load(glContext, Source, SHADER_TYPE.FRAGMENT);
-	    }
-	  }, {
-	    key: 'load',
-	    value: function load(glContext, source, type) {
-	      var shader = null;
-	      if (type === SHADER_TYPE.FRAGMENT) {
-	        shader = glContext.createShader(glContext.FRAGMENT_SHADER);
-	      } else if (type === SHADER_TYPE.VERTEX) {
-	        shader = glContext.createShader(glContext.VERTEX_SHADER);
-	      } else {
-	        console.error('invalid shader type: ' + type);
-	        return null;
-	      }
 
-	      glContext.shaderSource(shader, source);
-	      glContext.compileShader(shader);
+	    _createClass(ShaderLoader, null, [{
+	        key: 'loadVertex',
+	        value: function loadVertex(glContext, Source) {
+	            return this.load(glContext, Source, SHADER_TYPE.VERTEX);
+	        }
+	    }, {
+	        key: 'loadFragment',
+	        value: function loadFragment(glContext, Source) {
+	            return this.load(glContext, Source, SHADER_TYPE.FRAGMENT);
+	        }
+	    }, {
+	        key: 'load',
+	        value: function load(glContext, source, type) {
+	            var shader = null;
+	            if (type === SHADER_TYPE.FRAGMENT) {
+	                shader = glContext.createShader(glContext.FRAGMENT_SHADER);
+	            } else if (type === SHADER_TYPE.VERTEX) {
+	                shader = glContext.createShader(glContext.VERTEX_SHADER);
+	            } else {
+	                console.error('invalid shader type: ' + type);
+	                return null;
+	            }
 
-	      if (!glContext.getShaderParameter(shader, glContext.COMPILE_STATUS)) {
-	        console.error(glContext.getShaderInfoLog(shader));
-	        return null;
-	      }
-	      return shader;
-	    }
-	  }]);
+	            glContext.shaderSource(shader, source);
+	            glContext.compileShader(shader);
 
-	  return ShaderLoader;
+	            if (!glContext.getShaderParameter(shader, glContext.COMPILE_STATUS)) {
+	                console.error(glContext.getShaderInfoLog(shader));
+	                return null;
+	            }
+	            return shader;
+	        }
+	    }]);
+
+	    return ShaderLoader;
 	}();
 
 /***/ },
-/* 24 */
+/* 27 */
 /***/ function(module, exports) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7640,23 +8027,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var RasterTileShader = exports.RasterTileShader = function () {
-	  function RasterTileShader() {
-	    _classCallCheck(this, RasterTileShader);
-	  }
-
-	  _createClass(RasterTileShader, null, [{
-	    key: "vertexSource",
-	    get: function get() {
-	      return "\n      attribute vec3 aVertexPosition;\n      attribute vec2 aTextureCoordinates;\n\n      uniform mat4 uMVMatrix;\n      uniform mat4 uPMatrix;\n\n      varying vec2 vTextureCoordinates;\n\n      void main() {\n        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\n        vTextureCoordinates = aTextureCoordinates;  \n      } \n    ";
+	    function RasterTileShader() {
+	        _classCallCheck(this, RasterTileShader);
 	    }
-	  }, {
-	    key: "fragmentSource",
-	    get: function get() {
-	      return "\n      precision mediump float;\n\n      varying vec2 vTextureCoordinates;\n      uniform sampler2D uSampler;\n      void main() {\n        gl_FragColor = texture2D(uSampler, vTextureCoordinates);\n      } \n    ";
-	    }
-	  }]);
 
-	  return RasterTileShader;
+	    _createClass(RasterTileShader, null, [{
+	        key: "vertexSource",
+	        get: function get() {
+	            return "\n          attribute vec3 aVertexPosition;\n          attribute vec2 aTextureCoordinates;\n\n          uniform mat4 uMVMatrix;\n          uniform mat4 uPMatrix;\n\n          varying vec2 vTextureCoordinates;\n\n          void main() {\n            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\n            vTextureCoordinates = aTextureCoordinates;  \n          } \n        ";
+	        }
+	    }, {
+	        key: "fragmentSource",
+	        get: function get() {
+	            return "\n          precision mediump float;\n\n          varying vec2 vTextureCoordinates;\n          uniform sampler2D uSampler;\n          void main() {\n            gl_FragColor = texture2D(uSampler, vTextureCoordinates);\n          } \n        ";
+	        }
+	    }]);
+
+	    return RasterTileShader;
 	}();
 
 /***/ }
