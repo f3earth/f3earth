@@ -25,9 +25,7 @@ export class DomEvent {
     }
     static _on(obj, type, fn, context) {
         const self = this;
-        let handler = function (e) {
-            return fn.call(context || obj, e || window.event);
-        };
+        let handler = (e) => fn.call(context || obj, e || window.event);
 
         const originalHandler = handler;
 
@@ -35,7 +33,7 @@ export class DomEvent {
             if (type === 'mousewheel') {
                 obj.addEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
             } else if ((type === 'mouseenter') || (type === 'mouseleave')) {
-                handler = function (e) {
+                handler = (e) => {
                     const event = e || window.event;
                     if (self._isExternalTarget(obj, event)) {
                         originalHandler(event);
@@ -54,15 +52,19 @@ export class DomEvent {
     static _un(obj, type, fn, context) {
         if ('removeEventListener' in obj) {
             if (type === 'mousewheel') {
-                obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
+                obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', fn, false);
             } else {
+                let eventType = type;
+                if (type === 'mouseenter') {
+                    eventType = 'mouseover';
+                } else if (type === 'mouseleave') {
+                    eventType = 'mouseout';
+                }
                 obj.removeEventListener(
-                    type === 'mouseenter' ? 'mouseover'
-                        : type === 'mouseleave' ? 'mouseout'
-                            : type, handler, false);
+                    eventType, fn, false);
             }
         } else if ('detachEvent' in obj) {
-            obj.detachEvent(`on${type}`, handler);
+            obj.detachEvent(`on${type}`, fn);
         }
         return this;
     }

@@ -59,10 +59,10 @@ export class Observable {
      * @returns {Object} `this`
      */
     once(type, listener, thisObj) {
-        const wrapper = function () {
+        const wrapper = () => {
             this.un(type, listener, thisObj);
             this.un(type, wrapper, thisObj);
-        }.bind(this);
+        };
         return this
             .on(type, listener, thisObj)
             .on(type, wrapper, thisObj);

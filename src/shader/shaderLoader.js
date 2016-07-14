@@ -19,7 +19,7 @@ export class ShaderLoader {
         } else if (type === SHADER_TYPE.VERTEX) {
             shader = glContext.createShader(glContext.VERTEX_SHADER);
         } else {
-            console.error('invalid shader type: ' + type);
+            console.error(`invalid shader type: ${type}`);
             return null;
         }
 

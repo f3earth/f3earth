@@ -6967,7 +6967,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -6988,17 +6988,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    _createClass(ShaderLoader, null, [{
-	        key: 'loadVertex',
+	        key: "loadVertex",
 	        value: function loadVertex(glContext, Source) {
 	            return this.load(glContext, Source, SHADER_TYPE.VERTEX);
 	        }
 	    }, {
-	        key: 'loadFragment',
+	        key: "loadFragment",
 	        value: function loadFragment(glContext, Source) {
 	            return this.load(glContext, Source, SHADER_TYPE.FRAGMENT);
 	        }
 	    }, {
-	        key: 'load',
+	        key: "load",
 	        value: function load(glContext, source, type) {
 	            var shader = null;
 	            if (type === SHADER_TYPE.FRAGMENT) {
@@ -7006,7 +7006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else if (type === SHADER_TYPE.VERTEX) {
 	                shader = glContext.createShader(glContext.VERTEX_SHADER);
 	            } else {
-	                console.error('invalid shader type: ' + type);
+	                console.error("invalid shader type: " + type);
 	                return null;
 	            }
 
@@ -7100,7 +7100,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._mesh.bindIndex(gl);
 
 	            gl.uniform1i(pwgl.uniformSamplerLoc, 0);
-	            this._material.bind(gl, gl.TEXTURE0);
+	            this._material.bindTexture(gl, gl.TEXTURE0);
 
 	            gl.drawElements(gl.TRIANGLES, this._mesh.triangleCount, gl.UNSIGNED_SHORT, 0);
 	            this._material.unBind(gl);
@@ -7390,8 +7390,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            gl.bindTexture(gl.TEXTURE_2D, null);
 	        }
 	    }, {
-	        key: "bind",
-	        value: function bind(gl, textureNo) {
+	        key: "bindTexture",
+	        value: function bindTexture(gl, textureNo) {
 	            gl.activeTexture(textureNo);
 	            gl.bindTexture(gl.TEXTURE_2D, this._texture);
 	        }
@@ -7454,7 +7454,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            var imageUrl = this._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
-	            new Promise(function (resolve) {
+	            new Promise(function (resolve, reject) {
 	                var image = new Image();
 	                image.crossOrigin = 'Anonymous';
 	                image.onload = function () {
@@ -7569,10 +7569,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "once",
 	        value: function once(type, listener, thisObj) {
-	            var wrapper = function () {
-	                this.un(type, listener, thisObj);
-	                this.un(type, wrapper, thisObj);
-	            }.bind(this);
+	            var _this = this;
+
+	            var wrapper = function wrapper() {
+	                _this.un(type, listener, thisObj);
+	                _this.un(type, wrapper, thisObj);
+	            };
 	            return this.on(type, listener, thisObj).on(type, wrapper, thisObj);
 	        }
 
@@ -7587,7 +7589,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "trigger",
 	        value: function trigger(type, data) {
-	            var _this = this;
+	            var _this2 = this;
 
 	            if (!this.hasListens(type)) return this;
 	            var event = {};
@@ -7597,7 +7599,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // make sure adding/removing listeners inside other listeners won't cause infinite loop
 	            var listeners = this._listens[type].slice();
 	            listeners.forEach(function (l) {
-	                return l.fn.call(l.ctx || _this, event);
+	                return l.fn.call(l.ctx || _this2, event);
 	            });
 	            return this;
 	        }
@@ -7888,12 +7890,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _un(obj, type, fn, context) {
 	            if ('removeEventListener' in obj) {
 	                if (type === 'mousewheel') {
-	                    obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
+	                    obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', fn, false);
 	                } else {
-	                    obj.removeEventListener(type === 'mouseenter' ? 'mouseover' : type === 'mouseleave' ? 'mouseout' : type, handler, false);
+	                    var eventType = type;
+	                    if (type === 'mouseenter') {
+	                        eventType = 'mouseover';
+	                    } else if (type === 'mouseleave') {
+	                        eventType = 'mouseout';
+	                    }
+	                    obj.removeEventListener(eventType, fn, false);
 	                }
 	            } else if ('detachEvent' in obj) {
-	                obj.detachEvent('on' + type, handler);
+	                obj.detachEvent('on' + type, fn);
 	            }
 	            return this;
 	        }
