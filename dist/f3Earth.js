@@ -7890,12 +7890,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _un(obj, type, fn, context) {
 	            if ('removeEventListener' in obj) {
 	                if (type === 'mousewheel') {
-	                    obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
+	                    obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', fn, false);
 	                } else {
-	                    obj.removeEventListener(type === 'mouseenter' ? 'mouseover' : type === 'mouseleave' ? 'mouseout' : type, handler, false);
+	                    var eventType = type;
+	                    if (type === 'mouseenter') {
+	                        eventType = 'mouseover';
+	                    } else if (type === 'mouseleave') {
+	                        eventType = 'mouseout';
+	                    }
+	                    obj.removeEventListener(eventType, fn, false);
 	                }
 	            } else if ('detachEvent' in obj) {
-	                obj.detachEvent('on' + type, handler);
+	                obj.detachEvent('on' + type, fn);
 	            }
 	            return this;
 	        }

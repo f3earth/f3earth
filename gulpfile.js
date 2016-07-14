@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
+const webpack = require('webpack');
 
 gulp.task('lint', () =>
     // ESLint ignores files with "node_modules" paths.
@@ -18,6 +19,42 @@ gulp.task('lint', () =>
         .pipe(eslint.failAfterError())
 );
 
+gulp.task('webpack', () => {
+    const config = {
+        entry: {
+            f3Earth: './src/earth.js',
+            mouseWheelZoomInteraction: './src/interaction/mouseWheelZoomInteraction.js',
+            dragInteraction: './src/interaction/dragInteraction.js',
+            doubleClickZoomInteraction: './src/interaction/doubleClickZoomInteraction.js'
+        },
+        output: {
+            libraryTarget: 'umd',
+            filename: 'dist/[name].js'
+        },
+        module: {
+            loaders: [
+                {
+                    test: /\.js$/,
+                    exclude: /node_modules/,
+                    loader: 'babel',
+                    query: {
+                        compact: false
+                    }
+                }
+            ],
+            noParse: [/proj4/]
+        }
+    };
+    webpack(config, (err, stats) => {
+        if (err) {
+            console.error(err.toString());
+        } else {
+            console.log(stats.toString());
+        }
+    });
+});
+
 gulp.task('default', ['lint'], () => {
     // This will only run if the lint task is successful...
+    gulp.start('webpack');
 });
