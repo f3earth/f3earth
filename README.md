@@ -1,4 +1,7 @@
 # f3earth
+
+![build status](https://travis-ci.org/f3earth/f3earth.svg?branch=master)
+
 It is a web 3D GIS engine.
 
 ## demo
