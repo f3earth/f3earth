@@ -3,8 +3,8 @@
  * @mixin Observable
  */
 export class Observable {
-    constructor() {}
-
+    constructor() {
+    }
     /**
      * Subscribe to a specified observe with a listener function the latter gets the data object that was passed to `fire` and additionally `target` and `type` properties
      *
@@ -12,10 +12,11 @@ export class Observable {
      * @param {Function} listener Function to be called when the event is fired
      * @returns {Object} `this`
      */
-    on(type, listener) {
+    on(type, listener,thisObj) {
         this._listens = this._listens || {};
         this._listens[type] = this._listens[type] || [];
-        this._listens[type].push(listener);
+        let newListener={fn: listener, ctx: thisObj};
+        this._listens[type].push(newListener);
         return this;
     }
 
@@ -26,33 +27,29 @@ export class Observable {
      * @param {Function} [listener] Function to be called when the observe is trigger. If none is specified all listeners are removed
      * @returns {Object} `this`
      */
-    un(type, listener) {
+    un(type, listener,thisObj) {
         if (!type) {
             return this;
         }
-
         if (!this.hasListens(type)) return this;
-
-        if (listener) {
-            let idx = this._listens[type].indexOf(listener);
-            if (idx >= 0) {
-                this._listens[type].splice(idx, 1);
-            }
-            if (!this._listens[type].length) {
+        for(let i=0,len=this._listens[type].length;i<len;i++){
+            let l=this._listens[type][i];
+            if(len>1) {
+                if (l.fn === listener) {
+                    this._listens[type].splice(i, 1);
+                    break;
+                }
+            }else {
                 delete this._listens[type];
             }
-        } else {
-            delete this._listens[type];
         }
 
         return this;
     }
-
     unAll() {
         delete this._listens;
         return this;
     }
-
     /**
      * Call a function once when an observe has trigger
      *
@@ -60,13 +57,14 @@ export class Observable {
      * @param {Function} listener Function to be called once when the event is trigger
      * @returns {Object} `this`
      */
-    once(type, listener) {
-        let wrapper = function (data) {
-            this.un(type, wrapper);
-            listener.call(this, data);
+    once(type, listener,thisObj) {
+        let wrapper = function() {
+            this.un(type, listener,thisObj);
+            this.un(type,wrapper,thisObj);
         }.bind(this);
-        this.on(type, wrapper);
-        return this;
+        return this
+            .on(type,listener,thisObj)
+            .on(type, wrapper,thisObj);
     }
 
     /**
@@ -78,18 +76,15 @@ export class Observable {
      */
     trigger(type, data) {
         if (!this.hasListens(type)) return this;
-        let event = {};
-        Object.assign(event, data);
-        Object.assign(event, {
-            type: type,
-            target: this
-        });
+        let event={};
+        Object.assign(event,data);
+        Object.assign(event,{type: type, target: this});
 
         // make sure adding/removing listeners inside other listeners won't cause infinite loop
         let listeners = this._listens[type].slice();
-        listeners.forEach(function (listener) {
-            listener.call(this, event);
-        }, this);
+        listeners.forEach(function (l) {
+            l.fn.call(l.ctx||this,event);
+        },this);
         return this;
     }
 
@@ -102,3 +97,4 @@ export class Observable {
         return !!(this._listens && this._listens[type]);
     }
 };
+
