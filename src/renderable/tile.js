@@ -22,7 +22,7 @@ export class Tile {
         this._mesh.bindIndex(gl);
 
         gl.uniform1i(pwgl.uniformSamplerLoc, 0);
-        this._material.bind(gl, gl.TEXTURE0);
+        this._material.bindTexture(gl, gl.TEXTURE0);
 
         gl.drawElements(gl.TRIANGLES, this._mesh.triangleCount,
             gl.UNSIGNED_SHORT, 0);

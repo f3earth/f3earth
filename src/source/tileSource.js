@@ -18,7 +18,7 @@ export class TileSource extends Observable {
         }
 
         const imageUrl = this._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
-        new Promise(resolve => {
+        new Promise((resolve, reject) => {
             const image = new Image();
             image.crossOrigin = 'Anonymous';
             image.onload = function () {

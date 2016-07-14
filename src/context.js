@@ -24,7 +24,7 @@ export class Context {
             try {
                 context = this._canvas.getContext(name);
             } catch (e) {
-                console.error('failed to get context: ' + e);
+                console.error(`failed to get context: ${e}`);
             }
 
             if (context) {

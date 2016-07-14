@@ -22,7 +22,7 @@ export class ImageMaterial {
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
-    bind(gl, textureNo) {
+    bindTexture(gl, textureNo) {
         gl.activeTexture(textureNo);
         gl.bindTexture(gl.TEXTURE_2D, this._texture);
     }
