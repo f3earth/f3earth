@@ -3,16 +3,16 @@ export class Tile {
         this._mesh = options.mesh;
         this._material = options.material;
     }
-    
+
     render(gl, shaderProgram) {
         this._mesh.setup(gl);
         this._material.setup(gl);
 
-        let program =shaderProgram;
-        let pwgl = {};
-        pwgl.vertexPositionAttributeLoc = gl.getAttribLocation(program, "aVertexPosition");
-        pwgl.vertexTextureAttributeLoc = gl.getAttribLocation(program, "aTextureCoordinates");
-        pwgl.uniformSamplerLoc = gl.getUniformLocation(program, "uSampler");
+        const program = shaderProgram;
+        const pwgl = {};
+        pwgl.vertexPositionAttributeLoc = gl.getAttribLocation(program, 'aVertexPosition');
+        pwgl.vertexTextureAttributeLoc = gl.getAttribLocation(program, 'aTextureCoordinates');
+        pwgl.uniformSamplerLoc = gl.getUniformLocation(program, 'uSampler');
 
         gl.enableVertexAttribArray(pwgl.vertexPositionAttributeLoc);
         gl.enableVertexAttribArray(pwgl.vertexTextureAttributeLoc);
@@ -25,7 +25,7 @@ export class Tile {
         this._material.bind(gl, gl.TEXTURE0);
 
         gl.drawElements(gl.TRIANGLES, this._mesh.triangleCount,
-          gl.UNSIGNED_SHORT, 0);
+            gl.UNSIGNED_SHORT, 0);
         this._material.unBind(gl);
     }
 }

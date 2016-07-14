@@ -16,12 +16,13 @@ export class Camera {
     }
 
     set rotateX(radian) {
+        let validRadian = radian;
         if (radian < -Math.PI / 2) {
-            radian = -Math.PI / 2;
+            validRadian = -Math.PI / 2;
         } else if (radian > Math.PI / 2) {
-            radian = Math.PI / 2;
+            validRadian = Math.PI / 2;
         }
-        this._rotateX = radian;
+        this._rotateX = validRadian;
     }
 
     get rotateY() {
@@ -29,7 +30,7 @@ export class Camera {
     }
 
     set rotateY(radian) {
-        this._rotateY = radian
+        this._rotateY = radian;
     }
 
     get rotateZ() {
@@ -37,7 +38,7 @@ export class Camera {
     }
 
     set rotateZ(radian) {
-        this._rotateZ = radian
+        this._rotateZ = radian;
     }
 
     get center() {
@@ -45,7 +46,7 @@ export class Camera {
     }
 
     get eye() {
-        let eye = glMatrix.vec3.create();
+        const eye = glMatrix.vec3.create();
         glMatrix.vec3.rotateX(eye, this._eye, [0, 0, 0], this._rotateX);
         glMatrix.vec3.rotateY(eye, eye, [0, 0, 0], this._rotateY);
         return eye;

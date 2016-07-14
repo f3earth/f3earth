@@ -1,6 +1,4 @@
 export class RasterTileShader {
-    constructor() {}
-
     static get vertexSource() {
         return `
           attribute vec3 aVertexPosition;
