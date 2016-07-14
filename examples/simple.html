@@ -4,7 +4,9 @@
   <meta http-equiv="content-type" content="text/html" charset="utf-8" />
   <title>Simple F3Earth</title>
   <script type="text/javascript" src="../dist/f3Earth.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../dist/mouseWheelZoomInteraction.js" charset="utf-8"></script>
     <script type="text/javascript" src="../dist/doubleClickZoomInteraction.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../dist/dragInteraction.js" charset="utf-8"></script>
 
    <style>
       body {
@@ -26,11 +28,15 @@
       type: 'rasterTile',
       url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
     });
-    doubleClickZoomInteraction=new DoubleClickZoomInteraction();
+   var doubleClickZoomInteraction=new DoubleClickZoomInteraction();
     earth.addInteraction(doubleClickZoomInteraction);
-    earth.once('dblclick',function (e){
-        console.log('once:'+e.toString());
-    })
+
+   var dragInteraction=new DragInteraction();
+    earth.addInteraction(dragInteraction);
+
+    var mouseWheelZoomInteraction=new MouseWheelZoomInteraction();
+    earth.addInteraction(mouseWheelZoomInteraction);
+
 
   </script>
 </body>

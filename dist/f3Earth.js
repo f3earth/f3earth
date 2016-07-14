@@ -67,19 +67,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _context = __webpack_require__(17);
 
-	var _dragPan = __webpack_require__(18);
+	var _camera = __webpack_require__(18);
 
-	var _doubleClickZoom = __webpack_require__(19);
+	var _layerRenderer = __webpack_require__(19);
 
-	var _mouseWheelZoom = __webpack_require__(20);
+	var _observable = __webpack_require__(23);
 
-	var _camera = __webpack_require__(21);
-
-	var _layerRenderer = __webpack_require__(22);
-
-	var _observable = __webpack_require__(26);
-
-	var _domEvent = __webpack_require__(27);
+	var _domEvent = __webpack_require__(24);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -110,10 +104,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _this._sourceLayers = [];
 	    _this._interactions = [];
-	    new _dragPan.DragPan(_this);
+	    //new DragPan(this);
 	    //new DoubleClickZoom(this);
-	    new _mouseWheelZoom.MouseWheelZoom(_this);
-	    _domEvent.DomEvent.on(_this._context.canvas, ['click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mouseout', 'mousemove', 'keypress'], _this._handleDOMEvent, _this);
+	    //new MouseWheelZoom(this);
+	    _domEvent.DomEvent.on(_this._context.canvas, ['click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mouseout', 'mousemove', 'mousewheel', 'keypress'], _this._handleDOMEvent, _this);
 
 	    return _this;
 	  }
@@ -168,6 +162,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_handleDOMEvent',
 	    value: function _handleDOMEvent(e) {
 	      var type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
+	      type = type === 'wheel' ? 'mousewheel' : type;
 	      if (e._stopped) {
 	        return;
 	      }
@@ -7239,147 +7234,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 18 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var DragPan = exports.DragPan = function () {
-	  function DragPan(earth, onDragCallback) {
-	    _classCallCheck(this, DragPan);
-
-	    this._earth = earth;
-
-	    this._isMouseDown = false;
-	    this._prevMouseX = null;
-	    this._prevMouseY = null;
-	    this._bindMouseEventListeners(onDragCallback);
-	  }
-
-	  _createClass(DragPan, [{
-	    key: "_bindMouseEventListeners",
-	    value: function _bindMouseEventListeners(callback) {
-	      var self = this;
-	      this._earth.context.canvas.onmousedown = function (e) {
-	        self._isMouseDown = true;
-	        self._prevMouseX = e.clientX;
-	        self._prevMouseY = e.clientY;
-	      };
-
-	      this._earth.context.canvas.onmouseup = function (e) {
-	        self._isMouseDown = false;
-	      };
-
-	      this._earth.context.canvas.onmousemove = function (e) {
-	        if (self._isMouseDown) {
-	          var deltaX = e.clientX - self._prevMouseX;
-	          var deltaY = e.clientY - self._prevMouseY;
-
-	          var x = -deltaX / 10 % 360;
-	          var y = -deltaY / 10 % 360;
-	          self._earth.rotate(y * Math.PI / 180, x * Math.PI / 180);
-
-	          self._prevMouseX = e.clientX;
-	          self._prevMouseY = e.clientY;
-	        }
-	      };
-
-	      this._earth.context.canvas.onmouseout = function (e) {
-	        self._isMouseDown = false;
-	      };
-	    }
-	  }]);
-
-	  return DragPan;
-	}();
-
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var DoubleClickZoom = exports.DoubleClickZoom = function () {
-	  function DoubleClickZoom(earth, callback) {
-	    _classCallCheck(this, DoubleClickZoom);
-
-	    this._earth = earth;
-	    this._bindMouseEventListeners(callback);
-	  }
-
-	  _createClass(DoubleClickZoom, [{
-	    key: "_bindMouseEventListeners",
-	    value: function _bindMouseEventListeners(callback) {
-	      var self = this;
-	      this._earth.context.canvas.ondblclick = function (e) {
-	        var zoomDelta = 1;
-	        if (e.shiftKey) {
-	          zoomDelta = -1;
-	        }
-	        var zoom = self._earth.zoom + zoomDelta;
-
-	        self._earth.setZoom(zoom);
-	      };
-	    }
-	  }]);
-
-	  return DoubleClickZoom;
-	}();
-
-/***/ },
-/* 20 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var MouseWheelZoom = exports.MouseWheelZoom = function () {
-	  function MouseWheelZoom(earth) {
-	    _classCallCheck(this, MouseWheelZoom);
-
-	    this._earth = earth;
-	    this._bindMouseEventListener();
-	  }
-
-	  _createClass(MouseWheelZoom, [{
-	    key: "_bindMouseEventListener",
-	    value: function _bindMouseEventListener() {
-	      var self = this;
-	      this._earth.context.canvas.onmousewheel = function (e) {
-	        var zoomDelta = -e.deltaY / 100;
-	        var zoom = self._earth.zoom + zoomDelta;
-	        self._earth.setZoom(zoom);
-	      };
-	    }
-	  }]);
-
-	  return MouseWheelZoom;
-	}();
-
-/***/ },
-/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7468,7 +7322,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 22 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7480,7 +7334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _rasterTileLayerRenderer = __webpack_require__(23);
+	var _rasterTileLayerRenderer = __webpack_require__(20);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -7502,7 +7356,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 23 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7518,9 +7372,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _glMatrix2 = _interopRequireDefault(_glMatrix);
 
-	var _shaderLoader = __webpack_require__(24);
+	var _shaderLoader = __webpack_require__(21);
 
-	var _rasterTileShader = __webpack_require__(25);
+	var _rasterTileShader = __webpack_require__(22);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7598,7 +7452,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 24 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7659,7 +7513,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 25 */
+/* 22 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7693,7 +7547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 26 */
+/* 23 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7830,7 +7684,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	;
 
 /***/ },
-/* 27 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';

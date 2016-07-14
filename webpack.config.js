@@ -1,6 +1,8 @@
 module.exports = {
   entry: {
     f3Earth: './src/earth.js',
+    mouseWheelZoomInteraction:'./src/interaction/mouseWheelZoomInteraction.js',
+    dragInteraction:'./src/interaction/dragInteraction.js',
     doubleClickZoomInteraction: './src/interaction/doubleClickZoomInteraction.js'
   },
   output: {

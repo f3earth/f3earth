@@ -7,18 +7,6 @@ import {
 }
 from './context';
 import {
-  DragPan
-}
-from './interaction/dragPan';
-import {
-  DoubleClickZoom
-}
-from './interaction/doubleClickZoom';
-import {
-  MouseWheelZoom
-}
-from './interaction/mouseWheelZoom';
-import {
   Camera
 }
 from './camera';
@@ -50,11 +38,11 @@ class Earth extends Observable{
 
     this._sourceLayers = [];
     this._interactions=[];
-    new DragPan(this);
+    //new DragPan(this);
     //new DoubleClickZoom(this);
-    new MouseWheelZoom(this);
+    //new MouseWheelZoom(this);
     DomEvent.on(this._context.canvas,[ 'click','dblclick','mousedown','mouseup' ,
-        'mouseover','mouseout','mousemove','keypress'], this._handleDOMEvent, this);
+        'mouseover','mouseout','mousemove','mousewheel','keypress'], this._handleDOMEvent, this);
 
   }
   get context() {
@@ -106,6 +94,7 @@ class Earth extends Observable{
   }
   _handleDOMEvent (e) {
     var type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
+    type =type==='wheel'?'mousewheel':type;
     if (e._stopped) { return; }
     var data = {
       originalEvent: e
