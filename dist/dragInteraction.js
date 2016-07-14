@@ -72,9 +72,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by zhangwenjin on 2016/7/13.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-	// @class DragInteraction
-	// Abstract class for earth drag interaction handlers
-
 
 	var DragInteraction = exports.DragInteraction = function (_Interaction) {
 	    _inherits(DragInteraction, _Interaction);
@@ -161,9 +158,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Created by zhangwenjin on 2016/7/13.
+	 * @class Interaction
+	 * Abstract class for earth interaction handlers
 	 */
-	// @class Interaction
-	// Abstract class for earth interaction handlers
 
 	var Interaction = exports.Interaction = function () {
 	    function Interaction() {
@@ -183,9 +180,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function getEarth() {
 	            return this._earth;
 	        }
-	        // @method enable(): this
-	        // Enables the interaction
-
 	    }, {
 	        key: "enable",
 	        value: function enable() {
@@ -196,9 +190,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.addHandle();
 	            return this;
 	        }
-	        // @method disable(): this
-	        // Disables the interaction
-
 	    }, {
 	        key: "disable",
 	        value: function disable() {
@@ -210,9 +201,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.removeHandle();
 	            return this;
 	        }
-	        // @method enabled(): Boolean
-	        // Returns `true` if the interaction is enabled
-
 	    }, {
 	        key: "enabled",
 	        value: function enabled() {

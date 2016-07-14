@@ -80,7 +80,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function MouseWheelZoomInteraction() {
 	        _classCallCheck(this, MouseWheelZoomInteraction);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(MouseWheelZoomInteraction).call(this));
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(MouseWheelZoomInteraction).apply(this, arguments));
 	    }
 
 	    _createClass(MouseWheelZoomInteraction, [{
@@ -122,9 +122,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Created by zhangwenjin on 2016/7/13.
+	 * @class Interaction
+	 * Abstract class for earth interaction handlers
 	 */
-	// @class Interaction
-	// Abstract class for earth interaction handlers
 
 	var Interaction = exports.Interaction = function () {
 	    function Interaction() {
@@ -144,9 +144,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function getEarth() {
 	            return this._earth;
 	        }
-	        // @method enable(): this
-	        // Enables the interaction
-
 	    }, {
 	        key: "enable",
 	        value: function enable() {
@@ -157,9 +154,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.addHandle();
 	            return this;
 	        }
-	        // @method disable(): this
-	        // Disables the interaction
-
 	    }, {
 	        key: "disable",
 	        value: function disable() {
@@ -171,9 +165,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.removeHandle();
 	            return this;
 	        }
-	        // @method enabled(): Boolean
-	        // Returns `true` if the interaction is enabled
-
 	    }, {
 	        key: "enabled",
 	        value: function enabled() {

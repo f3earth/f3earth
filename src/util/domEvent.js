@@ -9,7 +9,7 @@ export class DomEvent {
      * (object the `this` keyword will point to).
     */
     static on(obj, types, fn, context) {
-        types.forEach(type => this._on(obj, types[type], fn, context));
+        types.forEach(type => this._on(obj, type, fn, context));
         return this;
     }
     /**
@@ -20,7 +20,7 @@ export class DomEvent {
      * context to `un` in order to remove the listener.
      */
     static un(obj, types, fn, context) {
-        types.forEach(type => this._un(obj, types[type], fn, context));
+        types.forEach(type => this._un(obj, type, fn, context));
         return this;
     }
     static _on(obj, type, fn, context) {
