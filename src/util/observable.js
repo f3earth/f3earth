@@ -12,10 +12,10 @@ export class Observable {
      * @param {Function} listener Function to be called when the event is fired
      * @returns {Object} `this`
      */
-    on(type, listener,context) {
+    on(type, listener,thisObj) {
         this._listens = this._listens || {};
         this._listens[type] = this._listens[type] || [];
-        let newListener={fn: listener, ctx: context};
+        let newListener={fn: listener, ctx: thisObj};
         this._listens[type].push(newListener);
         return this;
     }
@@ -27,7 +27,7 @@ export class Observable {
      * @param {Function} [listener] Function to be called when the observe is trigger. If none is specified all listeners are removed
      * @returns {Object} `this`
      */
-    un(type, listener,context) {
+    un(type, listener,thisObj) {
         if (!type) {
             return this;
         }
@@ -57,14 +57,14 @@ export class Observable {
      * @param {Function} listener Function to be called once when the event is trigger
      * @returns {Object} `this`
      */
-    once(type, listener,context) {
+    once(type, listener,thisObj) {
         let wrapper = function() {
-            this.un(type, listener,context);
-            this.un(type,wrapper,context);
+            this.un(type, listener,thisObj);
+            this.un(type,wrapper,thisObj);
         }.bind(this);
         return this
-            .on(type,listener,context)
-            .on(type, wrapper,context);
+            .on(type,listener,thisObj)
+            .on(type, wrapper,thisObj);
     }
 
     /**

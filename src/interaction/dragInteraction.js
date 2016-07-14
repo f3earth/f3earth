@@ -1,8 +1,7 @@
 /**
  * Created by zhangwenjin on 2016/7/13.
  */
-// @class DragInteraction
-// Abstract class for earth drag interaction handlers
+
 import {
     Interaction
 } from './interaction'

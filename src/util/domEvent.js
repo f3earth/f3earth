@@ -2,21 +2,25 @@
  * Created by zhangwenjin on 2016/7/13.
  */
 export class DomEvent {
-    // @function on(obj: HTMLElement, types: [], fn: Function, context?: Object): this
-    // Adds a listener function (`fn`) to a particular DOM event type of the
-    // element `obj`. You can optionally specify the context of the listener
-    // (object the `this` keyword will point to).
+    /**
+     * @function on(obj: HTMLElement, types: [], fn: Function, context?: Object): this
+     * Adds a listener function (`fn`) to a particular DOM event type of the
+     * element `obj`. You can optionally specify the context of the listener
+     * (object the `this` keyword will point to).
+    */
     static on(obj, types, fn, context) {
         for (let type in types) {
             this._on(obj,  types[type], fn,context);
         }
         return this;
     }
-    // @function un(obj: HTMLElement, types: [], fn: Function, context?: Object): this
-    // Removes a previously added listener function. If no function is specified,
-    // it will remove all the listeners of that particular DOM event from the element.
-    // Note that if you passed a custom context to on, you must pass the same
-    // context to `un` in order to remove the listener.
+    /**
+     * @function un(obj: HTMLElement, types: [], fn: Function, context?: Object): this
+     * Removes a previously added listener function. If no function is specified,
+     * it will remove all the listeners of that particular DOM event from the element.
+     * Note that if you passed a custom context to on, you must pass the same
+     * context to `un` in order to remove the listener.
+     */
     static un (obj, types, fn, context) {
             for (var type in types) {
                 this._un(obj,  types[type], fn,context);
@@ -72,7 +76,9 @@ export class DomEvent {
         }
         return this;
     }
-    // check if element really left/entered the event target (for mouseenter/mouseleave)
+    /**
+     * check if element really left/entered the event target (for mouseenter/mouseleave)
+     */
     static _isExternalTarget (el, e) {
 
         var related = e.relatedTarget;
