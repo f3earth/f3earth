@@ -7845,17 +7845,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Note that if you passed a custom context to on, you must pass the same
 	         * context to `un` in order to remove the listener.
 	         */
+	        /** now no need to use this method,so not suppot this function
+	        * static un(obj, types, fn, context) {
+	        *    types.forEach(type => this._un(obj, type, fn, context));
+	        *    return this;
+	        * }
+	        */
 
-	    }, {
-	        key: 'un',
-	        value: function un(obj, types, fn, context) {
-	            var _this2 = this;
-
-	            types.forEach(function (type) {
-	                return _this2._un(obj, type, fn, context);
-	            });
-	            return this;
-	        }
 	    }, {
 	        key: '_on',
 	        value: function _on(obj, type, fn, context) {
@@ -7885,26 +7881,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return this;
 	        }
-	    }, {
-	        key: '_un',
-	        value: function _un(obj, type, fn, context) {
-	            if ('removeEventListener' in obj) {
-	                if (type === 'mousewheel') {
-	                    obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', fn, false);
-	                } else {
-	                    var eventType = type;
-	                    if (type === 'mouseenter') {
-	                        eventType = 'mouseover';
-	                    } else if (type === 'mouseleave') {
-	                        eventType = 'mouseout';
-	                    }
-	                    obj.removeEventListener(eventType, fn, false);
-	                }
-	            } else if ('detachEvent' in obj) {
-	                obj.detachEvent('on' + type, fn);
-	            }
-	            return this;
-	        }
+
+	        // static _un(obj, type, fn, context) {
+	        //     if ('removeEventListener' in obj) {
+	        //         if (type === 'mousewheel') {
+	        //             obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', fn, false);
+	        //         } else {
+	        //             let eventType = type;
+	        //             if (type === 'mouseenter') {
+	        //                 eventType = 'mouseover';
+	        //             } else if (type === 'mouseleave') {
+	        //                 eventType = 'mouseout';
+	        //             }
+	        //             obj.removeEventListener(
+	        //                 eventType, fn, false);
+	        //         }
+	        //     } else if ('detachEvent' in obj) {
+	        //         obj.detachEvent(`on${type}`, fn);
+	        //     }
+	        //     return this;
+	        // }
+
 	        /**
 	         * check if element really left/entered the event target (for mouseenter/mouseleave)
 	         */
