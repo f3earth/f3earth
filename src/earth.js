@@ -5,7 +5,6 @@ import { Observable } from './util/observable';
 import { DomEvent } from './util/domEvent';
 
 const EARTH_RADIUS = 6378137;
-
 class Earth extends Observable {
     constructor(containerId) {
         super();
@@ -64,8 +63,8 @@ class Earth extends Observable {
     get zoom() {
         return this._zoom;
     }
-
     setZoom(level) {
+        this.trigger(Earth.ZOOM_START, { oldLevel: this._zoom, newlevel: level });
         let validLevel = level;
         if (level > 18) {
             validLevel = 18;
@@ -77,6 +76,7 @@ class Earth extends Observable {
             this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
             this.render();
         }
+        this.trigger(Earth.ZOOM_END, { oldLevel: this._zoom, newlevel: level });
     }
 
     addLayer(layer) {
@@ -115,7 +115,8 @@ class Earth extends Observable {
         return this;
     }
 }
-
+Earth.ZOOM_START = Symbol('zoomStart');
+Earth.ZOOM_END = Symbol('zoomEnd');
 export {
 Earth
 };
