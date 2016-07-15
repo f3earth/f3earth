@@ -135,6 +135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'setZoom',
 	        value: function setZoom(level) {
+	            this.trigger(Earth.ZOOM_START, { oldLevel: this._zoom, newlevel: level });
 	            var validLevel = level;
 	            if (level > 18) {
 	                validLevel = 18;
@@ -146,6 +147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
 	                this.render();
 	            }
+	            this.trigger(Earth.ZOOM_END, { oldLevel: this._zoom, newlevel: level });
 	        }
 	    }, {
 	        key: 'addLayer',
@@ -212,6 +214,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Earth;
 	}(_observable.Observable);
 
+	Earth.ZOOM_START = Symbol('zoomStart');
+	Earth.ZOOM_END = Symbol('zoomEnd');
 	exports.Earth = Earth;
 
 /***/ },
@@ -7579,25 +7583,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        /**
-	         * trigger observe of a given string type with the given data object
+	         * trigger observe of a given string eventtype with the given data object
 	         *
-	         * @param {string} type Observable type
+	         * @param {string} eventtype Observable eventtype
 	         * @param {Object} [data] Optional data passed to the event receiver (e.g. {@link event})
 	         * @returns {Object} `this`
 	         */
 
 	    }, {
 	        key: "trigger",
-	        value: function trigger(type, data) {
+	        value: function trigger(eventtype, data) {
 	            var _this2 = this;
 
-	            if (!this.hasListens(type)) return this;
+	            if (!this.hasListens(eventtype)) return this;
 	            var event = {};
 	            Object.assign(event, data);
-	            Object.assign(event, { type: type, target: this });
+	            Object.assign(event, { type: eventtype, target: this });
 
 	            // make sure adding/removing listeners inside other listeners won't cause infinite loop
-	            var listeners = this._listens[type].slice();
+	            var listeners = this._listens[eventtype].slice();
 	            listeners.forEach(function (l) {
 	                return l.fn.call(l.ctx || _this2, event);
 	            });

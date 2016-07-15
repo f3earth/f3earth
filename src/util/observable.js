@@ -69,20 +69,20 @@ export class Observable {
     }
 
     /**
-     * trigger observe of a given string type with the given data object
+     * trigger observe of a given string eventtype with the given data object
      *
-     * @param {string} type Observable type
+     * @param {string} eventtype Observable eventtype
      * @param {Object} [data] Optional data passed to the event receiver (e.g. {@link event})
      * @returns {Object} `this`
      */
-    trigger(type, data) {
-        if (!this.hasListens(type)) return this;
+    trigger(eventtype, data) {
+        if (!this.hasListens(eventtype)) return this;
         const event = {};
         Object.assign(event, data);
-        Object.assign(event, { type, target: this });
+        Object.assign(event, { type: eventtype, target: this });
 
         // make sure adding/removing listeners inside other listeners won't cause infinite loop
-        const listeners = this._listens[type].slice();
+        const listeners = this._listens[eventtype].slice();
         listeners.forEach(l => l.fn.call(l.ctx || this, event));
         return this;
     }
