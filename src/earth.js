@@ -64,7 +64,7 @@ class Earth extends Observable {
         return this._zoom;
     }
     setZoom(level) {
-        this.trigger(Earth.ZOOM_START, { oldLevel: this._zoom, newlevel: level });
+        this.trigger(Earth.ZOOM_START, { oldLevel: this._zoom, newLevel: level });
         let validLevel = level;
         if (level > 18) {
             validLevel = 18;
@@ -76,7 +76,7 @@ class Earth extends Observable {
             this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
             this.render();
         }
-        this.trigger(Earth.ZOOM_END, { oldLevel: this._zoom, newlevel: level });
+        this.trigger(Earth.ZOOM_END, { oldLevel: this._zoom, newLevel: level });
     }
 
     addLayer(layer) {
