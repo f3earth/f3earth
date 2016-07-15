@@ -8,10 +8,12 @@ export class DomEvent {
      * element `obj`. You can optionally specify the context of the listener
      * (object the `this` keyword will point to).
     */
+    /*now no need to use this method,so not suppot this function
     static on(obj, types, fn, context) {
         types.forEach(type => this._on(obj, type, fn, context));
         return this;
     }
+    */
     /**
      * @function un(obj: HTMLElement, types: [], fn: Function, context?: Object): this
      * Removes a previously added listener function. If no function is specified,
@@ -49,6 +51,7 @@ export class DomEvent {
         }
         return this;
     }
+    /*
     static _un(obj, type, fn, context) {
         if ('removeEventListener' in obj) {
             if (type === 'mousewheel') {
@@ -68,6 +71,7 @@ export class DomEvent {
         }
         return this;
     }
+    */
     /**
      * check if element really left/entered the event target (for mouseenter/mouseleave)
      */
