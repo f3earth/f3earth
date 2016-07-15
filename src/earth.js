@@ -71,11 +71,12 @@ class Earth extends Observable {
             validLevel = 1;
         }
         if (validLevel !== this._zoom) {
-            this.trigger(Earth.ZOOM_START, { oldLevel: this._zoom, newLevel: validLevel });
+            this.trigger(Earth.EVENT_TYPE_ZOOM_START,
+                { oldLevel: this._zoom, newLevel: validLevel });
             this._zoom = validLevel;
             this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
             this.render();
-            this.trigger(Earth.ZOOM_END, { oldLevel: this._zoom, newLevel: validLevel });
+            this.trigger(Earth.EVENT_TYPE_ZOOM_END, { oldLevel: this._zoom, newLevel: validLevel });
         }
     }
 
@@ -115,8 +116,8 @@ class Earth extends Observable {
         return this;
     }
 }
-Earth.ZOOM_START = Symbol('zoomStart');
-Earth.ZOOM_END = Symbol('zoomEnd');
+Earth.EVENT_TYPE_ZOOM_START = Symbol('zoomStart');
+Earth.EVENT_TYPE_ZOOM_END = Symbol('zoomEnd');
 export {
 Earth
 };

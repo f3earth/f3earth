@@ -34,7 +34,7 @@
 
         var mouseWheelZoomInteraction=new MouseWheelZoomInteraction();
         earth.addInteraction(mouseWheelZoomInteraction);
-        earth.on(Earth.ZOOM_START,function (e) {
+        earth.on(Earth.EVENT_TYPE_ZOOM_START,function (e) {
             console.log(e);
         })
 
