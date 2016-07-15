@@ -135,7 +135,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'setZoom',
 	        value: function setZoom(level) {
-	            this.trigger(Earth.ZOOM_START, { oldLevel: this._zoom, newlevel: level });
 	            var validLevel = level;
 	            if (level > 18) {
 	                validLevel = 18;
@@ -143,11 +142,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                validLevel = 1;
 	            }
 	            if (validLevel !== this._zoom) {
+	                this.trigger(Earth.ZOOM_START, { oldLevel: this._zoom, newLevel: level });
 	                this._zoom = validLevel;
 	                this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
 	                this.render();
+	                this.trigger(Earth.ZOOM_END, { oldLevel: this._zoom, newLevel: level });
 	            }
-	            this.trigger(Earth.ZOOM_END, { oldLevel: this._zoom, newlevel: level });
 	        }
 	    }, {
 	        key: 'addLayer',
