@@ -1,20 +1,40 @@
 <html>
 
 <head>
-  <meta http-equiv="content-type" content="text/html" charset="utf-8" />
-  <title>Simple F3Earth</title>
-  <script type="text/javascript" src="../dist/f3Earth.js" charset="utf-8"></script>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+    <title>Simple F3Earth</title>
+    <script type="text/javascript" src="../dist/f3Earth.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../dist/mouseWheelZoomInteraction.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../dist/doubleClickZoomInteraction.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../dist/dragInteraction.js" charset="utf-8"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+        
+        #earth {
+            height: 100vh;
+        }
+    </style>
 </head>
 
 <body>
-  <div id="earth" style="width: 100%; height: 100%;"></div>
-  <script type="application/javascript">
-    var earth = new fe.Earth("earth");
-    earth.addLayer({
-      type: 'rasterTile',
-      url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
-    });
-  </script>
+    <div id="earth"></div>
+    <script type="application/javascript">
+        var earth = new Earth("earth");
+        earth.addLayer({
+            type: 'rasterTile',
+            url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
+        });
+        var doubleClickZoomInteraction=new DoubleClickZoomInteraction();
+        earth.addInteraction(doubleClickZoomInteraction);
+
+        var dragInteraction=new DragInteraction();
+        earth.addInteraction(dragInteraction);
+
+        var mouseWheelZoomInteraction=new MouseWheelZoomInteraction();
+        earth.addInteraction(mouseWheelZoomInteraction);
+    </script>
 </body>
 
 </html>
