@@ -3,6 +3,7 @@
  */
 
 import { Interaction } from './interaction';
+import { Const } from '../const';
 export class DragInteraction extends Interaction {
     constructor() {
         super();
@@ -11,16 +12,18 @@ export class DragInteraction extends Interaction {
         this._prevMouseY = null;
     }
     addHandle() {
-        this._earth.on('mousedown', this._onmousedown, this);
-        this._earth.on('mouseup', this._onmouseup, this);
-        this._earth.on('mousemove', this._onmousemove, this);
-        this._earth.on('mouseout', this._onmouseout, this);
+        this._earth.on(Const.EarthEventType.MOUSEDOWN, this._onmousedown, this)
+                    .on(Const.EarthEventType.MOUSEUP, this._onmouseup, this)
+                    .on(Const.EarthEventType.MOUSEMOVE, this._onmousemove, this)
+                    .on(Const.EarthEventType.MOUSEOVER, this._onmouseout, this);
+        return this;
     }
     removeHandle() {
-        this._earth.un('mousedown', this._onmousedown, this);
-        this._earth.un('mouseup', this._onmouseup, this);
-        this._earth.un('mousemove', this._onmousemove, this);
-        this._earth.un('mouseout', this._onmouseout, this);
+        this._earth.un(Const.EarthEventType.MOUSEDOWN, this._onmousedown, this)
+                    .un(Const.EarthEventType.MOUSEUP, this._onmouseup, this)
+                    .un(Const.EarthEventType.MOUSEMOVE, this._onmousemove, this)
+                    .un(Const.EarthEventType.MOUSEOVER, this._onmouseout, this);
+        return this;
     }
     _onmousedown(e) {
         const originalEvent = e.originalEvent;

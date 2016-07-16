@@ -65,6 +65,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _interaction = __webpack_require__(1);
 
+	var _const = __webpack_require__(2);
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -90,18 +92,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(DragInteraction, [{
 	        key: 'addHandle',
 	        value: function addHandle() {
-	            this._earth.on('mousedown', this._onmousedown, this);
-	            this._earth.on('mouseup', this._onmouseup, this);
-	            this._earth.on('mousemove', this._onmousemove, this);
-	            this._earth.on('mouseout', this._onmouseout, this);
+	            this._earth.on(_const.Const.EarthEventType.MOUSEDOWN, this._onmousedown, this).on(_const.Const.EarthEventType.MOUSEUP, this._onmouseup, this).on(_const.Const.EarthEventType.MOUSEMOVE, this._onmousemove, this).on(_const.Const.EarthEventType.MOUSEOVER, this._onmouseout, this);
+	            return this;
 	        }
 	    }, {
 	        key: 'removeHandle',
 	        value: function removeHandle() {
-	            this._earth.un('mousedown', this._onmousedown, this);
-	            this._earth.un('mouseup', this._onmouseup, this);
-	            this._earth.un('mousemove', this._onmousemove, this);
-	            this._earth.un('mouseout', this._onmouseout, this);
+	            this._earth.un(_const.Const.EarthEventType.MOUSEDOWN, this._onmousedown, this).un(_const.Const.EarthEventType.MOUSEUP, this._onmouseup, this).un(_const.Const.EarthEventType.MOUSEMOVE, this._onmousemove, this).un(_const.Const.EarthEventType.MOUSEOVER, this._onmouseout, this);
+	            return this;
 	        }
 	    }, {
 	        key: '_onmousedown',
@@ -174,6 +172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "setEarth",
 	        value: function setEarth(earth) {
 	            this._earth = earth;
+	            return this;
 	        }
 	    }, {
 	        key: "getEarth",
@@ -210,6 +209,44 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return Interaction;
 	}();
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * Created by zhangwenjin on 2016/7/16.
+	 */
+
+	var Const = function Const() {
+	    _classCallCheck(this, Const);
+	};
+
+	Const.EarthEventType = {
+	    ZOOM_START: 'earthZoomStart',
+	    ZOOM_END: 'earthZoomEnd',
+	    CLICK: 'earthClick',
+	    DBLCLICK: 'earthDblclick',
+	    MOUSEDOWN: 'earthMousedown',
+	    MOUSEUP: 'earthMouseup',
+	    MOUSEOVER: 'earthMouseover',
+	    MOUSEOUT: 'earthMouseout',
+	    MOUSEMOVE: 'earthMousemove',
+	    MOUSEWHEEL: 'earthMousewheel',
+	    KEYPRESS: 'earthKeypress'
+	};
+	Const.TileSourceEventType = {
+	    CHANGE: 'tileSourceChange'
+	};
+	exports.Const = Const;
 
 /***/ }
 /******/ ])

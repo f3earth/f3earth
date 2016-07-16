@@ -9,7 +9,7 @@ export class DomEvent {
      * (object the `this` keyword will point to).
     */
     static on(obj, types, fn, context) {
-        types.forEach(type => this._on(obj, type, fn, context));
+        types.forEach(item => this._on(obj, item, fn, context));
         return this;
     }
     /**
@@ -25,7 +25,8 @@ export class DomEvent {
     *    return this;
     * }
     */
-    static _on(obj, type, fn, context) {
+    static _on(obj, item, fn, context) {
+        const type = item.originalEvent;
         const self = this;
         let handler = (e) => fn.call(context || obj, e || window.event);
 
