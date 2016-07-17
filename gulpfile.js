@@ -26,8 +26,8 @@ gulp.task('webpack', () => {
             mouseWheelZoomInteraction: './src/interaction/mouseWheelZoomInteraction.js',
             dragInteraction: './src/interaction/dragInteraction.js',
             doubleClickZoomInteraction: './src/interaction/doubleClickZoomInteraction.js',
-            // control: './src/control/control'
-            attributionControl: './src/control/attributionControl'
+            // control: './src/control/control.js'
+            attributionControl: './src/control/attributionControl.js'
         },
         output: {
             libraryTarget: 'umd',
