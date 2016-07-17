@@ -104,7 +104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        _this._sourceLayers = [];
 	        _this._interactions = [];
-	        _this._eventType = [{ originalEvent: 'click', event: _const.Const.EarthEventType.CLICK }, { originalEvent: 'dblclick', event: _const.Const.EarthEventType.DBLCLICK }, { originalEvent: 'mousedown', event: _const.Const.EarthEventType.MOUSEDOWN }, { originalEvent: 'mouseup', event: _const.Const.EarthEventType.MOUSEUP }, { originalEvent: 'mouseover', event: _const.Const.EarthEventType.MOUSEOVER }, { originalEvent: 'mouseout', event: _const.Const.EarthEventType.MOUSEOUT }, { originalEvent: 'mousemove', event: _const.Const.EarthEventType.MOUSEMOVE }, { originalEvent: 'mousewheel', event: _const.Const.EarthEventType.MOUSEWHEEL }, { originalEvent: 'keypress', event: _const.Const.EarthEventType.KEYPRESS }];
+	        _this._eventType = new Map([['click', _const.Const.EarthEventType.CLICK], ['dblclick', _const.Const.EarthEventType.DBLCLICK], ['mousedown', _const.Const.EarthEventType.MOUSEDOWN], ['mouseup', _const.Const.EarthEventType.MOUSEUP], ['mouseover', _const.Const.EarthEventType.MOUSEOVER], ['mouseout', _const.Const.EarthEventType.MOUSEOUT], ['mousemove', _const.Const.EarthEventType.MOUSEMOVE], ['mousewheel', _const.Const.EarthEventType.MOUSEWHEEL], ['keypress', _const.Const.EarthEventType.KEYPRESS]]);
 	        _domEvent.DomEvent.onKeys(_this._context.canvas, _this._eventType, _this._handleDOMEvent, _this);
 	        return _this;
 	    }
@@ -167,14 +167,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_getEventType',
 	        value: function _getEventType(type) {
-	            var eventType = null;
-	            for (var i = 0, len = this._eventType.length; i < len; i++) {
-	                var item = this._eventType[i];
-	                if (item.originalEvent === type) {
-	                    eventType = item.event;
-	                }
-	            }
-	            return eventType;
+	            return this._eventType.get(type);
 	        }
 	    }, {
 	        key: '_handleDOMEvent',
@@ -184,11 +177,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            var type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
 	            type = type === 'wheel' ? 'mousewheel' : type;
-	            var evetType = this._getEventType(type);
+	            var eventType = this._getEventType(type);
 	            var data = {
 	                originalEvent: e
 	            };
-	            this.trigger(evetType, data);
+	            this.trigger(eventType, data);
 	        }
 	    }, {
 	        key: 'addInteraction',
@@ -7885,8 +7878,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function onKeys(obj, types, fn, context) {
 	            var _this = this;
 
-	            types.forEach(function (item) {
-	                return _this.on(obj, item.originalEvent, fn, context);
+	            types.keys().forEach(function (type) {
+	                return _this.on(obj, type, fn, context);
 	            });
 	            return this;
 	        }

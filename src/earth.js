@@ -21,15 +21,16 @@ class Earth extends Observable {
 
         this._sourceLayers = [];
         this._interactions = [];
-        this._eventType = [{ originalEvent: 'click', event: Const.EarthEventType.CLICK },
-            { originalEvent: 'dblclick', event: Const.EarthEventType.DBLCLICK },
-            { originalEvent: 'mousedown', event: Const.EarthEventType.MOUSEDOWN },
-            { originalEvent: 'mouseup', event: Const.EarthEventType.MOUSEUP },
-            { originalEvent: 'mouseover', event: Const.EarthEventType.MOUSEOVER },
-            { originalEvent: 'mouseout', event: Const.EarthEventType.MOUSEOUT },
-            { originalEvent: 'mousemove', event: Const.EarthEventType.MOUSEMOVE },
-            { originalEvent: 'mousewheel', event: Const.EarthEventType.MOUSEWHEEL },
-            { originalEvent: 'keypress', event: Const.EarthEventType.KEYPRESS }];
+        this._eventType = new Map([['click', Const.EarthEventType.CLICK],
+            ['dblclick', Const.EarthEventType.DBLCLICK],
+            ['mousedown', Const.EarthEventType.MOUSEDOWN],
+            ['mouseup', Const.EarthEventType.MOUSEUP],
+            ['mouseover', Const.EarthEventType.MOUSEOVER],
+            ['mouseout', Const.EarthEventType.MOUSEOUT],
+            ['mousemove', Const.EarthEventType.MOUSEMOVE],
+            ['mousewheel', Const.EarthEventType.MOUSEWHEEL],
+            ['keypress', Const.EarthEventType.KEYPRESS]
+        ]);
         DomEvent.onKeys(this._context.canvas, this._eventType, this._handleDOMEvent, this);
     }
 
@@ -86,24 +87,17 @@ class Earth extends Observable {
         this._sourceLayers.forEach(layer => layer.render(this._camera));
     }
     _getEventType(type) {
-        let eventType = null;
-        for (let i = 0, len = this._eventType.length; i < len; i++) {
-            const item = this._eventType[i];
-            if (item.originalEvent === type) {
-                eventType = item.event;
-            }
-        }
-        return eventType;
+        return this._eventType.get(type);
     }
     _handleDOMEvent(e) {
         if (e._stopped) { return; }
         let type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
         type = type === 'wheel' ? 'mousewheel' : type;
-        const evetType = this._getEventType(type);
+        const eventType = this._getEventType(type);
         const data = {
             originalEvent: e
         };
-        this.trigger(evetType, data);
+        this.trigger(eventType, data);
     }
     addInteraction(interaction) {
         interaction.setEarth(this);
