@@ -16,8 +16,8 @@ export class AttributionControl extends Control {
             text-decoration:none;
             position:absolute;
 			top:100;
-			right:0;;
-        document.body.appendChild(ele)`;
+			right:0;`;
+        document.body.appendChild(ele);
         super(ele);
         DomEvent.on(this.element, ['click'], this._clickHandler, this);
     }
