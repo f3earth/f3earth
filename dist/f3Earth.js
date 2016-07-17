@@ -105,7 +105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this._sourceLayers = [];
 	        _this._interactions = [];
 	        _this._eventType = [{ originalEvent: 'click', event: _const.Const.EarthEventType.CLICK }, { originalEvent: 'dblclick', event: _const.Const.EarthEventType.DBLCLICK }, { originalEvent: 'mousedown', event: _const.Const.EarthEventType.MOUSEDOWN }, { originalEvent: 'mouseup', event: _const.Const.EarthEventType.MOUSEUP }, { originalEvent: 'mouseover', event: _const.Const.EarthEventType.MOUSEOVER }, { originalEvent: 'mouseout', event: _const.Const.EarthEventType.MOUSEOUT }, { originalEvent: 'mousemove', event: _const.Const.EarthEventType.MOUSEMOVE }, { originalEvent: 'mousewheel', event: _const.Const.EarthEventType.MOUSEWHEEL }, { originalEvent: 'keypress', event: _const.Const.EarthEventType.KEYPRESS }];
-	        _domEvent.DomEvent.on(_this._context.canvas, _this._eventType, _this._handleDOMEvent, _this);
+	        _domEvent.DomEvent.onKeys(_this._context.canvas, _this._eventType, _this._handleDOMEvent, _this);
 	        return _this;
 	    }
 
@@ -7874,19 +7874,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    _createClass(DomEvent, null, [{
-	        key: 'on',
+	        key: 'onKeys',
 
 	        /**
-	         * @function on(obj: HTMLElement, types: [], fn: Function, context?: Object): this
+	         * @function onKeys(obj: HTMLElement, types: [], fn: Function, context?: Object): this
 	         * Adds a listener function (`fn`) to a particular DOM event type of the
 	         * element `obj`. You can optionally specify the context of the listener
 	         * (object the `this` keyword will point to).
 	        */
-	        value: function on(obj, types, fn, context) {
+	        value: function onKeys(obj, types, fn, context) {
 	            var _this = this;
 
 	            types.forEach(function (item) {
-	                return _this._on(obj, item, fn, context);
+	                return _this.on(obj, item.originalEvent, fn, context);
 	            });
 	            return this;
 	        }
@@ -7905,9 +7905,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        */
 
 	    }, {
-	        key: '_on',
-	        value: function _on(obj, item, fn, context) {
-	            var type = item.originalEvent;
+	        key: 'on',
+	        value: function on(obj, type, fn, context) {
 	            var self = this;
 	            var handler = function handler(e) {
 	                return fn.call(context || obj, e || window.event);

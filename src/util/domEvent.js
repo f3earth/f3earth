@@ -3,13 +3,13 @@
  */
 export class DomEvent {
     /**
-     * @function on(obj: HTMLElement, types: [], fn: Function, context?: Object): this
+     * @function onKeys(obj: HTMLElement, types: [], fn: Function, context?: Object): this
      * Adds a listener function (`fn`) to a particular DOM event type of the
      * element `obj`. You can optionally specify the context of the listener
      * (object the `this` keyword will point to).
     */
-    static on(obj, types, fn, context) {
-        types.forEach(item => this._on(obj, item, fn, context));
+    static onKeys(obj, types, fn, context) {
+        types.forEach(item => this.on(obj, item.originalEvent, fn, context));
         return this;
     }
     /**
@@ -25,8 +25,7 @@ export class DomEvent {
     *    return this;
     * }
     */
-    static _on(obj, item, fn, context) {
-        const type = item.originalEvent;
+    static on(obj, type, fn, context) {
         const self = this;
         let handler = (e) => fn.call(context || obj, e || window.event);
 

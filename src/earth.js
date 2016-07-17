@@ -30,7 +30,7 @@ class Earth extends Observable {
             { originalEvent: 'mousemove', event: Const.EarthEventType.MOUSEMOVE },
             { originalEvent: 'mousewheel', event: Const.EarthEventType.MOUSEWHEEL },
             { originalEvent: 'keypress', event: Const.EarthEventType.KEYPRESS }];
-        DomEvent.on(this._context.canvas, this._eventType, this._handleDOMEvent, this);
+        DomEvent.onKeys(this._context.canvas, this._eventType, this._handleDOMEvent, this);
     }
 
     get context() {
