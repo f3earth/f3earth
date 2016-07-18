@@ -68,12 +68,13 @@ class Earth extends Observable {
             validLevel = 1;
         }
         if (validLevel !== this._zoom) {
-            this.trigger(Earth.EVENT_TYPE_ZOOM_START,
+            this.trigger(Const.EarthEventType.ZOOM_START,
                 { oldLevel: this._zoom, newLevel: validLevel });
             this._zoom = validLevel;
             this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
             this.render();
-            this.trigger(Earth.EVENT_TYPE_ZOOM_END, { oldLevel: this._zoom, newLevel: validLevel });
+            this.trigger(Const.EarthEventType.ZOOM_END,
+                { oldLevel: this._zoom, newLevel: validLevel });
         }
     }
 
@@ -86,14 +87,11 @@ class Earth extends Observable {
     render() {
         this._sourceLayers.forEach(layer => layer.render(this._camera));
     }
-    _getEventType(type) {
-        return this._eventType.get(type);
-    }
     _handleDOMEvent(e) {
         if (e._stopped) { return; }
         let type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
         type = type === 'wheel' ? 'mousewheel' : type;
-        const eventType = this._getEventType(type);
+        const eventType = this._eventType.get(type);
         const data = {
             originalEvent: e
         };

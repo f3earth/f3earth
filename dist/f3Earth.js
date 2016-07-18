@@ -141,11 +141,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                validLevel = 1;
 	            }
 	            if (validLevel !== this._zoom) {
-	                this.trigger(Earth.EVENT_TYPE_ZOOM_START, { oldLevel: this._zoom, newLevel: validLevel });
+	                this.trigger(_const.Const.EarthEventType.ZOOM_START, { oldLevel: this._zoom, newLevel: validLevel });
 	                this._zoom = validLevel;
 	                this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
 	                this.render();
-	                this.trigger(Earth.EVENT_TYPE_ZOOM_END, { oldLevel: this._zoom, newLevel: validLevel });
+	                this.trigger(_const.Const.EarthEventType.ZOOM_END, { oldLevel: this._zoom, newLevel: validLevel });
 	            }
 	        }
 	    }, {
@@ -165,11 +165,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 	        }
 	    }, {
-	        key: '_getEventType',
-	        value: function _getEventType(type) {
-	            return this._eventType.get(type);
-	        }
-	    }, {
 	        key: '_handleDOMEvent',
 	        value: function _handleDOMEvent(e) {
 	            if (e._stopped) {
@@ -177,7 +172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            var type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
 	            type = type === 'wheel' ? 'mousewheel' : type;
-	            var eventType = this._getEventType(type);
+	            var eventType = this._eventType.get(type);
 	            var data = {
 	                originalEvent: e
 	            };
@@ -7876,11 +7871,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * (object the `this` keyword will point to).
 	        */
 	        value: function onKeys(obj, types, fn, context) {
-	            var _this = this;
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
 
-	            types.keys().forEach(function (type) {
-	                return _this.on(obj, type, fn, context);
-	            });
+	            try {
+	                for (var _iterator = types.keys()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var key = _step.value;
+
+	                    this.on(obj, key, fn, context);
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+
 	            return this;
 	        }
 	        /**

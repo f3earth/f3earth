@@ -9,7 +9,9 @@ export class DomEvent {
      * (object the `this` keyword will point to).
     */
     static onKeys(obj, types, fn, context) {
-        types.keys().forEach(type => this.on(obj, type, fn, context));
+        for (const key of types.keys()) {
+            this.on(obj, key, fn, context);
+        }
         return this;
     }
     /**
