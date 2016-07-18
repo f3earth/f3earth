@@ -105,7 +105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this._sourceLayers = [];
 	        _this._interactions = [];
 	        _this._eventType = new Map([['click', _const.Const.EarthEventType.CLICK], ['dblclick', _const.Const.EarthEventType.DBLCLICK], ['mousedown', _const.Const.EarthEventType.MOUSEDOWN], ['mouseup', _const.Const.EarthEventType.MOUSEUP], ['mouseover', _const.Const.EarthEventType.MOUSEOVER], ['mouseout', _const.Const.EarthEventType.MOUSEOUT], ['mousemove', _const.Const.EarthEventType.MOUSEMOVE], ['mousewheel', _const.Const.EarthEventType.MOUSEWHEEL], ['keypress', _const.Const.EarthEventType.KEYPRESS]]);
-	        _domEvent.DomEvent.onKeys(_this._context.canvas, _this._eventType, _this._handleDOMEvent, _this);
+	        _domEvent.DomEvent.onMulti(_this._context.canvas, _this._eventType, _this._handleDOMEvent, _this);
 	        return _this;
 	    }
 
@@ -7862,15 +7862,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    _createClass(DomEvent, null, [{
-	        key: 'onKeys',
+	        key: 'onMulti',
 
 	        /**
-	         * @function onKeys(obj: HTMLElement, types: [], fn: Function, context?: Object): this
+	         * @function onMulti(obj: HTMLElement, types: [], fn: Function, context?: Object): this
 	         * Adds a listener function (`fn`) to a particular DOM event type of the
 	         * element `obj`. You can optionally specify the context of the listener
 	         * (object the `this` keyword will point to).
 	        */
-	        value: function onKeys(obj, types, fn, context) {
+	        value: function onMulti(obj, types, fn, context) {
 	            var _iteratorNormalCompletion = true;
 	            var _didIteratorError = false;
 	            var _iteratorError = undefined;

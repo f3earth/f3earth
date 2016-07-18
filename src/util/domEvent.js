@@ -3,12 +3,12 @@
  */
 export class DomEvent {
     /**
-     * @function onKeys(obj: HTMLElement, types: [], fn: Function, context?: Object): this
+     * @function onMulti(obj: HTMLElement, types: [], fn: Function, context?: Object): this
      * Adds a listener function (`fn`) to a particular DOM event type of the
      * element `obj`. You can optionally specify the context of the listener
      * (object the `this` keyword will point to).
     */
-    static onKeys(obj, types, fn, context) {
+    static onMulti(obj, types, fn, context) {
         for (const key of types.keys()) {
             this.on(obj, key, fn, context);
         }
