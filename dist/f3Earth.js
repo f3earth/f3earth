@@ -105,10 +105,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this._sourceLayers = [];
 	        _this._interactions = [];
 	        _this._eventType = new Map([['click', _const.Const.EarthEventType.CLICK], ['dblclick', _const.Const.EarthEventType.DBLCLICK], ['mousedown', _const.Const.EarthEventType.MOUSEDOWN], ['mouseup', _const.Const.EarthEventType.MOUSEUP], ['mouseover', _const.Const.EarthEventType.MOUSEOVER], ['mouseout', _const.Const.EarthEventType.MOUSEOUT], ['mousemove', _const.Const.EarthEventType.MOUSEMOVE], ['mousewheel', _const.Const.EarthEventType.MOUSEWHEEL], ['keypress', _const.Const.EarthEventType.KEYPRESS]]);
-	        _domEvent.DomEvent.on(_this._context.canvas, Array.from(_this._eventType.keys()), _this._handleDOMEvent, _this);
-	        // DomEvent.on(this._context.canvas,
-	        //     'click dblclick mousedown mouseup mouseover mousemove mousewheel',
+	        // DomEvent.on(this._context.canvas, Array.from(this._eventType.keys()),
 	        //     this._handleDOMEvent, this);
+	        _domEvent.DomEvent.on(_this._context.canvas, 'click dblclick mousedown mouseup mouseover mousemove mousewheel', _this._handleDOMEvent, _this);
 	        return _this;
 	    }
 
@@ -7872,19 +7871,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'on',
 
 	        /**
-	         * @function onMulti(obj: HTMLElement, types: [], fn: Function, context?: Object): this
+	         * @function on(obj: HTMLElement, types: [], fn: Function, context?: Object): this
 	         * Adds a listener function (`fn`) to a particular DOM event type of the
 	         * element `obj`. You can optionally specify the context of the listener
 	         * (object the `this` keyword will point to).
+	         * space-separated types (e.g. `'click dblclick'`).
 	        */
 	        value: function on(obj, types, fn, context) {
 	            var _this = this;
 
-	            var typesArray = void 0;
+	            var typesArray = types;
 	            if ((typeof types === 'undefined' ? 'undefined' : _typeof(types)) !== 'object') {
 	                typesArray = _util.Util.splitWords(types);
-	            } else {
-	                typesArray = types;
 	            }
 	            typesArray.forEach(function (type) {
 	                _this._on(obj, type, fn, context);

@@ -11,11 +11,9 @@ export class DomEvent {
      * space-separated types (e.g. `'click dblclick'`).
     */
     static on(obj, types, fn, context) {
-        let typesArray;
+        let typesArray = types;
         if (typeof types !== 'object') {
             typesArray = Util.splitWords(types);
-        } else {
-            typesArray = types;
         }
         typesArray.forEach(type => {
             this._on(obj, type, fn, context);
