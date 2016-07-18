@@ -105,7 +105,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this._sourceLayers = [];
 	        _this._interactions = [];
 	        _this._eventType = new Map([['click', _const.Const.EarthEventType.CLICK], ['dblclick', _const.Const.EarthEventType.DBLCLICK], ['mousedown', _const.Const.EarthEventType.MOUSEDOWN], ['mouseup', _const.Const.EarthEventType.MOUSEUP], ['mouseover', _const.Const.EarthEventType.MOUSEOVER], ['mouseout', _const.Const.EarthEventType.MOUSEOUT], ['mousemove', _const.Const.EarthEventType.MOUSEMOVE], ['mousewheel', _const.Const.EarthEventType.MOUSEWHEEL], ['keypress', _const.Const.EarthEventType.KEYPRESS]]);
-	        _domEvent.DomEvent.onMulti(_this._context.canvas, _this._eventType, _this._handleDOMEvent, _this);
+	        _domEvent.DomEvent.on(_this._context.canvas, Array.from(_this._eventType.keys()), _this._handleDOMEvent, _this);
+	        // DomEvent.on(this._context.canvas,
+	        //     'click dblclick mousedown mouseup mouseover mousemove mousewheel',
+	        //     this._handleDOMEvent, this);
 	        return _this;
 	    }
 
@@ -7840,21 +7843,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 27 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.DomEvent = undefined;
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by zhangwenjin on 2016/7/13.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+
+	var _util = __webpack_require__(28);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * Created by zhangwenjin on 2016/7/13.
-	 */
 
 	var DomEvent = exports.DomEvent = function () {
 	    function DomEvent() {
@@ -7862,7 +7869,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    _createClass(DomEvent, null, [{
-	        key: 'onMulti',
+	        key: 'on',
 
 	        /**
 	         * @function onMulti(obj: HTMLElement, types: [], fn: Function, context?: Object): this
@@ -7870,32 +7877,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * element `obj`. You can optionally specify the context of the listener
 	         * (object the `this` keyword will point to).
 	        */
-	        value: function onMulti(obj, types, fn, context) {
-	            var _iteratorNormalCompletion = true;
-	            var _didIteratorError = false;
-	            var _iteratorError = undefined;
+	        value: function on(obj, types, fn, context) {
+	            var _this = this;
 
-	            try {
-	                for (var _iterator = types.keys()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var key = _step.value;
-
-	                    this.on(obj, key, fn, context);
-	                }
-	            } catch (err) {
-	                _didIteratorError = true;
-	                _iteratorError = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion && _iterator.return) {
-	                        _iterator.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError) {
-	                        throw _iteratorError;
-	                    }
-	                }
+	            var typesArray = void 0;
+	            if ((typeof types === 'undefined' ? 'undefined' : _typeof(types)) !== 'object') {
+	                typesArray = _util.Util.splitWords(types);
+	            } else {
+	                typesArray = types;
 	            }
-
+	            typesArray.forEach(function (type) {
+	                _this._on(obj, type, fn, context);
+	            });
 	            return this;
 	        }
 	        /**
@@ -7913,8 +7906,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        */
 
 	    }, {
-	        key: 'on',
-	        value: function on(obj, type, fn, context) {
+	        key: '_on',
+	        value: function _on(obj, type, fn, context) {
 	            var self = this;
 	            var handler = function handler(e) {
 	                return fn.call(context || obj, e || window.event);
@@ -7987,6 +7980,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }]);
 
 	    return DomEvent;
+	}();
+
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * Created by zhangwenjin on 2016/7/18.
+	 */
+
+	var Util = exports.Util = function () {
+	    function Util() {
+	        _classCallCheck(this, Util);
+	    }
+
+	    _createClass(Util, null, [{
+	        key: 'trim',
+	        value: function trim(str) {
+	            return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
+	        }
+	    }, {
+	        key: 'splitWords',
+	        value: function splitWords(str) {
+	            return Util.trim(str).split(/\s+/);
+	        }
+	    }]);
+
+	    return Util;
 	}();
 
 /***/ }

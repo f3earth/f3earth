@@ -1,17 +1,25 @@
 /**
  * Created by zhangwenjin on 2016/7/13.
  */
+import { Util } from './util';
 export class DomEvent {
     /**
-     * @function onMulti(obj: HTMLElement, types: [], fn: Function, context?: Object): this
+     * @function on(obj: HTMLElement, types: [], fn: Function, context?: Object): this
      * Adds a listener function (`fn`) to a particular DOM event type of the
      * element `obj`. You can optionally specify the context of the listener
      * (object the `this` keyword will point to).
+     * space-separated types (e.g. `'click dblclick'`).
     */
-    static onMulti(obj, types, fn, context) {
-        for (const key of types.keys()) {
-            this.on(obj, key, fn, context);
+    static on(obj, types, fn, context) {
+        let typesArray;
+        if (typeof types !== 'object') {
+            typesArray = Util.splitWords(types);
+        } else {
+            typesArray = types;
         }
+        typesArray.forEach(type => {
+            this._on(obj, type, fn, context);
+        });
         return this;
     }
     /**
@@ -27,7 +35,7 @@ export class DomEvent {
     *    return this;
     * }
     */
-    static on(obj, type, fn, context) {
+    static _on(obj, type, fn, context) {
         const self = this;
         let handler = (e) => fn.call(context || obj, e || window.event);
 
