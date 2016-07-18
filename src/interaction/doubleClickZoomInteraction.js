@@ -2,12 +2,15 @@
  * Created by zhangwenjin on 2016/7/13.
  */
 import { Interaction } from './interaction';
+import { Const } from '../const';
 export class DoubleClickZoomInteraction extends Interaction {
     addHandle() {
-        this._earth.on('dblclick', this._doubleClick, this);
+        this._earth.on(Const.EarthEventType.DBLCLICK, this._doubleClick, this);
+        return this;
     }
     removeHandle() {
-        this._earth.un('dblclick', this._doubleClick, this);
+        this._earth.un(Const.EarthEventType.DBLCLICK, this._doubleClick, this);
+        return this;
     }
     _doubleClick(e) {
         let zoomDelta = 1;

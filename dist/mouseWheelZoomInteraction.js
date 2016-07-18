@@ -65,6 +65,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _interaction = __webpack_require__(1);
 
+	var _const = __webpack_require__(2);
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -86,12 +88,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(MouseWheelZoomInteraction, [{
 	        key: 'addHandle',
 	        value: function addHandle() {
-	            this._earth.on('mousewheel', this._onmousewheel, this);
+	            this._earth.on(_const.Const.EarthEventType.MOUSEWHEEL, this._onmousewheel, this);
+	            return this;
 	        }
 	    }, {
 	        key: 'removeHandle',
 	        value: function removeHandle() {
-	            this._earth.un('mousewheel', this._onmousewheel, this);
+	            this._earth.un(_const.Const.EarthEventType.MOUSEWHEEL, this._onmousewheel, this);
+	            return this;
 	        }
 	    }, {
 	        key: '_onmousewheel',
@@ -138,6 +142,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "setEarth",
 	        value: function setEarth(earth) {
 	            this._earth = earth;
+	            return this;
 	        }
 	    }, {
 	        key: "getEarth",
@@ -174,6 +179,44 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return Interaction;
 	}();
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * Created by zhangwenjin on 2016/7/16.
+	 */
+
+	var Const = function Const() {
+	    _classCallCheck(this, Const);
+	};
+
+	Const.EarthEventType = {
+	    ZOOM_START: 'earthZoomStart',
+	    ZOOM_END: 'earthZoomEnd',
+	    CLICK: 'earthClick',
+	    DBLCLICK: 'earthDblclick',
+	    MOUSEDOWN: 'earthMousedown',
+	    MOUSEUP: 'earthMouseup',
+	    MOUSEOVER: 'earthMouseover',
+	    MOUSEOUT: 'earthMouseout',
+	    MOUSEMOVE: 'earthMousemove',
+	    MOUSEWHEEL: 'earthMousewheel',
+	    KEYPRESS: 'earthKeypress'
+	};
+	Const.TileSourceEventType = {
+	    CHANGE: 'tileSourceChange'
+	};
+	exports.Const = Const;
 
 /***/ }
 /******/ ])
