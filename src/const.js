@@ -34,6 +34,8 @@ Const.SourceType = {
     LINE: 'line'
 };
 
+Const.EARTH_RADIUS = 6378137;
+
 export {
     Const
 };

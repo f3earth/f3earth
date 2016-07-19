@@ -1,8 +1,10 @@
+import { Const } from '../const';
+
 export class LineMesh {
     constructor(points) {
         this._points = points;
         this._vertices = [];
-        this._radius = 6378137 + 100;
+        this._radius = Const.EARTH_RADIUS + 100;
 
         this._createMesh();
     }

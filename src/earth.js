@@ -4,13 +4,13 @@ import { Camera } from './camera';
 import { Observable } from './util/observable';
 import { DomEvent } from './util/domEvent';
 import { Const } from './const';
-const EARTH_RADIUS = 6378137;
+
 class Earth extends Observable {
     constructor(containerId) {
         super();
         this._zoomDist = [];
         for (let level = 0; level < 18; level++) {
-            this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
+            this._zoomDist.push(Const.EARTH_RADIUS * Math.pow(1.05, 18 - level));
         }
 
         this._container = document.getElementById(containerId);

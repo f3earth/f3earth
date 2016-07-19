@@ -1,8 +1,9 @@
+
 import glMatrix from 'gl-matrix';
+import { Const } from '../const';
+
 import { ShaderLoader } from '../shader/shaderLoader';
 import { LineShader } from '../shader/lineShader';
-
-const EARTH_RADIUS = 6378137;
 
 export class LineLayerRender {
 
@@ -52,7 +53,7 @@ export class LineLayerRender {
             projectionMatrix,
             60 * Math.PI / 180,
             gl.viewportWidth / gl.viewportHeight,
-            0.001, 18 * EARTH_RADIUS);
+            0.001, 18 * Const.EARTH_RADIUS);
 
         glMatrix.mat4.identity(modelViewMatrix);
         glMatrix.mat4.lookAt(modelViewMatrix, camera.eye, camera.center, camera.up);
