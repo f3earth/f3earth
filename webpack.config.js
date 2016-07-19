@@ -3,7 +3,9 @@ module.exports = {
         f3Earth: './src/earth.js',
         mouseWheelZoomInteraction: './src/interaction/mouseWheelZoomInteraction.js',
         dragInteraction: './src/interaction/dragInteraction.js',
-        doubleClickZoomInteraction: './src/interaction/doubleClickZoomInteraction.js'
+        doubleClickZoomInteraction: './src/interaction/doubleClickZoomInteraction.js',
+        // control: './src/control/control.js'
+        attributionControl: './src/control/attributionControl.js'
     },
     output: {
         libraryTarget: 'umd',
