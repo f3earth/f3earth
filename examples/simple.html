@@ -7,6 +7,9 @@
     <script type="text/javascript" src="../dist/mouseWheelZoomInteraction.js" charset="utf-8"></script>
     <script type="text/javascript" src="../dist/doubleClickZoomInteraction.js" charset="utf-8"></script>
     <script type="text/javascript" src="../dist/dragInteraction.js" charset="utf-8"></script>
+    <link rel="stylesheet"  href="../css/fe-control.css">
+    <script type="text/javascript" src="../dist/attributionControl.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../dist/zoomControl.js" charset="utf-8"></script>
     <style>
         body {
             margin: 0;
@@ -20,6 +23,7 @@
 
 <body>
     <div id="earth"></div>
+    <div id="fe-controls-container"/>
     <script type="application/javascript">
         var earth = new Earth("earth");
         earth.addLayer({
@@ -37,6 +41,14 @@
 //        earth.on(Const.EarthEventType.ZOOM_START,function (e) {
 //            console.log(e);
 //        })
+
+        //fe attributionConttrol;
+        var attributionControl = new AttributionControl();
+        earth.addControl(attributionControl);
+
+        //fe zoomControl
+        var zoomControl = new ZoomControl();
+        earth.addControl(zoomControl);
 
     </script>
 </body>

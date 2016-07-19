@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.AttributionControl = undefined;
+	exports.ZoomControl = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -73,34 +73,45 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var AttributionControl = exports.AttributionControl = function (_Control) {
-	    _inherits(AttributionControl, _Control);
+	var ZoomControl = exports.ZoomControl = function (_Control) {
+	    _inherits(ZoomControl, _Control);
 
-	    function AttributionControl() {
-	        _classCallCheck(this, AttributionControl);
+	    function ZoomControl() {
+	        _classCallCheck(this, ZoomControl);
 
 	        var controlContainers = document.getElementById('fe-controls-container');
 	        var ele = document.createElement('div');
-	        // css-file be used;
-	        ele.innerHTML = '\n            <div class="fe-attribution-logo">\n            </div>\n            <div class="fe-attribution-copyright">\n                <span>Copyright@2016 F3Earth</span>\n            </div>\n        ';
+	        ele.className = 'fe-control-zoom fe-control';
+	        ele.innerHTML = '<button class="fe-zoom-in" type="button" title="Zoom in">+</button>\n            <button class="fe-zoom-out" type="button" title="Zoom out">−</button>';
 	        controlContainers.appendChild(ele);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AttributionControl).call(this, ele));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ZoomControl).call(this, ele));
 
-	        _domEvent.DomEvent.on(_this.element, 'click', _this._clickHandler, _this);
+	        _this.btnZoomIn = ele.getElementsByTagName('button')[0];
+	        _this.btnZoomOut = ele.getElementsByTagName('button')[1];
+
+	        _domEvent.DomEvent.on(_this.btnZoomIn, 'click', _this._zoomIn, _this);
+	        _domEvent.DomEvent.on(_this.btnZoomOut, 'click', _this._zoomOut, _this);
 	        return _this;
 	    }
 
-	    _createClass(AttributionControl, [{
-	        key: '_clickHandler',
-	        value: function _clickHandler(e) {
+	    _createClass(ZoomControl, [{
+	        key: '_zoomIn',
+	        value: function _zoomIn(e) {
 	            e.preventDefault();
 	            e.stopPropagation();
-	            window.open('https://github.com/f3earth/f3earth');
+	            this._earth.setZoom(this._earth.zoom + 1);
+	        }
+	    }, {
+	        key: '_zoomOut',
+	        value: function _zoomOut(e) {
+	            e.preventDefault();
+	            e.stopPropagation();
+	            this._earth.setZoom(this._earth.zoom - 1);
 	        }
 	    }]);
 
-	    return AttributionControl;
+	    return ZoomControl;
 	}(_control.Control);
 
 /***/ },
