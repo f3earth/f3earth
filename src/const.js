@@ -19,6 +19,9 @@ Const.EarthEventType = {
 Const.TileSourceEventType = {
     CHANGE: 'tileSourceChange'
 };
+Const.ControlEventType = {
+    RENDER: 'controlRender'
+};
 export {
     Const
 };
