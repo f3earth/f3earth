@@ -6,7 +6,7 @@ import {
 } from '../util/domEvent';
 export class ZoomControl extends Control {
     constructor() {
-        const controlContainers = document.getElementById('fe-conrols-container');
+        const controlContainers = document.getElementById('fe-controls-container');
         const ele = document.createElement('div');
         ele.className = 'fe-control-zoom fe-control';
         ele.innerHTML = `<button class="fe-zoom-in" type="button" title="Zoom in">+</button>

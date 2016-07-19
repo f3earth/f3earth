@@ -6,7 +6,7 @@ import {
 } from '../util/domEvent';
 export class AttributionControl extends Control {
     constructor() {
-        const controlContainers = document.getElementById('fe-conrols-container');
+        const controlContainers = document.getElementById('fe-controls-container');
         const ele = document.createElement('div');
         // css-file be used;
         ele.innerHTML = `

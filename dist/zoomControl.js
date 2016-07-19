@@ -79,7 +79,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function ZoomControl() {
 	        _classCallCheck(this, ZoomControl);
 
-	        var controlContainers = document.getElementById('fe-conrols-container');
+	        var controlContainers = document.getElementById('fe-controls-container');
 	        var ele = document.createElement('div');
 	        ele.className = 'fe-control-zoom fe-control';
 	        ele.innerHTML = '<button class="fe-zoom-in" type="button" title="Zoom in">+</button>\n            <button class="fe-zoom-out" type="button" title="Zoom out">−</button>';

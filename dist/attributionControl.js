@@ -79,7 +79,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function AttributionControl() {
 	        _classCallCheck(this, AttributionControl);
 
-	        var controlContainers = document.getElementById('fe-conrols-container');
+	        var controlContainers = document.getElementById('fe-controls-container');
 	        var ele = document.createElement('div');
 	        // css-file be used;
 	        ele.innerHTML = '\n            <div class="fe-attribution-logo">\n            </div>\n            <div class="fe-attribution-copyright">\n                <span>Copyright@2016 F3Earth</span>\n            </div>\n        ';
