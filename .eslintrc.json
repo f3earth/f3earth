@@ -44,7 +44,7 @@
         "camelcase": [
             2,
             {
-                "properties": "never"
+                "properties": "always"
             }
         ],
         "comma-dangle": [

@@ -1,4 +1,6 @@
 node_modules
+dist
 .idea
 npm-debug.log
 .vscode/launch.json
+

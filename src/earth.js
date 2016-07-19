@@ -4,13 +4,13 @@ import { Camera } from './camera';
 import { Observable } from './util/observable';
 import { DomEvent } from './util/domEvent';
 import { Const } from './const';
-const EARTH_RADIUS = 6378137;
+
 class Earth extends Observable {
     constructor(containerId) {
         super();
         this._zoomDist = [];
         for (let level = 0; level < 18; level++) {
-            this._zoomDist.push(EARTH_RADIUS * Math.pow(1.05, 18 - level));
+            this._zoomDist.push(Const.EARTH_RADIUS * Math.pow(1.05, 18 - level));
         }
 
         this._container = document.getElementById(containerId);
@@ -85,13 +85,23 @@ class Earth extends Observable {
 
     addLayer(layer) {
         const sourceLayer = SourceLayer.from(this._context, layer);
-        this._sourceLayers.push(sourceLayer);
-        this.render();
+        if (sourceLayer) {
+            sourceLayer.source.on(Const.SourceEventType.CHANGE, () => this.render());
+            this._sourceLayers.push(sourceLayer);
+            this.render();
+        }
     }
 
     render() {
+        const gl = this._context.gl;
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.enable(gl.CULL_FACE);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
         this._sourceLayers.forEach(layer => layer.render(this._camera));
     }
+
     _handleDOMEvent(e) {
         if (e._stopped) { return; }
         let type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
@@ -102,12 +112,14 @@ class Earth extends Observable {
         };
         this.trigger(eventType, data);
     }
+
     addInteraction(interaction) {
         interaction.setEarth(this);
         interaction.enable();
         this._interactions.push(interaction);
         return this;
     }
+
     removeInteraction(interaction) {
         for (let i = 0, len = this._interactions.length; i < len; i++) {
             if (this._interactions[i] === interaction) {

@@ -4,6 +4,10 @@ export class Tile {
         this._material = options.material;
     }
 
+    get mesh() {
+        return this._mesh;
+    }
+
     render(gl, shaderProgram) {
         this._mesh.setup(gl);
         this._material.setup(gl);

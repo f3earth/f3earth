@@ -1,9 +1,12 @@
+
 import glMatrix from 'gl-matrix';
 import { Const } from '../const';
-import { ShaderLoader } from '../shader/shaderLoader';
-import { RasterTileShader } from '../shader/rasterTileShader';
 
-export class RasterTileLayerRender {
+import { ShaderLoader } from '../shader/shaderLoader';
+import { LineShader } from '../shader/lineShader';
+
+export class LineLayerRender {
+
     constructor(gl) {
         this._gl = gl;
         this._shaderProgram = null;
@@ -12,8 +15,8 @@ export class RasterTileLayerRender {
 
     _setup() {
         const gl = this._gl;
-        const vertexShader = ShaderLoader.loadVertex(gl, RasterTileShader.vertexSource);
-        const fragmentShader = ShaderLoader.loadFragment(gl, RasterTileShader.fragmentSource);
+        const vertexShader = ShaderLoader.loadVertex(gl, LineShader.vertexSource);
+        const fragmentShader = ShaderLoader.loadFragment(gl, LineShader.fragmentSource);
 
         const shaderProgram = gl.createProgram();
         gl.attachShader(shaderProgram, vertexShader);
@@ -24,15 +27,17 @@ export class RasterTileLayerRender {
             console.error('Failed to setup shaders');
         }
         this._shaderProgram = shaderProgram;
+        // gl.useProgram(this._shaderProgram);
     }
 
-    render(renderTiles, camera) {
+    render(Objects, camera) {
         const gl = this._gl;
         const program = this._shaderProgram;
         gl.useProgram(program);
-
         this._uploadModels(camera);
-        renderTiles.forEach(tile => tile.render(gl, program));
+
+        Objects.forEach(object => object.render(gl, program));
+        gl.flush();
     }
 
     _uploadModels(camera) {

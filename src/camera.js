@@ -1,8 +1,9 @@
+import { Const } from './const';
 import glMatrix from 'gl-matrix';
 
 export class Camera {
     constructor() {
-        this._eye = [0, 0, 3 * 6378137];
+        this._eye = [0, 0, 3 * Const.EARTH_RADIUS];
         this._center = [0, 0, 0];
         this._up = [0, 1, 0];
 

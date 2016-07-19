@@ -1,11 +1,5 @@
-// const MERCATOR_LAT_MAX = 85.051128;
-// const MERCATOR_LNG_MAX = 180.0;
-// const SEGMENT_COUNT = 16;
-
-import {
-    Proj
-}
-from '../util/proj';
+import { Const } from '../const';
+import { Proj } from '../util/proj';
 
 const PIXELS_PER_TILE = 256;
 const SEGMENT_COUNT = 16;
@@ -21,9 +15,21 @@ export class TileMesh {
         this._uvs = [];
         this._elementIndexes = [];
 
-        this._radius = 6378137;
+        this._radius = Const.EARTH_RADIUS;
         this._bound = {};
         this._createMesh();
+    }
+
+    get zoom() {
+        return this._zoom;
+    }
+
+    get row() {
+        return this._row;
+    }
+
+    get col() {
+        return this._col;
     }
 
     _getMetersPerPixel(zoom) {
