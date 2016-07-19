@@ -1,10 +1,11 @@
 import glMatrix from 'gl-matrix';
 import { ShaderLoader } from '../shader/shaderLoader';
-import { RasterTileShader } from '../shader/rasterTileShader';
+import { LineShader } from '../shader/lineShader';
 
 const EARTH_RADIUS = 6378137;
 
-export class RasterTileLayerRender {
+export class LineLayerRender {
+
     constructor(gl) {
         this._gl = gl;
         this._shaderProgram = null;
@@ -13,8 +14,8 @@ export class RasterTileLayerRender {
 
     _setup() {
         const gl = this._gl;
-        const vertexShader = ShaderLoader.loadVertex(gl, RasterTileShader.vertexSource);
-        const fragmentShader = ShaderLoader.loadFragment(gl, RasterTileShader.fragmentSource);
+        const vertexShader = ShaderLoader.loadVertex(gl, LineShader.vertexSource);
+        const fragmentShader = ShaderLoader.loadFragment(gl, LineShader.fragmentSource);
 
         const shaderProgram = gl.createProgram();
         gl.attachShader(shaderProgram, vertexShader);
@@ -25,21 +26,17 @@ export class RasterTileLayerRender {
             console.error('Failed to setup shaders');
         }
         this._shaderProgram = shaderProgram;
+        // gl.useProgram(this._shaderProgram);
     }
 
-    render(renderTiles, camera) {
+    render(Objects, camera) {
         const gl = this._gl;
         const program = this._shaderProgram;
         gl.useProgram(program);
-
-        // gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        // gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        // gl.enable(gl.CULL_FACE);
-
         this._uploadModels(camera);
 
-        // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        renderTiles.forEach(tile => tile.render(gl, program));
+        Objects.forEach(object => object.render(gl, program));
+        gl.flush();
     }
 
     _uploadModels(camera) {

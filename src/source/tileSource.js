@@ -34,7 +34,6 @@ export class TileSource extends Observable {
             this.trigger('change', { zoom, row, col, image });
         });
         this._imageLoading[key] = true;
-
         return null;
     }
 }

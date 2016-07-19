@@ -82,10 +82,20 @@ class Earth extends Observable {
     addLayer(layer) {
         const sourceLayer = SourceLayer.from(this._context, layer);
         this._sourceLayers.push(sourceLayer);
+
+        const lineLayer = SourceLayer.createLineLayer(this._context);
+        this._sourceLayers.push(lineLayer);
+
         this.render();
     }
 
     render() {
+        const gl = this._context.gl;
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.enable(gl.CULL_FACE);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
         this._sourceLayers.forEach(layer => layer.render(this._camera));
     }
     _handleDOMEvent(e) {
