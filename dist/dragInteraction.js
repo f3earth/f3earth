@@ -63,9 +63,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _interaction = __webpack_require__(1);
+	var _interaction = __webpack_require__(6);
 
-	var _const = __webpack_require__(2);
+	var _const = __webpack_require__(3);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -141,7 +141,64 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_interaction.Interaction);
 
 /***/ },
-/* 1 */
+/* 1 */,
+/* 2 */,
+/* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * Created by zhangwenjin on 2016/7/16.
+	 */
+
+	var Const = function Const() {
+	    _classCallCheck(this, Const);
+	};
+
+	Const.EarthEventType = {
+	    ZOOM_START: 'earthZoomStart',
+	    ZOOM_END: 'earthZoomEnd',
+	    CLICK: 'earthClick',
+	    DBLCLICK: 'earthDblclick',
+	    MOUSEDOWN: 'earthMousedown',
+	    MOUSEUP: 'earthMouseup',
+	    MOUSEOVER: 'earthMouseover',
+	    MOUSEOUT: 'earthMouseout',
+	    MOUSEMOVE: 'earthMousemove',
+	    MOUSEWHEEL: 'earthMousewheel',
+	    KEYPRESS: 'earthKeypress'
+	};
+
+	Const.SourceEventType = {
+	    CHANGE: 'sourceChange'
+	};
+
+	Const.ControlEventType = {
+	    RENDER: 'controlRender'
+	};
+
+	Const.LayerType = {
+	    LINE: 'line',
+	    RASTER_TILE: 'rasterTile'
+	};
+
+	Const.SourceType = {
+	    LINE: 'line'
+	};
+
+	exports.Const = Const;
+
+/***/ },
+/* 4 */,
+/* 5 */,
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -209,44 +266,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return Interaction;
 	}();
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * Created by zhangwenjin on 2016/7/16.
-	 */
-
-	var Const = function Const() {
-	    _classCallCheck(this, Const);
-	};
-
-	Const.EarthEventType = {
-	    ZOOM_START: 'earthZoomStart',
-	    ZOOM_END: 'earthZoomEnd',
-	    CLICK: 'earthClick',
-	    DBLCLICK: 'earthDblclick',
-	    MOUSEDOWN: 'earthMousedown',
-	    MOUSEUP: 'earthMouseup',
-	    MOUSEOVER: 'earthMouseover',
-	    MOUSEOUT: 'earthMouseout',
-	    MOUSEMOVE: 'earthMousemove',
-	    MOUSEWHEEL: 'earthMousewheel',
-	    KEYPRESS: 'earthKeypress'
-	};
-	Const.TileSourceEventType = {
-	    CHANGE: 'tileSourceChange'
-	};
-	exports.Const = Const;
 
 /***/ }
 /******/ ])

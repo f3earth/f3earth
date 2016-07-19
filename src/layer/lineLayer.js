@@ -1,10 +1,12 @@
+import { Observable } from '../util/observable';
 import { Line as RenderableLine } from '../renderable/line';
 import { LineLayerRender } from '../render/lineLayerRender';
 import { LineMesh } from '../mesh/lineMesh';
 
-export class LineLayer {
+export class LineLayer extends Observable {
 
     constructor(options) {
+        super();
         this._source = options.source;
         this._view = options.view;
         this._render = new LineLayerRender(options.context.gl);
@@ -32,5 +34,9 @@ export class LineLayer {
             });
             this._renderList.push(renderableLine);
         });
+    }
+
+    get source() {
+        return this._source;
     }
 }

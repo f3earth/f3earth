@@ -85,12 +85,11 @@ class Earth extends Observable {
 
     addLayer(layer) {
         const sourceLayer = SourceLayer.from(this._context, layer);
-        this._sourceLayers.push(sourceLayer);
-
-        const lineLayer = SourceLayer.createLineLayer(this._context);
-        this._sourceLayers.push(lineLayer);
-
-        this.render();
+        if (sourceLayer) {
+            sourceLayer.source.on(Const.SourceEventType.CHANGE, () => this.render());
+            this._sourceLayers.push(sourceLayer);
+            this.render();
+        }
     }
 
     render() {
@@ -102,6 +101,7 @@ class Earth extends Observable {
 
         this._sourceLayers.forEach(layer => layer.render(this._camera));
     }
+
     _handleDOMEvent(e) {
         if (e._stopped) { return; }
         let type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
@@ -112,12 +112,14 @@ class Earth extends Observable {
         };
         this.trigger(eventType, data);
     }
+
     addInteraction(interaction) {
         interaction.setEarth(this);
         interaction.enable();
         this._interactions.push(interaction);
         return this;
     }
+
     removeInteraction(interaction) {
         for (let i = 0, len = this._interactions.length; i < len; i++) {
             if (this._interactions[i] === interaction) {

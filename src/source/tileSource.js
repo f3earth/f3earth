@@ -1,4 +1,6 @@
+
 import { Observable } from '../util/observable';
+import { Const } from '../const';
 
 export class TileSource extends Observable {
     constructor(url) {
@@ -31,7 +33,7 @@ export class TileSource extends Observable {
         }).then(image => {
             this._images[key] = image;
             delete this._imageLoading[key];
-            this.trigger('change', { zoom, row, col, image });
+            this.trigger(Const.SourceEventType.CHANGE, { zoom, row, col, image });
         });
         this._imageLoading[key] = true;
         return null;

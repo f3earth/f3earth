@@ -352,12 +352,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    MOUSEWHEEL: 'earthMousewheel',
 	    KEYPRESS: 'earthKeypress'
 	};
-	Const.TileSourceEventType = {
-	    CHANGE: 'tileSourceChange'
+
+	Const.SourceEventType = {
+	    CHANGE: 'sourceChange'
 	};
+
 	Const.ControlEventType = {
 	    RENDER: 'controlRender'
 	};
+
+	Const.LayerType = {
+	    LINE: 'line',
+	    RASTER_TILE: 'rasterTile'
+	};
+
+	Const.SourceType = {
+	    LINE: 'line'
+	};
+
 	exports.Const = Const;
 
 /***/ },

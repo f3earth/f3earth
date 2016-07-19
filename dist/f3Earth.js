@@ -65,25 +65,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _sourceLayer = __webpack_require__(7);
 
-<<<<<<< HEAD
-	var _context = __webpack_require__(30);
+	var _context = __webpack_require__(34);
 
-	var _camera = __webpack_require__(31);
-
-	var _observable = __webpack_require__(28);
-
-	var _domEvent = __webpack_require__(32);
-=======
-	var _context = __webpack_require__(28);
-
-	var _camera = __webpack_require__(29);
+	var _camera = __webpack_require__(35);
 
 	var _observable = __webpack_require__(2);
 
 	var _domEvent = __webpack_require__(4);
 
 	var _const = __webpack_require__(3);
->>>>>>> f3earth/master
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -165,28 +155,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'addLayer',
 	        value: function addLayer(layer) {
+	            var _this2 = this;
+
 	            var sourceLayer = _sourceLayer.SourceLayer.from(this._context, layer);
-	            this._sourceLayers.push(sourceLayer);
-
-	            var lineLayer = _sourceLayer.SourceLayer.createLineLayer(this._context);
-	            this._sourceLayers.push(lineLayer);
-
-	            this.render();
+	            if (sourceLayer) {
+	                sourceLayer.source.on(_const.Const.SourceEventType.CHANGE, function () {
+	                    return _this2.render();
+	                });
+	                this._sourceLayers.push(sourceLayer);
+	                this.render();
+	            }
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this2 = this;
+	            var _this3 = this;
 
 	            var gl = this._context.gl;
 	            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 	            gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	            gl.enable(gl.CULL_FACE);
-	            // gl.enable(gl.DEPTH_TEST);
 	            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 	            this._sourceLayers.forEach(function (layer) {
-	                return layer.render(_this2._camera);
+	                return layer.render(_this3._camera);
 	            });
 	        }
 	    }, {
@@ -437,12 +429,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    MOUSEWHEEL: 'earthMousewheel',
 	    KEYPRESS: 'earthKeypress'
 	};
-	Const.TileSourceEventType = {
-	    CHANGE: 'tileSourceChange'
+
+	Const.SourceEventType = {
+	    CHANGE: 'sourceChange'
 	};
+
 	Const.ControlEventType = {
 	    RENDER: 'controlRender'
 	};
+
+	Const.LayerType = {
+	    LINE: 'line',
+	    RASTER_TILE: 'rasterTile'
+	};
+
+	Const.SourceType = {
+	    LINE: 'line'
+	};
+
 	exports.Const = Const;
 
 /***/ },
@@ -637,17 +641,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _const = __webpack_require__(3);
+
 	var _rasterTileLayer = __webpack_require__(8);
 
-<<<<<<< HEAD
-	var _lineLayer = __webpack_require__(22);
+	var _lineLayer = __webpack_require__(27);
 
-	var _tileSource = __webpack_require__(27);
+	var _tileSource = __webpack_require__(32);
 
-	var _vectorSource = __webpack_require__(29);
-=======
-	var _tileSource = __webpack_require__(27);
->>>>>>> f3earth/master
+	var _vectorSource = __webpack_require__(33);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -659,20 +661,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(SourceLayer, null, [{
 	        key: 'from',
 	        value: function from(context, layerConfig) {
-	            return new _rasterTileLayer.RasterTileLayer({
-	                source: new _tileSource.TileSource(layerConfig.url),
-	                view: { zoom: 3 },
-	                context: context
-	            });
-	        }
-	    }, {
-	        key: 'createLineLayer',
-	        value: function createLineLayer(context) {
-	            return new _lineLayer.LineLayer({
-	                source: new _vectorSource.VectorSource(),
-	                view: { zoom: 3 },
-	                context: context
-	            });
+	            if (layerConfig.type === _const.Const.LayerType.RASTER_TILE) {
+	                return new _rasterTileLayer.RasterTileLayer({
+	                    source: new _tileSource.TileSource(layerConfig.url),
+	                    view: { zoom: 3 },
+	                    context: context
+	                });
+	            } else if (layerConfig.type === _const.Const.LayerType.LINE) {
+	                return new _lineLayer.LineLayer({
+	                    source: new _vectorSource.VectorSource(layerConfig.source),
+	                    view: { zoom: 3 },
+	                    context: context
+	                });
+	            }
+
+	            return null;
 	        }
 	    }]);
 
@@ -692,6 +695,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _observable = __webpack_require__(2);
+
 	var _rasterTileLayerRender = __webpack_require__(9);
 
 	var _tile = __webpack_require__(22);
@@ -702,51 +707,49 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var RasterTileLayer = exports.RasterTileLayer = function () {
-	    function RasterTileLayer(options) {
-	        var _this = this;
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var RasterTileLayer = exports.RasterTileLayer = function (_Observable) {
+	    _inherits(RasterTileLayer, _Observable);
+
+	    function RasterTileLayer(options) {
 	        _classCallCheck(this, RasterTileLayer);
 
-	        this._source = options.source;
-	        this._view = options.view;
-	        this._render = new _rasterTileLayerRender.RasterTileLayerRender(options.context.gl);
-	        this._renderList = [];
-	        this._renderVersion = -1;
-	        this._camera = null;
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RasterTileLayer).call(this));
 
-	        this._source.on('change', function (event) {
-	            return _this._rerender(_this._camera);
-	        });
+	        _this._source = options.source;
+	        _this._view = options.view;
+	        _this._render = new _rasterTileLayerRender.RasterTileLayerRender(options.context.gl);
+	        _this._renderList = [];
+	        _this._renderVersion = -1;
+	        _this._camera = null;
+	        return _this;
 	    }
 
 	    _createClass(RasterTileLayer, [{
 	        key: 'render',
 	        value: function render(camera) {
 	            this._camera = camera;
-	            if (this._renderVersion === -1) {
-	                this._buildRenderList();
-	            }
-
-	            this._render.render(this._renderList, camera);
-	            this._renderVersion = this._renderVersion + 1;
-	        }
-	    }, {
-	        key: '_rerender',
-	        value: function _rerender(camera) {
 	            this._buildRenderList();
+
 	            this._render.render(this._renderList, camera);
 	            this._renderVersion = this._renderVersion + 1;
 	        }
 	    }, {
 	        key: '_buildRenderList',
 	        value: function _buildRenderList() {
-	            this._renderList = [];
+	            // this._renderList = [];
 	            var zoom = this._view.zoom;
 	            // todo: get render list according to view range
 	            var count = 1 << zoom;
 	            for (var row = 0; row < count; row++) {
 	                for (var col = 0; col < count; col++) {
+	                    if (this._exist(zoom, row, col)) {
+	                        continue;
+	                    }
+
 	                    var image = this._source.getTileImage(zoom, row, col);
 	                    if (!image) {
 	                        continue;
@@ -763,10 +766,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }
+	    }, {
+	        key: '_exist',
+	        value: function _exist(zoom, row, col) {
+	            var findIndex = this._renderList.findIndex(function (tile) {
+	                return tile.mesh.zoom === zoom && tile.mesh.row === row && tile.mesh.col === col;
+	            });
+	            return findIndex !== -1;
+	        }
+	    }, {
+	        key: 'source',
+	        get: function get() {
+	            return this._source;
+	        }
 	    }]);
 
 	    return RasterTileLayer;
-	}();
+	}(_observable.Observable);
 
 /***/ },
 /* 9 */
@@ -828,13 +844,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var program = this._shaderProgram;
 	            gl.useProgram(program);
 
-	            // gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-	            // gl.clearColor(0.0, 0.0, 0.0, 1.0);
-	            // gl.enable(gl.CULL_FACE);
-
 	            this._uploadModels(camera);
-
-	            // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	            renderTiles.forEach(function (tile) {
 	                return tile.render(gl, program);
 	            });
@@ -7531,6 +7541,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            gl.drawElements(gl.TRIANGLES, this._mesh.triangleCount, gl.UNSIGNED_SHORT, 0);
 	            this._material.unBind(gl);
 	        }
+	    }, {
+	        key: 'mesh',
+	        get: function get() {
+	            return this._mesh;
+	        }
 	    }]);
 
 	    return Tile;
@@ -7704,6 +7719,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vertexIndexBuffer);
 	        }
 	    }, {
+	        key: 'zoom',
+	        get: function get() {
+	            return this._zoom;
+	        }
+	    }, {
+	        key: 'row',
+	        get: function get() {
+	            return this._row;
+	        }
+	    }, {
+	        key: 'col',
+	        get: function get() {
+	            return this._col;
+	        }
+	    }, {
 	        key: 'triangleCount',
 	        get: function get() {
 	            return this.VERTEX_INDEX_BUF_NUM_ITEMS;
@@ -7812,7 +7842,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 	            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 	            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-<<<<<<< HEAD
 
 	            gl.bindTexture(gl.TEXTURE_2D, null);
 	        }
@@ -7833,7 +7862,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 22 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7845,24 +7874,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _line = __webpack_require__(23);
+	var _observable = __webpack_require__(2);
 
-	var _lineLayerRender = __webpack_require__(24);
+	var _line = __webpack_require__(28);
 
-	var _lineMesh = __webpack_require__(26);
+	var _lineLayerRender = __webpack_require__(29);
+
+	var _lineMesh = __webpack_require__(31);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var LineLayer = exports.LineLayer = function () {
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var LineLayer = exports.LineLayer = function (_Observable) {
+	    _inherits(LineLayer, _Observable);
+
 	    function LineLayer(options) {
 	        _classCallCheck(this, LineLayer);
 
-	        this._source = options.source;
-	        this._view = options.view;
-	        this._render = new _lineLayerRender.LineLayerRender(options.context.gl);
-	        this._renderList = [];
-	        this._renderVersion = -1;
-	        this._camera = null;
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LineLayer).call(this));
+
+	        _this._source = options.source;
+	        _this._view = options.view;
+	        _this._render = new _lineLayerRender.LineLayerRender(options.context.gl);
+	        _this._renderList = [];
+	        _this._renderVersion = -1;
+	        _this._camera = null;
+	        return _this;
 	    }
 
 	    _createClass(LineLayer, [{
@@ -7879,7 +7919,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_buildRenderObjects',
 	        value: function _buildRenderObjects() {
-	            var _this = this;
+	            var _this2 = this;
 
 	            var lines = this._source.getLines();
 	            lines.forEach(function (line) {
@@ -7887,16 +7927,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    mesh: new _lineMesh.LineMesh(line),
 	                    material: undefined
 	                });
-	                _this._renderList.push(renderableLine);
+	                _this2._renderList.push(renderableLine);
 	            });
+	        }
+	    }, {
+	        key: 'source',
+	        get: function get() {
+	            return this._source;
 	        }
 	    }]);
 
 	    return LineLayer;
-	}();
+	}(_observable.Observable);
 
 /***/ },
-/* 23 */
+/* 28 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7943,7 +7988,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 24 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7955,13 +8000,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _glMatrix = __webpack_require__(5);
+	var _glMatrix = __webpack_require__(10);
 
 	var _glMatrix2 = _interopRequireDefault(_glMatrix);
 
-	var _shaderLoader = __webpack_require__(15);
+	var _shaderLoader = __webpack_require__(20);
 
-	var _lineShader = __webpack_require__(25);
+	var _lineShader = __webpack_require__(30);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8034,7 +8079,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 25 */
+/* 30 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -8068,7 +8113,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 26 */
+/* 31 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -8137,171 +8182,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.TileSource = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _observable = __webpack_require__(28);
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var TileSource = exports.TileSource = function (_Observable) {
-	    _inherits(TileSource, _Observable);
-
-	    function TileSource(url) {
-	        _classCallCheck(this, TileSource);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TileSource).call(this));
-
-	        _this._url = url;
-	        _this._images = {};
-	        _this._imageLoading = {};
-	        return _this;
-	    }
-
-	    _createClass(TileSource, [{
-	        key: 'getTileImage',
-	        value: function getTileImage(zoom, row, col) {
-	            var _this2 = this;
-
-	            var key = zoom + '-' + row + '-' + col;
-
-	            if (this._images[key]) {
-	                return this._images[key];
-	            } else if (this._imageLoading[key]) {
-	                return null;
-	            }
-
-	            var imageUrl = this._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
-	            new Promise(function (resolve, reject) {
-	                var image = new Image();
-	                image.crossOrigin = 'Anonymous';
-	                image.onload = function () {
-	                    resolve(image);
-	                };
-	                image.onerror = function () {
-	                    reject('error');
-	                };
-	                image.src = imageUrl;
-	            }).then(function (image) {
-	                _this2._images[key] = image;
-	                delete _this2._imageLoading[key];
-	                _this2.trigger('change', { zoom: zoom, row: row, col: col, image: image });
-	            });
-	            this._imageLoading[key] = true;
-	            return null;
-	        }
-	    }]);
-
-	    return TileSource;
-	}(_observable.Observable);
-
-/***/ },
-/* 28 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * Methods mixed in to other classes for observe capabilities.
-	 * @mixin Observable
-	 */
-
-	var Observable = exports.Observable = function () {
-	    function Observable() {
-	        _classCallCheck(this, Observable);
-	    }
-
-	    _createClass(Observable, [{
-	        key: "on",
-
-	        /**
-	         * Subscribe to a specified observe with a listener function
-	         * the latter gets the data object that was passed to `fire`
-	         * and additionally `target` and `type` properties
-	         *
-	         * @param {string} type Observable type
-	         * @param {Function} listener Function to be called when the event is fired
-	         * @returns {Object} `this`
-	         */
-	        value: function on(type, listener, thisObj) {
-	            this._listens = this._listens || {};
-	            this._listens[type] = this._listens[type] || [];
-	            var newListener = { fn: listener, ctx: thisObj };
-	            this._listens[type].push(newListener);
-	            return this;
-	        }
-
-	        /**
-	         * Remove a observe listener
-	         *
-	         * @param {string} [type] Observable type. If none is specified, remove all listeners
-	         * @param {Function} [listener] Function to be called when the observe is trigger.
-	         * If none is specified all listeners are removed
-	         * @returns {Object} `this`
-	         */
-
-	    }, {
-	        key: "un",
-	        value: function un(type, listener, thisObj) {
-	            if (!type) {
-	                return this;
-	            }
-	            if (!this.hasListens(type)) return this;
-	            for (var i = 0, len = this._listens[type].length; i < len; i++) {
-	                var l = this._listens[type][i];
-	                if (len > 1) {
-	                    if (l.fn === listener) {
-	                        this._listens[type].splice(i, 1);
-	                        break;
-	                    }
-	                } else {
-	                    delete this._listens[type];
-	                }
-	            }
-=======
->>>>>>> f3earth/master
-
-	            gl.bindTexture(gl.TEXTURE_2D, null);
-	        }
-	    }, {
-	        key: "bindTexture",
-	        value: function bindTexture(gl, textureNo) {
-	            gl.activeTexture(textureNo);
-	            gl.bindTexture(gl.TEXTURE_2D, this._texture);
-	        }
-	    }, {
-	        key: "unBind",
-	        value: function unBind(gl) {
-	            gl.bindTexture(gl.TEXTURE_2D, null);
-	        }
-	    }]);
-
-	    return ImageMaterial;
-	}();
-
-/***/ },
-/* 27 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8315,6 +8196,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _observable = __webpack_require__(2);
 
+	var _const = __webpack_require__(3);
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -8362,10 +8245,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }).then(function (image) {
 	                _this2._images[key] = image;
 	                delete _this2._imageLoading[key];
-	                _this2.trigger('change', { zoom: zoom, row: row, col: col, image: image });
+	                _this2.trigger(_const.Const.SourceEventType.CHANGE, { zoom: zoom, row: row, col: col, image: image });
 	            });
 	            this._imageLoading[key] = true;
-
 	            return null;
 	        }
 	    }]);
@@ -8374,40 +8256,58 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_observable.Observable);
 
 /***/ },
-<<<<<<< HEAD
-/* 29 */
-/***/ function(module, exports) {
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.VectorSource = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _const = __webpack_require__(3);
+
+	var _observable = __webpack_require__(2);
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var VectorSource = exports.VectorSource = function () {
-	    function VectorSource() {
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var VectorSource = exports.VectorSource = function (_Observable) {
+	    _inherits(VectorSource, _Observable);
+
+	    function VectorSource(options) {
 	        _classCallCheck(this, VectorSource);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VectorSource).call(this));
+
+	        _this._id = options.id;
+	        _this._type = options.type;
+	        if (_this._type === _const.Const.SourceType.LINE) {
+	            var lineCoordinates = JSON.parse(options.coordinates);
+	            _this._lines = [];
+	            _this._lines.push(lineCoordinates);
+	        }
+	        return _this;
 	    }
 
 	    _createClass(VectorSource, [{
-	        key: "getLines",
+	        key: 'getLines',
 	        value: function getLines() {
-	            return [[[127.657407, 49.76027], [129.397818, 49.4406], [130.582293, 48.729687], [130.987282, 47.790132], [132.506672, 47.78897], [133.373596, 48.183442], [135.026311, 48.47823], [134.500814, 47.57844], [134.112362, 47.212467], [133.769644, 46.116927], [133.097127, 45.144066], [131.883454, 45.321162], [131.025212, 44.967953], [131.288555, 44.11152], [131.144688, 42.92999], [130.633866, 42.903015], [130.640016, 42.395009], [129.994267, 42.985387], [129.596669, 42.424982], [128.052215, 41.994285], [128.208433, 41.466772], [127.343783, 41.503152], [126.869083, 41.816569], [126.182045, 41.107336], [125.079942, 40.569824], [124.265625, 39.928493], [122.86757, 39.637788], [122.131388, 39.170452], [121.054554, 38.897471], [121.585995, 39.360854], [121.376757, 39.750261], [122.168595, 40.422443], [121.640359, 40.94639], [120.768629, 40.593388], [119.639602, 39.898056], [119.023464, 39.252333], [118.042749, 39.204274], [117.532702, 38.737636], [118.059699, 38.061476], [118.87815, 37.897325], [118.911636, 37.448464], [119.702802, 37.156389], [120.823457, 37.870428], [121.711259, 37.481123], [122.357937, 37.454484], [122.519995, 36.930614], [121.104164, 36.651329], [120.637009, 36.11144], [119.664562, 35.609791], [119.151208, 34.909859], [120.227525, 34.360332], [120.620369, 33.376723], [121.229014, 32.460319], [121.908146, 31.692174], [121.891919, 30.949352], [121.264257, 30.676267], [121.503519, 30.142915], [122.092114, 29.83252], [121.938428, 29.018022], [121.684439, 28.225513], [121.125661, 28.135673], [120.395473, 27.053207], [119.585497, 25.740781], [118.656871, 24.547391], [117.281606, 23.624501], [115.890735, 22.782873], [114.763827, 22.668074], [114.152547, 22.22376], [113.80678, 22.54834], [113.241078, 22.051367], [111.843592, 21.550494], [110.785466, 21.397144], [110.444039, 20.341033], [109.889861, 20.282457], [109.627655, 21.008227], [109.864488, 21.395051], [108.522813, 21.715212], [108.05018, 21.55238], [107.04342, 21.811899], [106.567273, 22.218205], [106.725403, 22.794268], [105.811247, 22.976892], [105.329209, 23.352063], [104.476858, 22.81915], [103.504515, 22.703757], [102.706992, 22.708795], [102.170436, 22.464753], [101.652018, 22.318199], [101.80312, 21.174367], [101.270026, 21.201652], [101.180005, 21.436573], [101.150033, 21.849984], [100.416538, 21.558839], [99.983489, 21.742937], [99.240899, 22.118314], [99.531992, 22.949039], [98.898749, 23.142722], [98.660262, 24.063286], [97.60472, 23.897405], [97.724609, 25.083637], [98.671838, 25.918703], [98.712094, 26.743536], [98.68269, 27.508812], [98.246231, 27.747221], [97.911988, 28.335945], [97.327114, 28.261583], [96.248833, 28.411031], [96.586591, 28.83098], [96.117679, 29.452802], [95.404802, 29.031717], [94.56599, 29.277438], [93.413348, 28.640629], [92.503119, 27.896876], [91.696657, 27.771742], [91.258854, 28.040614], [90.730514, 28.064954], [90.015829, 28.296439], [89.47581, 28.042759], [88.814248, 27.299316], [88.730326, 28.086865], [88.120441, 27.876542], [86.954517, 27.974262], [85.82332, 28.203576], [85.011638, 28.642774], [84.23458, 28.839894], [83.898993, 29.320226], [83.337115, 29.463732], [82.327513, 30.115268], [81.525804, 30.422717], [81.111256, 30.183481], [79.721367, 30.882715], [78.738894, 31.515906], [78.458446, 32.618164], [79.176129, 32.48378], [79.208892, 32.994395], [78.811086, 33.506198], [78.912269, 34.321936], [77.837451, 35.49401], [76.192848, 35.898403], [75.896897, 36.666806], [75.158028, 37.133031], [74.980002, 37.41999], [74.829986, 37.990007], [74.864816, 38.378846], [74.257514, 38.606507], [73.928852, 38.505815], [73.675379, 39.431237], [73.960013, 39.660008], [73.822244, 39.893973], [74.776862, 40.366425], [75.467828, 40.562072], [76.526368, 40.427946], [76.904484, 41.066486], [78.187197, 41.185316], [78.543661, 41.582243], [80.11943, 42.123941], [80.25999, 42.349999], [80.18015, 42.920068], [80.866206, 43.180362], [79.966106, 44.917517], [81.947071, 45.317027], [82.458926, 45.53965], [83.180484, 47.330031], [85.16429, 47.000956], [85.720484, 47.452969], [85.768233, 48.455751], [86.598776, 48.549182], [87.35997, 49.214981], [87.751264, 49.297198], [88.013832, 48.599463], [88.854298, 48.069082], [90.280826, 47.693549], [90.970809, 46.888146], [90.585768, 45.719716], [90.94554, 45.286073], [92.133891, 45.115076], [93.480734, 44.975472], [94.688929, 44.352332], [95.306875, 44.241331], [95.762455, 43.319449], [96.349396, 42.725635], [97.451757, 42.74889], [99.515817, 42.524691], [100.845866, 42.663804], [101.83304, 42.514873], [103.312278, 41.907468], [104.522282, 41.908347], [104.964994, 41.59741], [106.129316, 42.134328], [107.744773, 42.481516], [109.243596, 42.519446], [110.412103, 42.871234], [111.129682, 43.406834], [111.829588, 43.743118], [111.667737, 44.073176], [111.348377, 44.457442], [111.873306, 45.102079], [112.436062, 45.011646], [113.463907, 44.808893], [114.460332, 45.339817], [115.985096, 45.727235], [116.717868, 46.388202], [117.421701, 46.672733], [118.874326, 46.805412], [119.66327, 46.69268], [119.772824, 47.048059], [118.866574, 47.74706], [118.064143, 48.06673], [117.295507, 47.697709], [116.308953, 47.85341], [115.742837, 47.726545], [115.485282, 48.135383], [116.191802, 49.134598], [116.678801, 49.888531], [117.879244, 49.510983], [119.288461, 50.142883], [119.279366, 50.582908], [120.18205, 51.643566], [120.738191, 51.964115], [120.725789, 52.516226], [120.177089, 52.753886], [121.003085, 53.251401], [122.245748, 53.431726], [123.571507, 53.458804], [125.068211, 53.161045], [125.946349, 52.792799], [126.564399, 51.784255], [126.939157, 51.353894], [127.287456, 50.739797], [127.657407, 49.76027]]];
+	            return this._lines;
 	        }
 	    }]);
 
 	    return VectorSource;
-	}();
+	}(_observable.Observable);
 
 /***/ },
-/* 30 */
-=======
-/* 28 */
->>>>>>> f3earth/master
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -8452,7 +8352,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 
 	                    if (context) {
-	                        context = WebGLDebugUtils.makeDebugContext(context);
 	                        break;
 	                    }
 	                }
@@ -8495,11 +8394,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-<<<<<<< HEAD
-/* 31 */
-=======
-/* 29 */
->>>>>>> f3earth/master
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8588,140 +8483,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Camera;
 	}();
 
-<<<<<<< HEAD
-/***/ },
-/* 32 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * Created by zhangwenjin on 2016/7/13.
-	 */
-
-	var DomEvent = exports.DomEvent = function () {
-	    function DomEvent() {
-	        _classCallCheck(this, DomEvent);
-	    }
-
-	    _createClass(DomEvent, null, [{
-	        key: 'on',
-
-	        /**
-	         * @function on(obj: HTMLElement, types: [], fn: Function, context?: Object): this
-	         * Adds a listener function (`fn`) to a particular DOM event type of the
-	         * element `obj`. You can optionally specify the context of the listener
-	         * (object the `this` keyword will point to).
-	        */
-	        value: function on(obj, types, fn, context) {
-	            var _this = this;
-
-	            types.forEach(function (type) {
-	                return _this._on(obj, type, fn, context);
-	            });
-	            return this;
-	        }
-	        /**
-	         * @function un(obj: HTMLElement, types: [], fn: Function, context?: Object): this
-	         * Removes a previously added listener function. If no function is specified,
-	         * it will remove all the listeners of that particular DOM event from the element.
-	         * Note that if you passed a custom context to on, you must pass the same
-	         * context to `un` in order to remove the listener.
-	         */
-	        /** now no need to use this method,so not suppot this function
-	        * static un(obj, types, fn, context) {
-	        *    types.forEach(type => this._un(obj, type, fn, context));
-	        *    return this;
-	        * }
-	        */
-
-	    }, {
-	        key: '_on',
-	        value: function _on(obj, type, fn, context) {
-	            var self = this;
-	            var handler = function handler(e) {
-	                return fn.call(context || obj, e || window.event);
-	            };
-
-	            var originalHandler = handler;
-
-	            if ('addEventListener' in obj) {
-	                if (type === 'mousewheel') {
-	                    obj.addEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
-	                } else if (type === 'mouseenter' || type === 'mouseleave') {
-	                    handler = function handler(e) {
-	                        var event = e || window.event;
-	                        if (self._isExternalTarget(obj, event)) {
-	                            originalHandler(event);
-	                        }
-	                    };
-	                    obj.addEventListener(type === 'mouseenter' ? 'mouseover' : 'mouseout', handler, false);
-	                } else {
-	                    obj.addEventListener(type, handler, false);
-	                }
-	            } else if ('attachEvent' in obj) {
-	                obj.attachEvent('on' + type, handler);
-	            }
-	            return this;
-	        }
-
-	        // static _un(obj, type, fn, context) {
-	        //     if ('removeEventListener' in obj) {
-	        //         if (type === 'mousewheel') {
-	        //             obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', fn, false);
-	        //         } else {
-	        //             let eventType = type;
-	        //             if (type === 'mouseenter') {
-	        //                 eventType = 'mouseover';
-	        //             } else if (type === 'mouseleave') {
-	        //                 eventType = 'mouseout';
-	        //             }
-	        //             obj.removeEventListener(
-	        //                 eventType, fn, false);
-	        //         }
-	        //     } else if ('detachEvent' in obj) {
-	        //         obj.detachEvent(`on${type}`, fn);
-	        //     }
-	        //     return this;
-	        // }
-
-	        /**
-	         * check if element really left/entered the event target (for mouseenter/mouseleave)
-	         */
-
-	    }, {
-	        key: '_isExternalTarget',
-	        value: function _isExternalTarget(el, e) {
-	            var related = e.relatedTarget;
-
-	            if (!related) {
-	                return true;
-	            }
-
-	            try {
-	                while (related && related !== el) {
-	                    related = related.parentNode;
-	                }
-	            } catch (err) {
-	                return false;
-	            }
-	            return related !== el;
-	        }
-	    }]);
-
-	    return DomEvent;
-	}();
-
-=======
->>>>>>> f3earth/master
 /***/ }
 /******/ ])
 });

@@ -26,6 +26,18 @@ export class TileMesh {
         this._createMesh();
     }
 
+    get zoom() {
+        return this._zoom;
+    }
+
+    get row() {
+        return this._row;
+    }
+
+    get col() {
+        return this._col;
+    }
+
     _getMetersPerPixel(zoom) {
         return this._radius * 2.0 * Math.PI / (Math.pow(2, zoom) * PIXELS_PER_TILE);
     }
