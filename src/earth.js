@@ -3,9 +3,8 @@ import { Context } from './context';
 import { Camera } from './camera';
 import { Observable } from './util/observable';
 import { DomEvent } from './util/domEvent';
-
+import { Const } from './const';
 const EARTH_RADIUS = 6378137;
-
 class Earth extends Observable {
     constructor(containerId) {
         super();
@@ -22,20 +21,22 @@ class Earth extends Observable {
 
         this._sourceLayers = [];
         this._interactions = [];
-
-        // new DragPan(this);
-        // new DoubleClickZoom(this);
-        // new MouseWheelZoom(this);
-        DomEvent.on(this._context.canvas, [
-            'click',
-            'dblclick',
-            'mousedown',
-            'mouseup',
-            'mouseover',
-            'mouseout',
-            'mousemove',
-            'mousewheel',
-            'keypress'], this._handleDOMEvent, this);
+        this._controls = [];
+        this._eventType = new Map([['click', Const.EarthEventType.CLICK],
+            ['dblclick', Const.EarthEventType.DBLCLICK],
+            ['mousedown', Const.EarthEventType.MOUSEDOWN],
+            ['mouseup', Const.EarthEventType.MOUSEUP],
+            ['mouseover', Const.EarthEventType.MOUSEOVER],
+            ['mouseout', Const.EarthEventType.MOUSEOUT],
+            ['mousemove', Const.EarthEventType.MOUSEMOVE],
+            ['mousewheel', Const.EarthEventType.MOUSEWHEEL],
+            ['keypress', Const.EarthEventType.KEYPRESS]
+        ]);
+        DomEvent.on(this._context.canvas, Array.from(this._eventType.keys()),
+            this._handleDOMEvent, this);
+        // DomEvent.on(this._context.canvas,
+        //     'click dblclick mousedown mouseup mouseover mousemove mousewheel',
+        //     this._handleDOMEvent, this);
     }
 
     get context() {
@@ -64,7 +65,6 @@ class Earth extends Observable {
     get zoom() {
         return this._zoom;
     }
-
     setZoom(level) {
         let validLevel = level;
         if (level > 18) {
@@ -73,9 +73,13 @@ class Earth extends Observable {
             validLevel = 1;
         }
         if (validLevel !== this._zoom) {
+            this.trigger(Const.EarthEventType.ZOOM_START,
+                { oldLevel: this._zoom, newLevel: validLevel });
             this._zoom = validLevel;
             this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
             this.render();
+            this.trigger(Const.EarthEventType.ZOOM_END,
+                { oldLevel: this._zoom, newLevel: validLevel });
         }
     }
 
@@ -99,13 +103,14 @@ class Earth extends Observable {
         this._sourceLayers.forEach(layer => layer.render(this._camera));
     }
     _handleDOMEvent(e) {
+        if (e._stopped) { return; }
         let type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
         type = type === 'wheel' ? 'mousewheel' : type;
-        if (e._stopped) { return; }
+        const eventType = this._eventType.get(type);
         const data = {
             originalEvent: e
         };
-        this.trigger(type, data);
+        this.trigger(eventType, data);
     }
     addInteraction(interaction) {
         interaction.setEarth(this);
@@ -124,8 +129,22 @@ class Earth extends Observable {
         }
         return this;
     }
+    addControl(control) {
+        control.setEarth(this);
+        this._controls.push(control);
+        return this;
+    }
+    removeControl(control) {
+        for (let i = 0, len = this._interactions.length; i < len; i++) {
+            if (this._controls[i] === control) {
+                control.dispose();
+                this._controls.splice(i, 1);
+                break;
+            }
+        }
+        return this;
+    }
 }
-
 export {
 Earth
 };

@@ -1,15 +1,23 @@
 /**
  * Created by zhangwenjin on 2016/7/13.
  */
+import { Util } from './util';
 export class DomEvent {
     /**
      * @function on(obj: HTMLElement, types: [], fn: Function, context?: Object): this
      * Adds a listener function (`fn`) to a particular DOM event type of the
      * element `obj`. You can optionally specify the context of the listener
      * (object the `this` keyword will point to).
+     * space-separated types (e.g. `'click dblclick'`).
     */
     static on(obj, types, fn, context) {
-        types.forEach(type => this._on(obj, type, fn, context));
+        let typesArray = types;
+        if (typeof types !== 'object') {
+            typesArray = Util.splitWords(types);
+        }
+        typesArray.forEach(type => {
+            this._on(obj, type, fn, context);
+        });
         return this;
     }
     /**

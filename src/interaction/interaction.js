@@ -11,6 +11,7 @@ export class Interaction {
     }
     setEarth(earth) {
         this._earth = earth;
+        return this;
     }
     getEarth() {
         return this._earth;
