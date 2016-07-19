@@ -21,6 +21,7 @@ class Earth extends Observable {
 
         this._sourceLayers = [];
         this._interactions = [];
+        this._controls = [];
         this._eventType = new Map([['click', Const.EarthEventType.CLICK],
             ['dblclick', Const.EarthEventType.DBLCLICK],
             ['mousedown', Const.EarthEventType.MOUSEDOWN],
@@ -113,6 +114,21 @@ class Earth extends Observable {
                 interaction.disable();
                 interaction.setEarth(null);
                 this._interactions.splice(i, 1);
+                break;
+            }
+        }
+        return this;
+    }
+    addControl(control) {
+        control.setEarth(this);
+        this._controls.push(control);
+        return this;
+    }
+    removeControl(control) {
+        for (let i = 0, len = this._interactions.length; i < len; i++) {
+            if (this._controls[i] === control) {
+                control.dispose();
+                this._controls.splice(i, 1);
                 break;
             }
         }
