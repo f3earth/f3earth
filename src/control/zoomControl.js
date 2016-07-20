@@ -14,8 +14,9 @@ export class ZoomControl extends Control {
         controlContainers.appendChild(ele);
         super(ele);
 
-        this.btnZoomIn = ele.getElementsByTagName('button')[0];
-        this.btnZoomOut = ele.getElementsByTagName('button')[1];
+        const buttons =  ele.getElementsByTagName('button');
+        this.btnZoomIn = buttons[0];
+        this.btnZoomOut = buttons[1];
 
         DomEvent.on(this.btnZoomIn, 'click', this._zoomIn, this);
         DomEvent.on(this.btnZoomOut, 'click', this._zoomOut, this);
