@@ -1,0 +1,57 @@
+.fe-attribution-logo {
+    width: 87px;
+    height: 28px;
+    background: url(../imgs/logo.jpg) no-repeat 0 0;
+    background-size: 100% auto;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    margin: 0px 1px;
+}
+.fe-attribution-copyright{
+    cursor: default;
+    background: rgba(255, 255, 255, .7);
+    white-space: nowrap;
+    bottom: 0px;
+    right: auto;
+    top: auto;
+    left: 90px;
+    position: absolute;
+    z-index: 10;
+}
+
+.fe-control {
+    background-color: rgba(255,255,255,.4);
+    border-radius: 4px;
+    position: absolute;
+    padding: 2px;
+}
+.fe-control:hover {
+    background-color: rgba(255,255,255,0.6);
+}
+.fe-control button {
+    display: block;
+    margin: 1px;
+    padding: 0;
+    color : #fff;
+    font-size: 1.14em;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    height: 1.375em;
+    width: 1.375em;
+    line-height: .4em;
+    background-color: rgba(0,60,136,.5);
+    border: none;
+    border-radius: 2px;
+}
+.fe-control-zoom {
+    top: 2em;
+    left: 1em;
+}
+.fe-control-zoom .fe-zoom-in {
+    border-radius: 2px 2px 0 0;
+}
+.fe-control-zoom .fe-zoom-out {
+    border-radius: 0 0 2px 2px;
+}

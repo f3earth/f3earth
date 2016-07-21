@@ -7,8 +7,10 @@
     <script type="text/javascript" src="../dist/mouseWheelZoomInteraction.js" charset="utf-8"></script>
     <script type="text/javascript" src="../dist/doubleClickZoomInteraction.js" charset="utf-8"></script>
     <script type="text/javascript" src="../dist/dragInteraction.js" charset="utf-8"></script>
+    <link rel="stylesheet"  href="../css/fe-control.css">
     <script type="text/javascript" src="../dist/Control.js" charset="utf-8"></script>
     <script type="text/javascript" src="../dist/attributionControl.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../dist/zoomControl.js" charset="utf-8"></script>
 
     <style>
         body {
@@ -19,7 +21,7 @@
         }
         a{   
             display:block;   
-            width:100px;   
+            width:120px;   
             height:30px;   
             line-height:30px;   
             text-align:center;   
@@ -40,8 +42,8 @@
     <button  onclick="btnReomveAttributionControlClick()">删除AttributionControl</button>
 </div>
 <div id="earth"></div>
-<div id="myConrols-Container">
-    <a id="myControl" href="#">zoomIn</a>
+<div id="fe-controls-container">
+    <a id="myControl" href="#">custom myZoomIn</a>
 </div>
 <script type="application/javascript">
     var earth = new Earth("earth");
@@ -55,6 +57,8 @@
     earth.addInteraction(dragInteraction); 
     var mouseWheelZoomInteraction=new MouseWheelZoomInteraction();
     earth.addInteraction(mouseWheelZoomInteraction);
+
+    //custom control
     var myControlElement = document.getElementById('myControl');
     var myControl = new Control(myControlElement);
     earth.addControl(myControl);
@@ -66,8 +70,14 @@
     {
         console.log(e);
     });
+    //fe attributionConttrol;
     var attributionControl = new AttributionControl();
     earth.addControl(attributionControl);
+
+    //fe zoomControl
+    var zoomControl = new ZoomControl();
+    earth.addControl(zoomControl);
+
     function btnReomveMyControlClick(e) {
         earth.removeControl(myControl);
     }
