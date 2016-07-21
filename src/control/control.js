@@ -23,7 +23,7 @@ export class Control extends Observable {
     }
 
     render(camera) {
-        this.trigger(Const.ControlEventType, camera);
+        this.trigger(Const.ControlEventType.RENDER, camera);
         console.log(camera);
     }
 

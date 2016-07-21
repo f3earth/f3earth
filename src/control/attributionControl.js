@@ -2,22 +2,17 @@ import { Control } from './control';
 import { DomEvent } from '../util/domEvent';
 export class AttributionControl extends Control {
     constructor() {
-        const ele = document.createElement('a');
-        ele.innerText = 'this is attribution';
-        ele.href = '#';
-        ele.style = `display:block;
-            width:160px;
-            height:30px;
-            line-height:30px;
-            text-align:center;
-            background-color:#60F;
-            color:white;
-            margin-top:5px;
-            text-decoration:none;
-            position:absolute;
-			top:100;
-			right:0;`;
-        document.body.appendChild(ele);
+        const controlContainers = document.getElementById('fe-controls-container');
+        const ele = document.createElement('div');
+        // css-file be used;
+        ele.innerHTML = `
+            <div class="fe-attribution-logo">
+            </div>
+            <div class="fe-attribution-copyright">
+                <span>Copyright@2016 F3Earth</span>
+            </div>
+        `;
+        controlContainers.appendChild(ele);
         super(ele);
         DomEvent.on(this.element, 'click', this._clickHandler, this);
     }

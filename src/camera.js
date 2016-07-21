@@ -1,5 +1,6 @@
-import { Const } from './const';
 import glMatrix from 'gl-matrix';
+
+import { Const } from './const';
 
 export class Camera {
     constructor() {
