@@ -3,7 +3,7 @@ import glMatrix from 'gl-matrix';
 import { Const } from '../const';
 
 import { ShaderLoader } from '../shader/shaderLoader';
-import { LineShader } from '../shader/lineShader';
+import { LayerShader } from '../shader/layerShader';
 
 export class LineLayerRender {
 
@@ -15,8 +15,8 @@ export class LineLayerRender {
 
     _setup() {
         const gl = this._gl;
-        const vertexShader = ShaderLoader.loadVertex(gl, LineShader.vertexSource);
-        const fragmentShader = ShaderLoader.loadFragment(gl, LineShader.fragmentSource);
+        const vertexShader = ShaderLoader.loadVertex(gl, LayerShader.vertexSource);
+        const fragmentShader = ShaderLoader.loadFragment(gl, LayerShader.fragmentSource);
 
         const shaderProgram = gl.createProgram();
         gl.attachShader(shaderProgram, vertexShader);

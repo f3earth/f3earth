@@ -1,9 +1,9 @@
 import { Const } from '../const';
 import { RasterTileLayer } from '../layer/rasterTileLayer';
-import { LineLayer } from '../layer/lineLayer';
+import { Layer } from '../layer/layer';
 import { TileSource } from './tileSource';
-import { VectorSource } from './vectorSource';
-
+import { LineSource } from './lineSource';
+import { PolygonSource } from './polygonSource';
 export class SourceLayer {
     static from(context, layerConfig) {
         if (layerConfig.type === Const.LayerType.RASTER_TILE) {
@@ -13,8 +13,14 @@ export class SourceLayer {
                 context
             });
         } else if (layerConfig.type === Const.LayerType.LINE) {
-            return new LineLayer({
-                source: new VectorSource(layerConfig.source),
+            return new Layer({
+                source: new LineSource(layerConfig.source),
+                view: { zoom: 3 },
+                context
+            });
+        } else if (layerConfig.type === Const.LayerType.POLYGON) {
+            return new Layer({
+                source: new PolygonSource(layerConfig.source),
                 view: { zoom: 3 },
                 context
             });
