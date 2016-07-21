@@ -13,8 +13,7 @@ export class ZoomControl extends Control {
             <button class="fe-zoom-out" type="button" title="Zoom out">−</button>`;
         controlContainers.appendChild(ele);
         super(ele);
-
-        const buttons =  ele.getElementsByTagName('button');
+        const buttons = ele.getElementsByTagName('button');
         this.btnZoomIn = buttons[0];
         this.btnZoomOut = buttons[1];
 
