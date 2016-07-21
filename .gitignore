@@ -3,7 +3,7 @@ node_modules
 npm-debug.log
 .vscode/launch.json
 /examples/test.html
-/dist
+dist
 
 
 
