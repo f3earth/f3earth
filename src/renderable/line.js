@@ -15,7 +15,7 @@ export class Line {
         this._mesh.bindPoint(gl, pwgl.vertexPositionAttributeLoc);
 
         const colorLoc = gl.getUniformLocation(program, 'uColor');
-        gl.uniform4f(colorLoc, 1.0, 1.0, 1.0, 1.0);
+        gl.uniform4f(colorLoc, 1.0, 0.0, 0.0, 1.0);
         // this._material.bindTexture(gl, gl.TEXTURE0);
         gl.drawArrays(gl.LINE_STRIP, 0, this._mesh.count);
 //        this._material.unBind(gl);
