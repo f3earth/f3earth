@@ -1,6 +1,6 @@
 import { Const } from '../const';
 import { Earcut } from '../util/earCut';
-export class PolygonMesh {
+export class FillMesh {
     constructor(points) {
         this._points = points;
         this._vertices = [];

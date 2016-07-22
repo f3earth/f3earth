@@ -1,6 +1,6 @@
 import { Layer } from './layer';
 import { Polygon as RenderablePolygon } from '../renderable/polygon';
-import { PolygonMesh } from '../mesh/polygonMesh';
+import { FillMesh } from '../mesh/fillMesh';
 import { LayerRender } from '../render/layerRender';
 import { LayerShader } from '../shader/layerShader';
 export class FillLayerLayer extends Layer {
@@ -12,7 +12,7 @@ export class FillLayerLayer extends Layer {
     _buildRenderObjects() {
         this.source.getPolygon().forEach(line => {
             const renderablePolygon = new RenderablePolygon({
-                mesh: new PolygonMesh(line),
+                mesh: new FillMesh(line),
                 material: undefined
             });
             this._renderList.push(renderablePolygon);
