@@ -11,11 +11,11 @@ export class LineLayer extends Layer {
     }
     _buildRenderObjects() {
         this.source.getLines().forEach(line => {
-            const renderablePolygon = new RenderableLine({
+            const renderableLine = new RenderableLine({
                 mesh: new LineMesh(line),
                 material: undefined
             });
-            this._renderList.push(renderablePolygon);
+            this._renderList.push(renderableLine);
         });
     }
 }

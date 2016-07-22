@@ -19,7 +19,7 @@ export class VectorSource extends Observable {
     getPoints() {
         return this._features;
     }
-    getPolygon() {
+    getFill() {
         return this._features;
     }
 

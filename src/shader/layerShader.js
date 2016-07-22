@@ -24,7 +24,7 @@ export class LayerShader {
           } 
         `;
     }
-    static get PolygonVertexSource() {
+    static get FillVertexSource() {
         return `
           attribute vec3 aVertexPosition;
 
@@ -38,7 +38,7 @@ export class LayerShader {
         `;
     }
 
-    static get PolygonFragmentSource() {
+    static get FillFragmentSource() {
         return `
           precision mediump float;
 

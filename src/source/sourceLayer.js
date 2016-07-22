@@ -18,7 +18,7 @@ export class SourceLayer {
                 view: { zoom: 3 },
                 context
             });
-        } else if (layerConfig.type === Const.LayerType.POLYGON) {
+        } else if (layerConfig.type === Const.LayerType.FILL) {
             return new FillLayerLayer({
                 source: new VectorSource(layerConfig.source),
                 view: { zoom: 3 },

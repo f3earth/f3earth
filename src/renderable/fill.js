@@ -1,4 +1,4 @@
-export class Polygon {
+export class Fill {
     constructor(options) {
         this._mesh = options.mesh;
         this._material = options.material;
