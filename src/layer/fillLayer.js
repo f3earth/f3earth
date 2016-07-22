@@ -10,9 +10,9 @@ export class FillLayer extends Layer {
             LayerShader.fillVertexSource, LayerShader.fillFragmentSource);
     }
     _buildRenderObjects() {
-        this.source.getFill().forEach(line => {
+        this.source.getFill().forEach(polygon => {
             const renderablePolygon = new RenderableFill({
-                mesh: new FillMesh(line),
+                mesh: new FillMesh(polygon),
                 material: undefined
             });
             this._renderObjects.push(renderablePolygon);
