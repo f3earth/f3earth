@@ -1,5 +1,4 @@
 import glMatrix from 'gl-matrix';
-import { Const } from '../const';
 import { ShaderLoader } from '../shader/shaderLoader';
 import { RasterTileShader } from '../shader/rasterTileShader';
 
@@ -42,13 +41,13 @@ export class RasterTileLayerRender {
         const uniformMVMatrixLoc = gl.getUniformLocation(program, 'uMVMatrix');
         const uniformProjMatrixLoc = gl.getUniformLocation(program, 'uPMatrix');
         const modelViewMatrix = glMatrix.mat4.create();
-        const projectionMatrix = glMatrix.mat4.create();
+        // const projectionMatrix = glMatrix.mat4.create();
 
-        glMatrix.mat4.perspective(
-            projectionMatrix,
-            60 * Math.PI / 180,
-            gl.viewportWidth / gl.viewportHeight,
-            0.001, 18 * Const.EARTH_RADIUS);
+        // glMatrix.mat4.perspective(
+        //     projectionMatrix,
+        //     60 * Math.PI / 180,
+        //     gl.viewportWidth / gl.viewportHeight,
+        //     0.001, 18 * Const.EARTH_RADIUS);
 
         glMatrix.mat4.identity(modelViewMatrix);
         glMatrix.mat4.lookAt(modelViewMatrix, camera.eye, camera.center, camera.up);
@@ -60,6 +59,6 @@ export class RasterTileLayerRender {
         gl.uniformMatrix4fv(
             uniformProjMatrixLoc,
             false,
-            projectionMatrix);
+            camera.projectMatrix);
     }
 }

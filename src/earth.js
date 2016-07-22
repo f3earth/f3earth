@@ -18,6 +18,7 @@ class Earth extends Observable {
         this._camera = new Camera();
         this._zoom = 3;
         this._camera.eye = [0, 0, this._zoomDist[this._zoom - 1]];
+        this._camera.aspect = this._context.gl.viewportWidth / this._context.gl.viewportHeight;
 
         this._sourceLayers = [];
         this._interactions = [];
@@ -34,9 +35,6 @@ class Earth extends Observable {
         ]);
         DomEvent.on(this._context.canvas, Array.from(this._eventType.keys()),
             this._handleDOMEvent, this);
-        // DomEvent.on(this._context.canvas,
-        //     'click dblclick mousedown mouseup mouseover mousemove mousewheel',
-        //     this._handleDOMEvent, this);
     }
 
     get context() {
