@@ -22,7 +22,7 @@ export class Camera {
 
     _calcProjectMatrix() {
         this._projectionMatrix = glMatrix.mat4.create();
-        glMatrix.mat4.perspective(
+        this._projectionMatrix = glMatrix.mat4.perspective(
             this._projectionMatrix,
             this._fov * Math.PI / 180,
             this._aspect,
