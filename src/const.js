@@ -27,6 +27,7 @@ Const.ControlEventType = {
 
 Const.LayerType = {
     LINE: 'line',
+    FILL: 'fill',
     RASTER_TILE: 'rasterTile'
 };
 

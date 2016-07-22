@@ -1,42 +1,21 @@
-import { Observable } from '../util/observable';
+import { Layer } from './layer';
 import { Line as RenderableLine } from '../renderable/line';
-import { LineLayerRender } from '../render/lineLayerRender';
 import { LineMesh } from '../mesh/lineMesh';
-
-export class LineLayer extends Observable {
-
+import { LayerRender } from '../render/layerRender';
+import { LayerShader } from '../shader/layerShader';
+export class LineLayer extends Layer {
     constructor(options) {
-        super();
-        this._source = options.source;
-        this._view = options.view;
-        this._render = new LineLayerRender(options.context.gl);
-        this._renderList = [];
-        this._renderVersion = -1;
-        this._camera = null;
+        super(options);
+        this._render = new LayerRender(options.context.gl,
+            LayerShader.lineVertexSource, LayerShader.lineFragmentSource);
     }
-
-    render(camera) {
-        this._camera = camera;
-        if (this._renderVersion === -1) {
-            this._buildRenderObjects();
-        }
-
-        this._render.render(this._renderList, camera);
-        this._renderVersion = this._renderVersion + 1;
-    }
-
     _buildRenderObjects() {
-        const lines = this._source.getLines();
-        lines.forEach(line => {
+        this.source.getLines().forEach(line => {
             const renderableLine = new RenderableLine({
                 mesh: new LineMesh(line),
                 material: undefined
             });
-            this._renderList.push(renderableLine);
+            this._renderObjects.push(renderableLine);
         });
-    }
-
-    get source() {
-        return this._source;
     }
 }
