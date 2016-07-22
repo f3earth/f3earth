@@ -1,5 +1,6 @@
 /**
  * Created by zhangwenjin on 2016/7/20.
+ * base by https://github.com/zhangwenjin/earcut/blob/master/src/earcut.js
  */
 class Node {
     constructor(i, x, y) {

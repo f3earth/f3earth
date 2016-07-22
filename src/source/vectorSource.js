@@ -10,10 +10,16 @@ export class VectorSource extends Observable {
         this._features = [];
         this._features.push(lineCoordinates);
     }
-    getRenderObjects() {
-        return this.buildRenderObjects();
-    }
     getFeatures() {
+        return this._features;
+    }
+    getLines() {
+        return this._features;
+    }
+    getPoints() {
+        return this._features;
+    }
+    getPolygon() {
         return this._features;
     }
 
