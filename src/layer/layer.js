@@ -5,7 +5,7 @@ export class Layer extends Observable {
         this._source = options.source;
         this._view = options.view;
         // this._render = new LineLayerRender(options.context.gl);
-        this._renderList = [];
+        this._renderObjects = [];
         this._renderVersion = -1;
         this._camera = null;
     }
@@ -15,7 +15,7 @@ export class Layer extends Observable {
             this._buildRenderObjects();
         }
 
-        this._render.render(this._renderList, camera);
+        this._render.render(this._renderObjects, camera);
         this._renderVersion = this._renderVersion + 1;
     }
     get source() {

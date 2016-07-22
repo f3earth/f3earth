@@ -1,5 +1,5 @@
 export class LayerShader {
-    static get LineVertexSource() {
+    static get lineVertexSource() {
         return `
           attribute vec3 aVertexPosition;
 
@@ -13,7 +13,7 @@ export class LayerShader {
         `;
     }
 
-    static get LineFragmentSource() {
+    static get lineFragmentSource() {
         return `
           precision mediump float;
 
@@ -24,7 +24,7 @@ export class LayerShader {
           } 
         `;
     }
-    static get FillVertexSource() {
+    static get fillVertexSource() {
         return `
           attribute vec3 aVertexPosition;
 
@@ -38,7 +38,7 @@ export class LayerShader {
         `;
     }
 
-    static get FillFragmentSource() {
+    static get fillFragmentSource() {
         return `
           precision mediump float;
 

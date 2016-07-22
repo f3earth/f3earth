@@ -7,7 +7,7 @@ export class LineLayer extends Layer {
     constructor(options) {
         super(options);
         this._render = new LayerRender(options.context.gl,
-            LayerShader.LineVertexSource, LayerShader.LineFragmentSource);
+            LayerShader.lineVertexSource, LayerShader.lineFragmentSource);
     }
     _buildRenderObjects() {
         this.source.getLines().forEach(line => {
@@ -15,7 +15,7 @@ export class LineLayer extends Layer {
                 mesh: new LineMesh(line),
                 material: undefined
             });
-            this._renderList.push(renderableLine);
+            this._renderObjects.push(renderableLine);
         });
     }
 }

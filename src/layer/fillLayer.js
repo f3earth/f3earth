@@ -3,11 +3,11 @@ import { Fill as RenderableFill } from '../renderable/fill';
 import { FillMesh } from '../mesh/fillMesh';
 import { LayerRender } from '../render/layerRender';
 import { LayerShader } from '../shader/layerShader';
-export class FillLayerLayer extends Layer {
+export class FillLayer extends Layer {
     constructor(options) {
         super(options);
         this._render = new LayerRender(options.context.gl,
-            LayerShader.FillVertexSource, LayerShader.FillFragmentSource);
+            LayerShader.fillVertexSource, LayerShader.fillFragmentSource);
     }
     _buildRenderObjects() {
         this.source.getFill().forEach(line => {
@@ -15,7 +15,7 @@ export class FillLayerLayer extends Layer {
                 mesh: new FillMesh(line),
                 material: undefined
             });
-            this._renderList.push(renderablePolygon);
+            this._renderObjects.push(renderablePolygon);
         });
     }
 }

@@ -1,6 +1,6 @@
 import { Const } from '../const';
 import { RasterTileLayer } from '../layer/rasterTileLayer';
-import { FillLayerLayer } from '../layer/fillLayer';
+import { FillLayer } from '../layer/fillLayer';
 import { LineLayer } from '../layer/lineLayer';
 import { TileSource } from './tileSource';
 import { VectorSource } from './vectorSource';
@@ -19,7 +19,7 @@ export class SourceLayer {
                 context
             });
         } else if (layerConfig.type === Const.LayerType.FILL) {
-            return new FillLayerLayer({
+            return new FillLayer({
                 source: new VectorSource(layerConfig.source),
                 view: { zoom: 3 },
                 context
