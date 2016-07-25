@@ -10,8 +10,7 @@ export class MarkerOverlay extends Overlay {
             size: options.size === undefined ? [36, 36] : options.size,
             margin: options.margin === undefined ? 0 : options.margin,
             padding: options.padding === undefined ? 0 : options.padding,
-            border: options.border === undefined ? '0px none' : options.border,
-            imageUrl: options.imageUrl
+            border: options.border === undefined ? '0px none' : options.border
         };
 
         const divElement = document.createElement('span');
