@@ -11,7 +11,6 @@ export class FillMesh {
     }
     _createMesh() {
         const sphere = new Sphere(this._radius);
-        const vertices = [];
         const newPoints = [];
         this._points.forEach(point => {
             newPoints.push(point[0], point[1]);
@@ -25,7 +24,6 @@ export class FillMesh {
         lastPoints.forEach(point => {
             this._vertices = this._vertices.concat(sphere.getXYZ(point[0], point[1]));
         });
-        this._vertices = vertices;
     }
 
     setup(gl) {
