@@ -5,7 +5,14 @@ module.exports = {
         dragInteraction: './src/interaction/dragInteraction.js',
         doubleClickZoomInteraction: './src/interaction/doubleClickZoomInteraction.js',
         // control: './src/control/control.js'
-        attributionControl: './src/control/attributionControl.js'
+        attributionControl: './src/control/attributionControl.js',
+        zoomControl: './src/control/zoomControl.js',
+        overlayLayer: './src/overlay/overlayLayer.js',
+        // overlay: './src/overlay/overlay.js',
+        iconOverlay: './src/overlay/iconOverlay.js',
+        labelOverlay: './src/overlay/labelOverlay.js',
+        markerOverlay: './src/overlay/markerOverlay.js',
+        popupOverlay: './src/overlay/popupOverlay.js'
     },
     output: {
         libraryTarget: 'umd',
