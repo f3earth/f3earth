@@ -25,13 +25,13 @@ export class RasterTileLayerRender {
         this._shaderProgram = shaderProgram;
     }
 
-    render(renderTiles, camera) {
+    render(tiles, camera) {
         const gl = this._gl;
         const program = this._shaderProgram;
         gl.useProgram(program);
 
         this._uploadModels(camera);
-        renderTiles.forEach(tile => tile.render(gl, program));
+        tiles.forEach(tile => tile.render(gl, program));
     }
 
     _uploadModels(camera) {

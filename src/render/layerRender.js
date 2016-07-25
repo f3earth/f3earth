@@ -25,16 +25,15 @@ export class LayerRender {
             console.error('Failed to setup shaders');
         }
         this._shaderProgram = shaderProgram;
-        // gl.useProgram(this._shaderProgram);
     }
 
-    render(Objects, camera) {
+    render(objects, camera) {
         const gl = this._gl;
         const program = this._shaderProgram;
         gl.useProgram(program);
         this._uploadModels(camera);
 
-        Objects.forEach(object => object.render(gl, program));
+        objects.forEach(object => object.render(gl, program));
         gl.flush();
     }
 
