@@ -1,5 +1,5 @@
 import { Layer } from './layer';
-import { Circle as RenderableCircle } from '../renderable/circle';
+import { Line as RenderableLine } from '../renderable/line';
 import { CircleMesh } from '../mesh/circleMesh';
 import { LayerRender } from '../render/layerRender';
 import { LayerShader } from '../shader/layerShader';
@@ -10,7 +10,7 @@ export class CircleLayer extends Layer {
             LayerShader.circleVertexSource, LayerShader.circleFragmentSource);
     }
     _buildRenderObjects() {
-        const renderableCircle = new RenderableCircle({
+        const renderableCircle = new RenderableLine({
             mesh: new CircleMesh({
                 center: this.source.getCenter(),
                 radius: this.source.getRadius()
