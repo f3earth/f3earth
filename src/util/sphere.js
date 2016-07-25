@@ -20,11 +20,11 @@ export class Sphere {
         return [FMath.toDegrees(lon), FMath.toDegrees(lat)];
     }
     getXYZ(lng, lat) {
-        const pointX = this._radius * Math.sin(lng * Math.PI / 180) *
-            Math.cos(lat * Math.PI / 180);
-        const pointY = this._radius * Math.sin(lat * Math.PI / 180);
-        const pointZ = this._radius * Math.cos(lng * Math.PI / 180) *
-            Math.cos(lat * Math.PI / 180);
+        const pointX = this._radius * Math.sin(FMath.toRadians(lng)) *
+            Math.cos(FMath.toRadians(lat));
+        const pointY = this._radius * Math.sin(FMath.toRadians(lat));
+        const pointZ = this._radius * Math.cos(FMath.toRadians(lng)) *
+            Math.cos(FMath.toRadians(lat));
         return [pointX, pointY, pointZ];
     }
 }
