@@ -22,7 +22,7 @@ export class CircleFillMesh {
             this._points.push(lnglat1, this._circleCenter, lnglat2);
         }
         this._points.forEach(point => {
-            this._vertices = this._vertices.concat(sphere.getXYZ(point[0], point[1]));
+            this._vertices.push(...sphere.getXYZ(point[0], point[1]));
         });
     }
 

@@ -19,7 +19,7 @@ export class CircleMesh {
                 this._circleRadius, this._pi2 * i / this._steps));
         }
         this._points.forEach(point => {
-            this._vertices = this._vertices.concat(sphere.getXYZ(point[0], point[1]));
+            this._vertices.push(...sphere.getXYZ(point[0], point[1]));
         });
     }
 
