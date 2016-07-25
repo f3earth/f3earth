@@ -4,7 +4,7 @@ export class CircleMesh {
     constructor(circle) {
         this._points = [];
         this.circleCenter = circle.center;
-        this._steps = 50;
+        this._steps = Const.CIRCLE_BY_STEPS;
         this._pi2 = Math.PI * 2;
         this._vertices = [];
         this._radius = Const.EARTH_RADIUS + 100;
