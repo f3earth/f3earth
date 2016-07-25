@@ -4,16 +4,7 @@
     <meta http-equiv="content-type" content="text/html" charset="utf-8" />
     <title>OverlaySample F3Earth</title>
     <link rel="stylesheet"  href="../css/fe.css">
-    <script type="text/javascript" src="../dist/f3Earth.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/mouseWheelZoomInteraction.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/doubleClickZoomInteraction.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/dragInteraction.js" charset="utf-8"></script>    
-    <script type="text/javascript" src="../dist/overlayLayer.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/overlay.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/iconOverlay.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/labelOverlay.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/markerOverlay.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/popupOverlay.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../dist/fe.js" charset="utf-8"></script>
     <style>
         body {
             margin: 0;
@@ -47,31 +38,31 @@
         <div id="customMarker" title="Marker">this is customMarker</div>
     </div>
     <script >
-        var earth = new Earth("earth");
+        var earth = new FE.Earth("earth");
         earth.addLayer({
             type: 'rasterTile',
             url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
         });
-        var doubleClickZoomInteraction=new DoubleClickZoomInteraction();
+        var doubleClickZoomInteraction=new FEInteraction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);
 
-        var dragInteraction=new DragInteraction();
+        var dragInteraction=new FEInteraction.Drag();
         earth.addInteraction(dragInteraction);
 
-        var mouseWheelZoomInteraction=new MouseWheelZoomInteraction();
+        var mouseWheelZoomInteraction=new FEInteraction.MouseWheelZoom();
         earth.addInteraction(mouseWheelZoomInteraction);
 
         var overlayContainer  = document.getElementById('overlayContainer');
-        var customLayer = new OverlayLayer({
+        var customLayer = new FEOverlay.Layer({
             container : overlayContainer
         });
         earth.addOverlayLayer(customLayer);
-        customLayer.addOverlay(new Overlay({
+        customLayer.addOverlay(new FEOverlay.Overlay({
             element : document.getElementById('customLink'),
             coordinate :[100,100],
             positioning : 'center-center', //should be used Const.OverlayPositioning
         }));
-        customLayer.addOverlay(new Overlay({
+        customLayer.addOverlay(new FEOverlay.Overlay({
             element : document.getElementById('customMarker'),
             coordinate :[200,200],
             positioning : 'center-center', //should be used Const.OverlayPositioning
@@ -79,18 +70,18 @@
             alert(this.element.innerText + '  clicked!!!')
         })
 
-        var defLayer =  new OverlayLayer({
+        var defLayer =  new FEOverlay.Layer({
             container : overlayContainer
         });
         earth.addOverlayLayer(defLayer);
-        var label = new LabelOverlay({
+        var label = new FEOverlay.Label({
             coordinate :[300,300],
             content: 'this is label of f3earth provide',
             border: '1px solid rgb(255,255, 255)',
         });
         defLayer.addOverlay(label);
 
-        var icon = new IconOverlay({
+        var icon = new FEOverlay.Icon({
             coordinate :[150,150],
             border: '1px solid rgb(255,255, 255)',
             imageUrl: '../imgs/logo.jpg',
@@ -102,16 +93,16 @@
             name : 'this is laoyu',
             imageUrl: '../imgs/logo.jpg',
         }
-        var marker = new MarkerOverlay({
+        var marker = new FEOverlay.Marker({
             coordinate :[50,50],
             border: '1px solid rgb(255,255, 255)',            
-            icon: new IconOverlay({
+            icon: new FEOverlay.Icon({
                 imageUrl: friend.imageUrl,
                 size: [36,36],
                 offset: [1,1],
                 border: '1px solid rgb(255,0, 255)',
             }),
-            label : new LabelOverlay({
+            label : new FEOverlay.Label({
                content : friend.name,
                offset: [-10,36],
                border: '1px solid rgb(255,255, 255)',
@@ -122,7 +113,7 @@
         marker.on('click',function(e){
             alert(this.entity.name + " " +  this.entity.imageUrl)
         })
-        var popup = new PopupOverlay({
+        var popup = new FEOverlay.Popup({
             content: `<table><tr><td>${friend.name}</td></tr><tr><td style="width=64px;height=64px"><img src="${friend.imageUrl}"/></td></tr></table>`
         })
         defLayer.addOverlay(popup);

@@ -3,14 +3,8 @@
 <head>
     <meta http-equiv="content-type" content="text/html" charset="utf-8" />
     <title>controlSimple F3Earth</title>
-    <script type="text/javascript" src="../dist/f3Earth.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/mouseWheelZoomInteraction.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/doubleClickZoomInteraction.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/dragInteraction.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../dist/fe.js" charset="utf-8"></script>
     <link rel="stylesheet"  href="../css/fe.css">
-    <script type="text/javascript" src="../dist/Control.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/attributionControl.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../dist/zoomControl.js" charset="utf-8"></script>
 
     <style>
         body {
@@ -45,22 +39,22 @@
 <div id="fe-controls-container">
     <a id="myControl" href="#">custom myZoomIn</a>
 </div>
-<script type="application/javascript">
-    var earth = new Earth("earth");
+<script type="text/javascript">
+    var earth = new FE.Earth("earth");
     earth.addLayer({
         type: 'rasterTile',
         url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
     });
-    var doubleClickZoomInteraction=new DoubleClickZoomInteraction(); 
+    var doubleClickZoomInteraction=new FEInteraction.DoubleClickZoom(); 
     earth.addInteraction(doubleClickZoomInteraction); 
-    var dragInteraction=new DragInteraction(); 
+    var dragInteraction=new FEInteraction.Drag(); 
     earth.addInteraction(dragInteraction); 
-    var mouseWheelZoomInteraction=new MouseWheelZoomInteraction();
+    var mouseWheelZoomInteraction=new FEInteraction.MouseWheelZoom();
     earth.addInteraction(mouseWheelZoomInteraction);
 
     //custom control
     var myControlElement = document.getElementById('myControl');
-    var myControl = new Control(myControlElement);
+    var myControl = new FEControl.Control(myControlElement);
     earth.addControl(myControl);
     myControlElement.addEventListener('click',function(e){
         var myEarth = myControl.earth;
@@ -71,11 +65,11 @@
         console.log(e);
     });
     //fe attributionConttrol;
-    var attributionControl = new AttributionControl();
+    var attributionControl = new FEControl.Attribution();
     earth.addControl(attributionControl);
 
     //fe zoomControl
-    var zoomControl = new ZoomControl();
+    var zoomControl = new FEControl.Zoom();
     earth.addControl(zoomControl);
 
     function btnReomveMyControlClick(e) {

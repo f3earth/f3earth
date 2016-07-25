@@ -1,5 +1,7 @@
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
+const uglify = require('gulp-uglify');
+const concat = require('gulp-concat');
 const webpack = require('webpack');
 
 gulp.task('lint', () =>
@@ -7,7 +9,7 @@ gulp.task('lint', () =>
     // So, it's best to have gulp ignore the directory as well.
     // Also, Be sure to return the stream from the task;
     // Otherwise, the task may end before the stream has finished.
-    gulp.src(['gulpfile.js', 'src/**/*.js', 'examples/**/*.js'])
+    gulp.src(['gulpfile.js', 'src/**/*.js', 'plugins/**/*.js', 'examples/**/*.js'])
         // eslint() attaches the lint output to the "eslint" property
         // of the file object so it can be used by other modules.
         .pipe(eslint({ useEslintrc: true }))
@@ -22,24 +24,19 @@ gulp.task('lint', () =>
 gulp.task('webpack', () => {
     const config = {
         entry: {
-            f3Earth: './src/earth.js',
-            mouseWheelZoomInteraction: './src/interaction/mouseWheelZoomInteraction.js',
-            dragInteraction: './src/interaction/dragInteraction.js',
-            doubleClickZoomInteraction: './src/interaction/doubleClickZoomInteraction.js',
-            // control: './src/control/control.js'
-            attributionControl: './src/control/attributionControl.js',
-            zoomControl: './src/control/zoomControl.js',
-            overlayLayer: './src/overlay/overlayLayer.js',
-            overlay: './src/overlay/overlay.js',
-            iconOverlay: './src/overlay/iconOverlay.js',
-            labelOverlay: './src/overlay/labelOverlay.js',
-            markerOverlay: './src/overlay/markerOverlay.js',
-            popupOverlay: './src/overlay/popupOverlay.js'
+            f3earth: './src/fe.js',
+            interaction: './plugins/interaction/feInteraction.js',
+            control: './plugins/control/feControl.js',
+            overlay: './plugins/overlay/feOverlay.js'
         },
         output: {
             libraryTarget: 'umd',
             filename: 'dist/[name].js'
         },
+        plugins: [
+            new webpack.optimize.CommonsChunkPlugin('dist/common.js',
+                ['f3earth', 'interaction', 'control', 'overlay'])
+        ],
         module: {
             loaders: [
                 {
@@ -54,13 +51,28 @@ gulp.task('webpack', () => {
             noParse: [/proj4/]
         }
     };
-    webpack(config, (err, stats) => {
-        if (err) {
-            console.error(err.toString());
-        } else {
-            console.log(stats.toString());
-        }
-    });
+
+    return new Promise((resolve, reject) => {
+        webpack(config, (err, stats) => {
+            if (err) {
+                console.error(err.toString());
+                reject();
+            } else {
+                console.log(stats.toString());
+                resolve();
+            }
+        });
+    }).then(() => gulp.start('jsmin'));
+});
+
+gulp.task('jsmin', () => {
+    gulp.src([
+        'dist/common.js', 'dist/f3earth.js', 'dist/control.js',
+        'dist/interaction.js', 'dist/overlay.js'])
+        .pipe(concat('fe.js'))
+        .pipe(gulp.dest('dist'))
+        .pipe(uglify())
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('default', ['lint'], () => {
