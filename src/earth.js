@@ -4,6 +4,7 @@ import { Camera } from './camera';
 import { Observable } from './util/observable';
 import { DomEvent } from './util/domEvent';
 import { Const } from './const';
+import { Dom } from './util/dom';
 
 class Earth extends Observable {
     constructor(containerId) {
@@ -22,6 +23,7 @@ class Earth extends Observable {
         this._sourceLayers = [];
         this._interactions = [];
         this._controls = [];
+        this._overlayLayers = [];
         this._eventType = new Map([['click', Const.EarthEventType.CLICK],
             ['dblclick', Const.EarthEventType.DBLCLICK],
             ['mousedown', Const.EarthEventType.MOUSEDOWN],
@@ -145,6 +147,31 @@ class Earth extends Observable {
             }
         }
         return this;
+    }
+    addOverlayLayer(overlayLayer) {
+        overlayLayer.setEarth(this);
+        this._overlayLayers.push(overlayLayer);
+    }
+    removeOverlayLayer(overlayLayer) {
+        for (let i = 0, len = this._overlayLayers.length; i < len; i++) {
+            if (this._overlayLayers[i] === overlayLayer) {
+                overlayLayer.dispose();
+                this._overlayLayers.splice(i, 1);
+                break;
+            }
+        }
+        return this;
+    }
+    clearOverlayLayers() {
+        this._overlayLayers.forEach(overlayLayer => overlayLayer.dispose());
+        this._overlayLayers = [];
+    }
+
+    get container() {
+        return this._container;
+    }
+    get size() {
+        return Dom.getSize(this._container);
     }
 }
 export {
