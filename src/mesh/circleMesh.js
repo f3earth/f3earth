@@ -19,16 +19,7 @@ export class CircleMesh {
                 this._circleRadius, this._pi2 * i / this._steps));
         }
         this._points.forEach(point => {
-            const latLng = {
-                lng: point[0],
-                lat: point[1]
-            };
-            const pointX = this._radius * Math.sin(latLng.lng * Math.PI / 180) *
-                            Math.cos(latLng.lat * Math.PI / 180);
-            const pointY = this._radius * Math.sin(latLng.lat * Math.PI / 180);
-            const pointZ = this._radius * Math.cos(latLng.lng * Math.PI / 180) *
-                            Math.cos(latLng.lat * Math.PI / 180);
-            this._vertices.push(pointX, pointY, pointZ);
+            this._vertices = this._vertices.concat(sphere.getXYZ(point[0], point[1]));
         });
     }
 

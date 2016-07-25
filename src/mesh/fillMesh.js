@@ -1,5 +1,6 @@
 import { Const } from '../const';
 import { Earcut } from '../util/earCut';
+import { Sphere } from '../util/sphere';
 export class FillMesh {
     constructor(points) {
         this._points = points;
@@ -9,6 +10,7 @@ export class FillMesh {
         this._createMesh();
     }
     _createMesh() {
+        const sphere = new Sphere(this._radius);
         const vertices = [];
         const newPoints = [];
         this._points.forEach(point => {
@@ -21,16 +23,7 @@ export class FillMesh {
             lastPoints.push(this._points[point]);
         });
         lastPoints.forEach(point => {
-            const latLng = {
-                lng: point[0],
-                lat: point[1]
-            };
-            const pointX = this._radius * Math.sin(latLng.lng * Math.PI / 180) *
-                            Math.cos(latLng.lat * Math.PI / 180);
-            const pointY = this._radius * Math.sin(latLng.lat * Math.PI / 180);
-            const pointZ = this._radius * Math.cos(latLng.lng * Math.PI / 180) *
-                            Math.cos(latLng.lat * Math.PI / 180);
-            vertices.push(pointX, pointY, pointZ);
+            this._vertices = this._vertices.concat(sphere.getXYZ(point[0], point[1]));
         });
         this._vertices = vertices;
     }

@@ -39,7 +39,7 @@ export class SourceLayer {
                 view: { zoom: 3 },
                 context
             });
-        } else if (layerConfig.type === Const.LayerType.CIRCLEFILL) {
+        } else if (layerConfig.type === Const.LayerType.CIRCLE_FILL) {
             return new CircleFillLayer({
                 source: new VectorSource(layerConfig.source),
                 view: { zoom: 3 },

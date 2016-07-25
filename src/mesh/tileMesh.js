@@ -1,6 +1,6 @@
 import { Const } from '../const';
 import { Proj } from '../util/proj';
-
+import { Sphere } from '../util/sphere';
 const PIXELS_PER_TILE = 256;
 const SEGMENT_COUNT = 16;
 
@@ -74,6 +74,7 @@ export class TileMesh {
     }
 
     _createMesh() {
+        const sphere = new Sphere(this._radius);
         this._calcMercatorBound();
         // make SEGMENT_COUNT*SEGMENT_COUNT square mesh
         const intervalMeters = Math.abs(this._bound.E - this._bound.W) / SEGMENT_COUNT;
@@ -91,12 +92,7 @@ export class TileMesh {
                                                 this._row === 0 && y === 0,
                                                 this._row === maxRow && y === SEGMENT_COUNT);
 
-                const pointX = this._radius * Math.sin(latLng.lng * Math.PI / 180) *
-                                Math.cos(latLng.lat * Math.PI / 180);
-                const pointY = this._radius * Math.sin(latLng.lat * Math.PI / 180);
-                const pointZ = this._radius * Math.cos(latLng.lng * Math.PI / 180) *
-                                Math.cos(latLng.lat * Math.PI / 180);
-                this._vertices.push(pointX, pointY, pointZ);
+                this._vertices = this._vertices.concat(sphere.getXYZ(latLng.lng, latLng.lat));
                 verticeIndex.push(this._vertices.length / 3 - 1);
 
                 const u = x / SEGMENT_COUNT;
