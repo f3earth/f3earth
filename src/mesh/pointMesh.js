@@ -12,7 +12,7 @@ export class PointMesh {
     _createMesh() {
         const sphere = new Sphere(this._radius);
         this._points.forEach(point => {
-            this._vertices = this._vertices.concat(sphere.getXYZ(point[0], point[1]));
+            this._vertices.push(...sphere.getXYZ(point[0], point[1]));
         });
     }
 

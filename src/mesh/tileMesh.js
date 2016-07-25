@@ -91,8 +91,7 @@ export class TileMesh {
                                                 pointN,
                                                 this._row === 0 && y === 0,
                                                 this._row === maxRow && y === SEGMENT_COUNT);
-
-                this._vertices = this._vertices.concat(sphere.getXYZ(latLng.lng, latLng.lat));
+                this._vertices.push(...sphere.getXYZ(latLng.lng, latLng.lat));
                 verticeIndex.push(this._vertices.length / 3 - 1);
 
                 const u = x / SEGMENT_COUNT;
