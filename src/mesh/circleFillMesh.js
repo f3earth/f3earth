@@ -1,14 +1,14 @@
 import { Const } from '../const';
 
 export class CircleFillMesh {
-    constructor(circle) {
+    constructor(options) {
         this._points = [];
-        this.circleCenter = circle.center;
+        this.circleCenter = options.center;
         this._steps = 50;
         this._pi2 = Math.PI * 2;
         this._vertices = [];
         this._radius = Const.EARTH_RADIUS + 100;
-        this._circleRadius = (180 / this._radius) * circle.radius;
+        this._circleRadius = (180 / this._radius) * options.radius;
         this._createMesh();
     }
 
