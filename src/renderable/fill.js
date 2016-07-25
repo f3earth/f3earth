@@ -13,7 +13,7 @@ export class Fill {
         gl.enableVertexAttribArray(pwgl.vertexPositionAttributeLoc);
         this._mesh.bindPoint(gl, pwgl.vertexPositionAttributeLoc);
         const colorLoc = gl.getUniformLocation(program, 'uColor');
-        gl.uniform4f(colorLoc, 1.0, 0.0, 0.0, 0.5);
+        gl.uniform4f(colorLoc, 1.0, 0.0, 0.0, 0.4);
         gl.drawArrays(gl.TRIANGLES, 0, this._mesh.count);
 //        this._material.unBind(gl);
     }

@@ -1,24 +1,21 @@
 import { Const } from '../const';
-
+import { Util } from '../util/util';
 export class CircleMesh {
-    constructor(circle) {
+    constructor(options) {
         this._points = [];
-        this.circleCenter = circle.center;
+        this._circleCenter = options.center;
         this._steps = Const.CIRCLE_BY_STEPS;
         this._pi2 = Math.PI * 2;
         this._vertices = [];
         this._radius = Const.EARTH_RADIUS + 100;
-        this._circleRadius = (180 / this._radius) * circle.radius;
+        this._circleRadius = options.radius;
         this._createMesh();
     }
 
     _createMesh() {
         for (let i = 0; i <= this._steps; i++) {
-            const lng = this.circleCenter[0] +
-                this._circleRadius * Math.cos(i / this._steps * this._pi2);
-            const lat = this.circleCenter[1] +
-                this._circleRadius * Math.sin(i / this._steps * this._pi2);
-            this._points.push([lng, lat]);
+            this._points.push(Util.sphereOffset(this._circleCenter,
+                this._circleRadius, this._pi2 * i / this._steps, this._radius));
         }
         this._points.forEach(point => {
             const latLng = {

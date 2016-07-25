@@ -7,7 +7,7 @@ export class CircleLayer extends Layer {
     constructor(options) {
         super(options);
         this._render = new LayerRender(options.context.gl,
-            LayerShader.circleVertexSource, LayerShader.circleFragmentSource);
+            LayerShader.lineVertexSource, LayerShader.lineFragmentSource);
     }
     _buildRenderObjects() {
         const renderableCircle = new RenderableLine({

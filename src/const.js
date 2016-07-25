@@ -39,7 +39,7 @@ Const.SourceType = {
 };
 
 Const.EARTH_RADIUS = 6378137;
-Const.CIRCLE_BY_STEPS = 50;
+Const.CIRCLE_BY_STEPS = 64;
 export {
     Const
 };
