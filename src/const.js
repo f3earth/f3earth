@@ -29,6 +29,8 @@ Const.LayerType = {
     POINT: 'point',
     LINE: 'line',
     FILL: 'fill',
+    CIRCLE: 'circle',
+    CIRCLEFILL: 'circlefill',
     RASTER_TILE: 'rasterTile'
 };
 
