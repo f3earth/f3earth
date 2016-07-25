@@ -29,6 +29,8 @@ Const.LayerType = {
     POINT: 'point',
     LINE: 'line',
     FILL: 'fill',
+    CIRCLE: 'circle',
+    CIRCLE_FILL: 'circleFill',
     RASTER_TILE: 'rasterTile'
 };
 
@@ -37,7 +39,7 @@ Const.SourceType = {
 };
 
 Const.EARTH_RADIUS = 6378137;
-
+Const.CIRCLE_BY_STEPS = 64;
 export {
     Const
 };

@@ -1,5 +1,5 @@
 import { Const } from '../const';
-
+import { Sphere } from '../util/sphere';
 export class PointMesh {
     constructor(points) {
         this._points = points;
@@ -10,17 +10,9 @@ export class PointMesh {
     }
 
     _createMesh() {
+        const sphere = new Sphere(this._radius);
         this._points.forEach(point => {
-            const latLng = {
-                lng: point[0],
-                lat: point[1]
-            };
-            const pointX = this._radius * Math.sin(latLng.lng * Math.PI / 180) *
-                            Math.cos(latLng.lat * Math.PI / 180);
-            const pointY = this._radius * Math.sin(latLng.lat * Math.PI / 180);
-            const pointZ = this._radius * Math.cos(latLng.lng * Math.PI / 180) *
-                            Math.cos(latLng.lat * Math.PI / 180);
-            this._vertices.push(pointX, pointY, pointZ);
+            this._vertices.push(...sphere.getXYZ(point[0], point[1]));
         });
     }
 
