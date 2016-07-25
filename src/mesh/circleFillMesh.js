@@ -1,5 +1,5 @@
 import { Const } from '../const';
-import { Util } from '../util/util';
+import { Sphere } from '../util/sphere';
 export class CircleFillMesh {
     constructor(options) {
         this._points = [];
@@ -13,11 +13,12 @@ export class CircleFillMesh {
     }
 
     _createMesh() {
+        const sphere = new Sphere(this._radius);
         for (let i = 0; i < this._steps; i++) {
-            const lnglat1 = Util.sphereOffset(this._circleCenter,
-                this._circleRadius, this._pi2 * i / this._steps, this._radius);
-            const lnglat2 = Util.sphereOffset(this._circleCenter,
-                this._circleRadius, this._pi2 * (i + 1) / this._steps, this._radius);
+            const lnglat1 = sphere.offset(this._circleCenter,
+                this._circleRadius, this._pi2 * i / this._steps);
+            const lnglat2 = sphere.offset(this._circleCenter,
+                this._circleRadius, this._pi2 * (i + 1) / this._steps);
             this._points.push(lnglat1, this._circleCenter, lnglat2);
         }
         this._points.forEach(point => {
