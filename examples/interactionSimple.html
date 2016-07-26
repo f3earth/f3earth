@@ -32,21 +32,21 @@
     });
     var dragInteraction,mouseWheelZoomInteraction,doubleClickZoomInteraction;
     function addDoubleClickZoomInteraction () {
-        doubleClickZoomInteraction=doubleClickZoomInteraction||new FEInteraction.DoubleClickZoom();
+        doubleClickZoomInteraction=doubleClickZoomInteraction||new FE.Interaction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);
     }
     function delDoubleClickZoomInteraction() {
         earth.removeInteraction(doubleClickZoomInteraction);
     }
     function addDragInteraction() {
-         dragInteraction=dragInteraction||new FEInteraction.Drag();
+         dragInteraction=dragInteraction||new FE.Interaction.Drag();
         earth.addInteraction(dragInteraction);
     }
     function delDragInteraction() {
         earth.removeInteraction(dragInteraction);
     }
     function addMouseWheelZoomInteraction() {
-         mouseWheelZoomInteraction=mouseWheelZoomInteraction||new FEInteraction.MouseWheelZoom();
+         mouseWheelZoomInteraction=mouseWheelZoomInteraction||new FE.Interaction.MouseWheelZoom();
         earth.addInteraction(mouseWheelZoomInteraction);
     }
     function delMouseWheelZoomInteraction() {

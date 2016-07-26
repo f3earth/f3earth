@@ -23,13 +23,13 @@
             type: 'rasterTile',
             url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
         });
-        var doubleClickZoomInteraction=new FEInteraction.DoubleClickZoom();
+        var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);
 
-        var dragInteraction=new FEInteraction.Drag();
+        var dragInteraction=new FE.Interaction.Drag();
         earth.addInteraction(dragInteraction);
 
-        var mouseWheelZoomInteraction=new FEInteraction.MouseWheelZoom();
+        var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
         earth.addInteraction(mouseWheelZoomInteraction);
         earth.on(FE.Const.EarthEventType.ZOOM_START,function (e) {
             console.log(e);

@@ -45,16 +45,16 @@
         type: 'rasterTile',
         url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
     });
-    var doubleClickZoomInteraction=new FEInteraction.DoubleClickZoom(); 
+    var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom(); 
     earth.addInteraction(doubleClickZoomInteraction); 
-    var dragInteraction=new FEInteraction.Drag(); 
+    var dragInteraction=new FE.Interaction.Drag(); 
     earth.addInteraction(dragInteraction); 
-    var mouseWheelZoomInteraction=new FEInteraction.MouseWheelZoom();
+    var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
     earth.addInteraction(mouseWheelZoomInteraction);
 
     //custom control
     var myControlElement = document.getElementById('myControl');
-    var myControl = new FEControl.Control(myControlElement);
+    var myControl = new FE.Control.Control(myControlElement);
     earth.addControl(myControl);
     myControlElement.addEventListener('click',function(e){
         var myEarth = myControl.earth;
@@ -65,11 +65,11 @@
         console.log(e);
     });
     //fe attributionConttrol;
-    var attributionControl = new FEControl.Attribution();
+    var attributionControl = new FE.Control.Attribution();
     earth.addControl(attributionControl);
 
     //fe zoomControl
-    var zoomControl = new FEControl.Zoom();
+    var zoomControl = new FE.Control.Zoom();
     earth.addControl(zoomControl);
 
     function btnReomveMyControlClick(e) {

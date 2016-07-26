@@ -46,13 +46,13 @@
         // show china
         earth.rotate(-30 * Math.PI / 180.0, 110 * Math.PI / 180.0);
 
-        var doubleClickZoomInteraction=new FEInteraction.DoubleClickZoom();
+        var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);
 
-        var dragInteraction=new FEInteraction.Drag();
+        var dragInteraction=new FE.Interaction.Drag();
         earth.addInteraction(dragInteraction);
 
-        var mouseWheelZoomInteraction=new FEInteraction.MouseWheelZoom();
+        var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
         earth.addInteraction(mouseWheelZoomInteraction);
     </script>
 </body>

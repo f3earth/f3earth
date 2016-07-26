@@ -1,8 +1,8 @@
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
 const uglify = require('gulp-uglify');
-const concat = require('gulp-concat');
 const webpack = require('webpack');
+const argv = require('yargs').argv;
 
 gulp.task('lint', () =>
     // ESLint ignores files with "node_modules" paths.
@@ -23,20 +23,12 @@ gulp.task('lint', () =>
 
 gulp.task('webpack', () => {
     const config = {
-        entry: {
-            f3earth: './src/fe.js',
-            interaction: './plugins/interaction/feInteraction.js',
-            control: './plugins/control/feControl.js',
-            overlay: './plugins/overlay/feOverlay.js'
-        },
+        entry: './fe.js',
         output: {
+            library: 'FE',
             libraryTarget: 'umd',
-            filename: 'dist/[name].js'
+            filename: 'dist/fe.js'
         },
-        plugins: [
-            new webpack.optimize.CommonsChunkPlugin('dist/common.js',
-                ['f3earth', 'interaction', 'control', 'overlay'])
-        ],
         module: {
             loaders: [
                 {
@@ -66,16 +58,8 @@ gulp.task('webpack', () => {
 });
 
 gulp.task('jsmin', () => {
-    if (gulp.env.debug) {
-        gulp.src(['dist/common.js', 'dist/f3earth.js', 'dist/control.js',
-        'dist/interaction.js', 'dist/overlay.js'])
-        .pipe(concat('fe.js'))
-        .pipe(gulp.dest('dist'));
-    } else {
-        gulp.src(['dist/common.js', 'dist/f3earth.js', 'dist/control.js',
-        'dist/interaction.js', 'dist/overlay.js'])
-        .pipe(concat('fe.js'))
-        .pipe(gulp.dest('dist'))
+    if (argv.p) {
+        gulp.src(['dist/fe.js'])
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
     }
