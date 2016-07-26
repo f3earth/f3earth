@@ -1,13 +1,15 @@
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
+const uglify = require('gulp-uglify');
 const webpack = require('webpack');
+const argv = require('yargs').argv;
 
 gulp.task('lint', () =>
     // ESLint ignores files with "node_modules" paths.
     // So, it's best to have gulp ignore the directory as well.
     // Also, Be sure to return the stream from the task;
     // Otherwise, the task may end before the stream has finished.
-    gulp.src(['gulpfile.js', 'src/**/*.js', 'examples/**/*.js'])
+    gulp.src(['./gulpfile.js', './fe.js', 'src/**/*.js', 'plugins/**/*.js', 'examples/**/*.js'])
         // eslint() attaches the lint output to the "eslint" property
         // of the file object so it can be used by other modules.
         .pipe(eslint({ useEslintrc: true }))
@@ -21,17 +23,11 @@ gulp.task('lint', () =>
 
 gulp.task('webpack', () => {
     const config = {
-        entry: {
-            f3Earth: './src/earth.js',
-            mouseWheelZoomInteraction: './src/interaction/mouseWheelZoomInteraction.js',
-            dragInteraction: './src/interaction/dragInteraction.js',
-            doubleClickZoomInteraction: './src/interaction/doubleClickZoomInteraction.js',
-            // control: './src/control/control.js'
-            attributionControl: './src/control/attributionControl.js'
-        },
+        entry: './fe.js',
         output: {
+            library: 'FE',
             libraryTarget: 'umd',
-            filename: 'dist/[name].js'
+            filename: 'dist/fe.js'
         },
         module: {
             loaders: [
@@ -47,13 +43,26 @@ gulp.task('webpack', () => {
             noParse: [/proj4/]
         }
     };
-    webpack(config, (err, stats) => {
-        if (err) {
-            console.error(err.toString());
-        } else {
-            console.log(stats.toString());
-        }
-    });
+
+    return new Promise((resolve, reject) => {
+        webpack(config, (err, stats) => {
+            if (err) {
+                console.error(err.toString());
+                reject();
+            } else {
+                console.log(stats.toString());
+                resolve();
+            }
+        });
+    }).then(() => gulp.start('jsmin'));
+});
+
+gulp.task('jsmin', () => {
+    if (argv.p) {
+        gulp.src(['dist/fe.js'])
+        .pipe(uglify())
+        .pipe(gulp.dest('dist'));
+    }
 });
 
 gulp.task('default', ['lint'], () => {

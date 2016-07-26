@@ -1,9 +1,9 @@
 /**
  * Created by zhangwenjin on 2016/7/13.
  */
-
 import { Interaction } from './interaction';
-import { Const } from '../const';
+import { Const } from '../../src/const';
+
 export class DragInteraction extends Interaction {
     constructor() {
         super();

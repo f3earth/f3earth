@@ -1,18 +1,18 @@
 import { Layer } from './layer';
-import { Line as RenderableLine } from '../renderable/line';
-import { LineMesh } from '../mesh/lineMesh';
+import { Point as RenderablePoint } from '../renderable/point';
+import { PointMesh } from '../mesh/pointMesh';
 import { LayerRender } from '../render/layerRender';
 import { LayerShader } from '../shader/layerShader';
-export class LineLayer extends Layer {
+export class PointLayer extends Layer {
     constructor(options) {
         super(options);
         this._render = new LayerRender(options.context.gl,
-            LayerShader.lineVertexSource, LayerShader.lineFragmentSource);
+            LayerShader.pointVertexSource, LayerShader.pointFragmentSource);
     }
     _buildRenderObjects() {
-        this.source.getLines().forEach(line => {
-            const renderableLine = new RenderableLine({
-                mesh: new LineMesh(line),
+        this.source.getPoints().forEach(point => {
+            const renderableLine = new RenderablePoint({
+                mesh: new PointMesh(point),
                 material: undefined
             });
             this._renderObjects.push(renderableLine);
