@@ -66,13 +66,19 @@ gulp.task('webpack', () => {
 });
 
 gulp.task('jsmin', () => {
-    gulp.src([
-        'dist/common.js', 'dist/f3earth.js', 'dist/control.js',
+    if (gulp.env.debug) {
+        gulp.src(['dist/common.js', 'dist/f3earth.js', 'dist/control.js',
+        'dist/interaction.js', 'dist/overlay.js'])
+        .pipe(concat('fe.js'))
+        .pipe(gulp.dest('dist'));
+    } else {
+        gulp.src(['dist/common.js', 'dist/f3earth.js', 'dist/control.js',
         'dist/interaction.js', 'dist/overlay.js'])
         .pipe(concat('fe.js'))
         .pipe(gulp.dest('dist'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
+    }
 });
 
 gulp.task('default', ['lint'], () => {
