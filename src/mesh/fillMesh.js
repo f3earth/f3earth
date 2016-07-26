@@ -1,6 +1,7 @@
 import { Const } from '../const';
+import { Earcut } from '../util/earCut';
 import { Sphere } from '../util/sphere';
-export class LineMesh {
+export class FillMesh {
     constructor(points) {
         this._points = points;
         this._vertices = [];
@@ -8,10 +9,19 @@ export class LineMesh {
 
         this._createMesh();
     }
-
     _createMesh() {
         const sphere = new Sphere(this._radius);
+        const newPoints = [];
         this._points.forEach(point => {
+            newPoints.push(point[0], point[1]);
+        });
+        const earCut = new Earcut();
+        const verticesIndex = earCut.getTriangles(newPoints);
+        const lastPoints = [];
+        verticesIndex.forEach(point => {
+            lastPoints.push(this._points[point]);
+        });
+        lastPoints.forEach(point => {
             this._vertices.push(...sphere.getXYZ(point[0], point[1]));
         });
     }

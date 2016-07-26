@@ -1,5 +1,6 @@
 import { Control } from './control';
-import { DomEvent } from '../util/domEvent';
+import { DomEvent } from '../../src/util/domEvent';
+
 export class AttributionControl extends Control {
     constructor() {
         const controlContainers = document.getElementById('fe-controls-container');

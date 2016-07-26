@@ -1,9 +1,6 @@
-import {
-    Control
-} from './control';
-import {
-    DomEvent
-} from '../util/domEvent';
+import { Control } from './control';
+import { DomEvent } from '../../src/util/domEvent';
+
 export class ZoomControl extends Control {
     constructor() {
         const controlContainers = document.getElementById('fe-controls-container');

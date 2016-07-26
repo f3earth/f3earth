@@ -1,6 +1,6 @@
 import { Const } from '../const';
 import { Sphere } from '../util/sphere';
-export class LineMesh {
+export class PointMesh {
     constructor(points) {
         this._points = points;
         this._vertices = [];

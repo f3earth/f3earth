@@ -1,8 +1,9 @@
-import { Observable } from '../util/observable';
-import { Const } from '../const';
-import { Dom } from '../util/dom';
-import { DomEvent } from '../util/domEvent';
-import { Util } from '../util/util';
+import { Observable } from '../../src/util/observable';
+import { Const } from '../../src/const';
+import { Dom } from '../../src/util/dom';
+import { DomEvent } from '../../src/util/domEvent';
+import { Util } from '../../src/util/util';
+
 export class Overlay extends Observable {
     constructor(options) {
         super();
