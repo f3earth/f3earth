@@ -1,5 +1,6 @@
-import { Observable } from '../util/observable';
-import { Const } from '../const';
+import { Observable } from '../../src/util/observable';
+import { Const } from '../../src/const';
+
 export class Control extends Observable {
     constructor(element) {
         super();
@@ -23,7 +24,7 @@ export class Control extends Observable {
     }
 
     render(camera) {
-        this.trigger(Const.ControlEventType, camera);
+        this.trigger(Const.ControlEventType.RENDER, camera);
         console.log(camera);
     }
 

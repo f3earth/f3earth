@@ -23,7 +23,9 @@
     "eslint-plugin-standard": "^2.0.0",
     "gl-matrix": "^2.3.2",
     "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
     "gulp-eslint": "^3.0.1",
+    "gulp-uglify": "^1.5.4",
     "proj4": "^2.3.14",
     "webpack": "^1.13.1"
   },

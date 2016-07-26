@@ -1,5 +1,6 @@
-import { Const } from './const';
 import glMatrix from 'gl-matrix';
+
+import { Const } from './const';
 
 export class Camera {
     constructor() {
@@ -7,9 +8,29 @@ export class Camera {
         this._center = [0, 0, 0];
         this._up = [0, 1, 0];
 
+        this._fov = 60;
+        this._aspect = 1;
+        this._near = 0.001;
+        this._far = 18 * Const.EARTH_RADIUS;
+
         this._rotateX = 0;
         this._rotateY = 0;
         this._rotateZ = 0;
+
+        this._calcProjectMatrix();
+    }
+
+    _calcProjectMatrix() {
+        this._projectionMatrix = glMatrix.mat4.create();
+        this._projectionMatrix = glMatrix.mat4.perspective(
+            this._projectionMatrix,
+            this._fov * Math.PI / 180,
+            this._aspect,
+            this._near, this._far);
+    }
+
+    get projectMatrix() {
+        return this._projectionMatrix;
     }
 
     get rotateX() {
@@ -60,4 +81,27 @@ export class Camera {
     get up() {
         return this._up;
     }
+
+    get fov() {
+        return this._fov;
+    }
+
+    get aspect() {
+        return this._aspect;
+    }
+
+    set aspect(aspect) {
+        this._aspect = aspect;
+        this._calcProjectMatrix();
+        return this;
+    }
+
+    get near() {
+        return this._near;
+    }
+
+    get far() {
+        return this._far;
+    }
+
 }
