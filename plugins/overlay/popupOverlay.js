@@ -1,6 +1,7 @@
 import { Overlay } from './overlay';
-import { Const } from '../const';
-import { DomEvent } from '../util/domEvent';
+import { Const } from '../../src/const';
+import { DomEvent } from '../../src/util/domEvent';
+
 export class PopupOverlay extends Overlay {
     constructor(options) {
         super(options);

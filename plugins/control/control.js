@@ -1,5 +1,6 @@
-import { Observable } from '../util/observable';
-import { Const } from '../const';
+import { Observable } from '../../src/util/observable';
+import { Const } from '../../src/const';
+
 export class Control extends Observable {
     constructor(element) {
         super();
