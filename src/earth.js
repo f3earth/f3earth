@@ -38,7 +38,7 @@ class Earth extends Observable {
         return this._context;
     }
 
-    pan(longitude, latitude) {
+    panByDelta(longitude, latitude) {
         if (latitude) {
             this._camera.latitude = this._camera.latitude + latitude;
         }
