@@ -9,16 +9,11 @@ import { Dom } from './util/dom';
 class Earth extends Observable {
     constructor(containerId) {
         super();
-        this._zoomDist = [];
-        for (let level = 0; level < 18; level++) {
-            this._zoomDist.push(Const.EARTH_RADIUS * Math.pow(1.05, 18 - level));
-        }
 
         this._container = document.getElementById(containerId);
         this._context = new Context(this._container);
         this._camera = new Camera();
         this._zoom = 3;
-        this._camera.eye = [0, 0, this._zoomDist[this._zoom - 1]];
         this._camera.aspect = this._context.gl.viewportWidth / this._context.gl.viewportHeight;
 
         this._sourceLayers = [];
@@ -43,21 +38,13 @@ class Earth extends Observable {
         return this._context;
     }
 
-    rotateX(radian) {
-        this.rotate(radian);
-    }
-
-    rotateY(radian) {
-        this.rotate(undefined, radian);
-    }
-
-    rotate(xRadian, yRadian) {
-        if (xRadian) {
-            this._camera.rotateX = this._camera.rotateX + xRadian;
+    panByDelta(longitude, latitude) {
+        if (latitude) {
+            this._camera.latitude = this._camera.latitude + latitude;
         }
 
-        if (yRadian) {
-            this._camera.rotateY = this._camera.rotateY + yRadian;
+        if (longitude) {
+            this._camera.longitude = this._camera.longitude + longitude;
         }
         this.render();
     }
@@ -67,16 +54,16 @@ class Earth extends Observable {
     }
     setZoom(level) {
         let validLevel = level;
-        if (level > 18) {
-            validLevel = 18;
-        } else if (level < 1) {
-            validLevel = 1;
+        if (level > Const.MAX_ZOOM) {
+            validLevel = Const.MAX_ZOOM;
+        } else if (level < Const.MIN_ZOOM) {
+            validLevel = Const.MIN_ZOOM;
         }
         if (validLevel !== this._zoom) {
             this.trigger(Const.EarthEventType.ZOOM_START,
                 { oldLevel: this._zoom, newLevel: validLevel });
+            this._camera.zoomByPercent((validLevel - this._zoom) / 9.0);
             this._zoom = validLevel;
-            this._camera.eye = [0, 0, this._zoomDist[validLevel - 1]];
             this.render();
             this.trigger(Const.EarthEventType.ZOOM_END,
                 { oldLevel: this._zoom, newLevel: validLevel });
@@ -133,11 +120,13 @@ class Earth extends Observable {
         }
         return this;
     }
+
     addControl(control) {
         control.setEarth(this);
         this._controls.push(control);
         return this;
     }
+
     removeControl(control) {
         for (let i = 0, len = this._interactions.length; i < len; i++) {
             if (this._controls[i] === control) {
@@ -148,10 +137,12 @@ class Earth extends Observable {
         }
         return this;
     }
+
     addOverlayLayer(overlayLayer) {
         overlayLayer.setEarth(this);
         this._overlayLayers.push(overlayLayer);
     }
+
     removeOverlayLayer(overlayLayer) {
         for (let i = 0, len = this._overlayLayers.length; i < len; i++) {
             if (this._overlayLayers[i] === overlayLayer) {
@@ -162,6 +153,7 @@ class Earth extends Observable {
         }
         return this;
     }
+
     clearOverlayLayers() {
         this._overlayLayers.forEach(overlayLayer => overlayLayer.dispose());
         this._overlayLayers = [];
@@ -170,10 +162,17 @@ class Earth extends Observable {
     get container() {
         return this._container;
     }
+
     get size() {
         return Dom.getSize(this._container);
     }
+
+    setCenter(lon, lat) {
+        this._camera.latitude = lat;
+        this._camera.longitude = lon;
+        return this;
+    }
 }
 export {
-Earth
+    Earth
 };

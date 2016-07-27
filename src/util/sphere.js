@@ -19,12 +19,15 @@ export class Sphere {
                 Math.cos(dByR) - Math.sin(lat1) * Math.sin(lat));
         return [FMath.toDegrees(lon), FMath.toDegrees(lat)];
     }
-    getXYZ(lng, lat) {
-        const pointX = this._radius * Math.sin(FMath.toRadians(lng)) *
-            Math.cos(FMath.toRadians(lat));
-        const pointY = this._radius * Math.sin(FMath.toRadians(lat));
-        const pointZ = this._radius * Math.cos(FMath.toRadians(lng)) *
-            Math.cos(FMath.toRadians(lat));
+    getXYZ(longitude, latitude) {
+        const lonRadians = FMath.toRadians(longitude);
+        const latRadians = FMath.toRadians(latitude);
+
+        const radCosLat = this._radius * Math.cos(latRadians);
+
+        const pointX = radCosLat * Math.cos(lonRadians);
+        const pointY = radCosLat * Math.sin(lonRadians);
+        const pointZ = this._radius * Math.sin(latRadians);
         return [pointX, pointY, pointZ];
     }
 }

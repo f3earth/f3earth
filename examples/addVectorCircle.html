@@ -44,7 +44,7 @@
         earth.addLayer(circleLayerConfig);
         
         // show china
-        earth.rotate(-30 * Math.PI / 180.0, 110 * Math.PI / 180.0);
+        earth.setCenter(110, 30);
 
         var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);

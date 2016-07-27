@@ -7,7 +7,6 @@ export class LayerShader {
           uniform mat4 uPMatrix;
 
           void main() {
-            gl_PointSize = 10.0;
             gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
           } 
         `;
@@ -21,7 +20,7 @@ export class LayerShader {
 
           void main() {
             gl_FragColor = uColor;
-          } 
+          }
         `;
     }
     static get fillVertexSource() {
@@ -32,7 +31,6 @@ export class LayerShader {
           uniform mat4 uPMatrix;
 
           void main() {
-            gl_PointSize = 10.0;
             gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
           } 
         `;
