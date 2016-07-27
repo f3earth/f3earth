@@ -79,6 +79,10 @@ Const.DomEventType = {
 
 Const.EARTH_RADIUS = 6378137;
 Const.CIRCLE_BY_STEPS = 64;
+
+Const.MAX_ZOOM = 28;
+Const.MIN_ZOOM = 1;
+
 export {
     Const
 };

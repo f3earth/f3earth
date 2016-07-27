@@ -47,6 +47,6 @@ export class RasterTileLayerRender {
         gl.uniformMatrix4fv(
             uniformProjMatrixLoc,
             false,
-            camera.projectMatrix);
+            camera.projectionMatrix);
     }
 }

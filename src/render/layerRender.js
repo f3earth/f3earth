@@ -49,6 +49,6 @@ export class LayerRender {
         gl.uniformMatrix4fv(
             uniformProjMatrixLoc,
             false,
-            camera.projectMatrix);
+            camera.projectionMatrix);
     }
 }

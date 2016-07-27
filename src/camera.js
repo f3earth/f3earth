@@ -19,7 +19,7 @@ export class Camera {
         this._altitude = this._distance;
 
         this._calcProjectionMatrix();
-        this._calcViewMatrix();
+        this._calcModelViewMatrix();
     }
 
     _calcProjectionMatrix() {
@@ -37,7 +37,7 @@ export class Camera {
             this._near, this._far);
     }
 
-    _calcViewMatrix() {
+    _calcModelViewMatrix() {
         this._modelViewMatrix = glMatrix.mat4.create();
         glMatrix.mat4.identity(this._modelViewMatrix);
 
@@ -47,7 +47,7 @@ export class Camera {
         glMatrix.mat4.lookAt(this._modelViewMatrix, cartesianPos, this._center, [0, 0, 1]);
     }
 
-    get projectMatrix() {
+    get projectionMatrix() {
         return this._projectionMatrix;
     }
 
@@ -67,7 +67,7 @@ export class Camera {
             validDegree = 90;
         }
         this._lat = validDegree;
-        this._calcViewMatrix();
+        this._calcModelViewMatrix();
     }
 
     get longitude() {
@@ -76,7 +76,7 @@ export class Camera {
 
     set longitude(degree) {
         this._lon = degree;
-        this._calcViewMatrix();
+        this._calcModelViewMatrix();
     }
 
     get center() {
@@ -130,7 +130,7 @@ export class Camera {
     set distance(distance) {
         this._distance = distance;
         this._calcAltitude(this._distance, this._tilt);
-        this._calcViewMatrix();
+        this._calcModelViewMatrix();
     }
 
     _calcAltitude(distance, tilt) {

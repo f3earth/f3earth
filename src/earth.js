@@ -54,12 +54,10 @@ class Earth extends Observable {
     }
     setZoom(level) {
         let validLevel = level;
-        const maxLevel = 28;
-        const minLevel = 1;
-        if (level > maxLevel) {
-            validLevel = maxLevel;
-        } else if (level < minLevel) {
-            validLevel = minLevel;
+        if (level > Const.MAX_ZOOM) {
+            validLevel = Const.MAX_ZOOM;
+        } else if (level < Const.MIN_ZOOM) {
+            validLevel = Const.MIN_ZOOM;
         }
         if (validLevel !== this._zoom) {
             this.trigger(Const.EarthEventType.ZOOM_START,
