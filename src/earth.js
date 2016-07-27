@@ -5,6 +5,7 @@ import { Observable } from './util/observable';
 import { DomEvent } from './util/domEvent';
 import { Const } from './const';
 import { Dom } from './util/dom';
+import { FMath } from './util/math';
 
 class Earth extends Observable {
     constructor(containerId) {
@@ -170,8 +171,14 @@ class Earth extends Observable {
     get container() {
         return this._container;
     }
+
     get size() {
         return Dom.getSize(this._container);
+    }
+
+    setCenter(lon, lat) {
+        this.rotate(FMath.toRadians(-lat), FMath.toRadians(lon));
+        return this;
     }
 }
 export {
