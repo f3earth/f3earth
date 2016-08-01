@@ -1,58 +1,178 @@
-import glMatrix from 'gl-matrix';
-import {
-  SourceLayer
-}
-from './source/sourceLayer';
+import { SourceLayer } from './source/sourceLayer';
 import { Context } from './context';
-import { DragPan } from './interaction/dragPan';
 import { Camera } from './camera';
-import { LayerRenderer } from './renderer/layerRenderer';
+import { Observable } from './util/observable';
+import { DomEvent } from './util/domEvent';
+import { Const } from './const';
+import { Dom } from './util/dom';
 
-class Earth {
-  constructor(containerId) {
-    this._container = document.getElementById(containerId);
-    this._context = new Context(this._container);
-    this._camera = new Camera();
+class Earth extends Observable {
+    constructor(containerId) {
+        super();
 
-    this._sourceLayers = [];
-    this.addLayer({
-      type: 'rasterTile',
-      url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
-    });
-    this.render();
-    
-    new DragPan(this, function(deltaX, deltaY){
-      if (this._sourceLayers) {
-        
-        let eye = this._camera.eye;
-        let x = -deltaX % 360;
-        let y = -deltaY % 360;
-        glMatrix.vec3.rotateX(eye, eye, [0, 0, 0], y * Math.PI / 180);
-        glMatrix.vec3.rotateY(eye, eye, [0, 0, 0], x * Math.PI / 180); 
-        
-        this._camera.setEye(eye);
+        this._container = document.getElementById(containerId);
+        this._context = new Context(this._container);
+        this._camera = new Camera();
+        this._zoom = 3;
+        this._camera.aspect = this._context.gl.viewportWidth / this._context.gl.viewportHeight;
+
+        this._sourceLayers = [];
+        this._interactions = [];
+        this._controls = [];
+        this._overlayLayers = [];
+        this._eventType = new Map([['click', Const.EarthEventType.CLICK],
+            ['dblclick', Const.EarthEventType.DBLCLICK],
+            ['mousedown', Const.EarthEventType.MOUSEDOWN],
+            ['mouseup', Const.EarthEventType.MOUSEUP],
+            ['mouseover', Const.EarthEventType.MOUSEOVER],
+            ['mouseout', Const.EarthEventType.MOUSEOUT],
+            ['mousemove', Const.EarthEventType.MOUSEMOVE],
+            ['mousewheel', Const.EarthEventType.MOUSEWHEEL],
+            ['keypress', Const.EarthEventType.KEYPRESS]
+        ]);
+        DomEvent.on(this._context.canvas, Array.from(this._eventType.keys()),
+            this._handleDOMEvent, this);
+    }
+
+    get context() {
+        return this._context;
+    }
+
+    panByDelta(longitude, latitude) {
+        if (latitude) {
+            this._camera.latitude = this._camera.latitude + latitude;
+        }
+
+        if (longitude) {
+            this._camera.longitude = this._camera.longitude + longitude;
+        }
         this.render();
-      }
-    }.bind(this));
-  }
-  
-  get context() {
-    return this._context;
-  }
+    }
 
-  addLayer(layer) {
-    let sourceLayer = SourceLayer.from(layer);
-    this._sourceLayers.push(sourceLayer);
-  }
+    get zoom() {
+        return this._zoom;
+    }
+    setZoom(level) {
+        let validLevel = level;
+        if (level > Const.MAX_ZOOM) {
+            validLevel = Const.MAX_ZOOM;
+        } else if (level < Const.MIN_ZOOM) {
+            validLevel = Const.MIN_ZOOM;
+        }
+        if (validLevel !== this._zoom) {
+            this.trigger(Const.EarthEventType.ZOOM_START,
+                { oldLevel: this._zoom, newLevel: validLevel });
+            this._camera.zoomByPercent((validLevel - this._zoom) / 9.0);
+            this._zoom = validLevel;
+            this.render();
+            this.trigger(Const.EarthEventType.ZOOM_END,
+                { oldLevel: this._zoom, newLevel: validLevel });
+        }
+    }
 
-  render() {
-    this._sourceLayers.forEach(function (layer) {
-      LayerRenderer.render(layer, this.context.gl, this._camera);
-//      layer.render(this.context.gl, this._camera);
-    }.bind(this));
-  }
+    addLayer(layer) {
+        const sourceLayer = SourceLayer.from(this._context, layer);
+        if (sourceLayer) {
+            sourceLayer.source.on(Const.SourceEventType.CHANGE, () => this.render());
+            this._sourceLayers.push(sourceLayer);
+            this.render();
+        }
+    }
+
+    render() {
+        const gl = this._context.gl;
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.enable(gl.CULL_FACE);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.enable(gl.BLEND);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        this._sourceLayers.forEach(layer => layer.render(this._camera));
+    }
+
+    _handleDOMEvent(e) {
+        if (e._stopped) { return; }
+        let type = e.type === 'keypress' && e.keyCode === 13 ? 'click' : e.type;
+        type = type === 'wheel' ? 'mousewheel' : type;
+        const eventType = this._eventType.get(type);
+        const data = {
+            originalEvent: e
+        };
+        this.trigger(eventType, data);
+    }
+
+    addInteraction(interaction) {
+        interaction.setEarth(this);
+        interaction.enable();
+        this._interactions.push(interaction);
+        return this;
+    }
+
+    removeInteraction(interaction) {
+        for (let i = 0, len = this._interactions.length; i < len; i++) {
+            if (this._interactions[i] === interaction) {
+                interaction.disable();
+                interaction.setEarth(null);
+                this._interactions.splice(i, 1);
+                break;
+            }
+        }
+        return this;
+    }
+
+    addControl(control) {
+        control.setEarth(this);
+        this._controls.push(control);
+        return this;
+    }
+
+    removeControl(control) {
+        for (let i = 0, len = this._interactions.length; i < len; i++) {
+            if (this._controls[i] === control) {
+                control.dispose();
+                this._controls.splice(i, 1);
+                break;
+            }
+        }
+        return this;
+    }
+
+    addOverlayLayer(overlayLayer) {
+        overlayLayer.setEarth(this);
+        this._overlayLayers.push(overlayLayer);
+    }
+
+    removeOverlayLayer(overlayLayer) {
+        for (let i = 0, len = this._overlayLayers.length; i < len; i++) {
+            if (this._overlayLayers[i] === overlayLayer) {
+                overlayLayer.dispose();
+                this._overlayLayers.splice(i, 1);
+                break;
+            }
+        }
+        return this;
+    }
+
+    clearOverlayLayers() {
+        this._overlayLayers.forEach(overlayLayer => overlayLayer.dispose());
+        this._overlayLayers = [];
+    }
+
+    get container() {
+        return this._container;
+    }
+
+    get size() {
+        return Dom.getSize(this._container);
+    }
+
+    setCenter(lon, lat) {
+        this._camera.latitude = lat;
+        this._camera.longitude = lon;
+        return this;
+    }
 }
-
 export {
-  Earth
+    Earth
 };

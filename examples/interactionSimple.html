@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+    <title>interactionSimple F3Earth</title>
+    <script type="text/javascript" src="../dist/fe.js" charset="utf-8"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+        #earth {
+        height: 100vh;
+      }
+    </style>
+</head>
+
+<body>
+<div style="position: absolute;top: 1px;left: 2px;padding: 10px;color: #cccccc;background: rgba(0, 50, 50, 0.5);">
+    <button id="addDoubleClickZoomInteraction" onclick="addDoubleClickZoomInteraction()">增加双击缩放Interaction</button>
+    <button id="delDoubleClickZoomInteraction" onclick="delDoubleClickZoomInteraction()">删除双击缩放Interaction</button>
+    <button id="addDragInteraction" onclick="addDragInteraction()">增加拖动Interaction</button>
+    <button id="delDragInteraction" onclick="delDragInteraction()">删除拖动Interaction</button>
+    <button id="addMouseWheelZoomInteraction" onclick="addMouseWheelZoomInteraction()">增加鼠标滚动Interaction</button>
+    <button id="delMouseWheelZoomInteraction" onclick="delMouseWheelZoomInteraction()">删除鼠标滚动Interaction</button>
+</div>
+<div id="earth"></div>
+<script type="text/javascript">
+    var earth = new FE.Earth("earth");
+    earth.addLayer({
+        type: 'rasterTile',
+        url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
+    });
+    var dragInteraction,mouseWheelZoomInteraction,doubleClickZoomInteraction;
+    function addDoubleClickZoomInteraction () {
+        doubleClickZoomInteraction=doubleClickZoomInteraction||new FE.Interaction.DoubleClickZoom();
+        earth.addInteraction(doubleClickZoomInteraction);
+    }
+    function delDoubleClickZoomInteraction() {
+        earth.removeInteraction(doubleClickZoomInteraction);
+    }
+    function addDragInteraction() {
+         dragInteraction=dragInteraction||new FE.Interaction.Drag();
+        earth.addInteraction(dragInteraction);
+    }
+    function delDragInteraction() {
+        earth.removeInteraction(dragInteraction);
+    }
+    function addMouseWheelZoomInteraction() {
+         mouseWheelZoomInteraction=mouseWheelZoomInteraction||new FE.Interaction.MouseWheelZoom();
+        earth.addInteraction(mouseWheelZoomInteraction);
+    }
+    function delMouseWheelZoomInteraction() {
+        earth.removeInteraction(mouseWheelZoomInteraction);
+    }
+</script>
+</body>
+
+</html>
