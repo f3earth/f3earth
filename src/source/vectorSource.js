@@ -6,10 +6,22 @@ export class VectorSource extends Observable {
         super();
         this._id = options.id;
         this._type = options.type;
-        const lineCoordinates = options.coordinates
+        /* opts.coords actually present featureCollection coords.
+         * eg: lines -> [[[123,13],[121,31],[144,15]], [[123,13],[121,31],[144,15]]],
+         * eg: points -> []
+         */
+        const geomCollection = options.coordinates
             ? JSON.parse(options.coordinates) : undefined;
         this._features = [];
-        this._features.push(lineCoordinates);
+        /* if (this._type === Const.LayerType.POINT) {
+            this._features.push(lineCoordinates);
+        } else if (lineCoordinates !== undefined) {
+            lineCoordinates.forEach(coord => this._features.push(coord));
+        } */
+        if (geomCollection !== undefined) {
+            geomCollection.forEach(geom => this._features.push(geom));
+        }
+        /* this._features.push(lineCoordinates);*/
         this._radius = options.radius;
         this._center = options.center;
     }

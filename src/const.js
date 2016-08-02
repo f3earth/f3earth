@@ -25,6 +25,12 @@ Const.ControlEventType = {
     RENDER: 'controlRender'
 };
 
+Const.GeomType = {
+    POINT: 'Point',
+    LINE: 'LineString',
+    POLYGON: 'Polygon'
+};
+
 Const.LayerType = {
     POINT: 'point',
     LINE: 'line',

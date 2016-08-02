@@ -60,8 +60,8 @@ gulp.task('webpack', () => {
 gulp.task('jsmin', () => {
     if (argv.p) {
         gulp.src(['dist/fe.js'])
-        .pipe(uglify())
-        .pipe(gulp.dest('dist'));
+            .pipe(uglify())
+            .pipe(gulp.dest('dist'));
     }
 });
 
