@@ -19,12 +19,28 @@ export class VectorSource extends Observable {
             lineCoordinates.forEach(coord => this._features.push(coord));
         } */
         if (geomCollection !== undefined) {
-            geomCollection.forEach(geom => this._features.push(geom));
+            this._features.push(...geomCollection);
         }
         /* this._features.push(lineCoordinates);*/
         this._radius = options.radius;
         this._center = options.center;
     }
+
+    addFeature(feature) {
+        this._features.push(feature);
+        return this;
+    }
+
+    addFeatures(features) {
+        this._features.push(...features);
+        return this;
+    }
+
+    remoteAllFeatures() {
+        this._features = [];
+        return this;
+    }
+
     getFeatures() {
         return this._features;
     }
