@@ -17,6 +17,14 @@ import { MarkerOverlay } from './plugins/overlay/markerOverlay';
 import { PopupOverlay } from './plugins/overlay/popupOverlay';
 import { OverlayLayer } from './plugins/overlay/overlayLayer';
 
+import { Format as FEFormat } from './plugins/format/format';
+import { GeoJSON } from './plugins/format/geojson';
+
+import { Geometry as FEGeometry } from './src/feature/geometry';
+import { Point } from './src/feature/point';
+import { LineString } from './src/feature/linestring';
+import { Polygon } from './src/feature/polygon';
+
 const Control = {};
 Control.Attribution = AttributionControl;
 Control.Zoom = ZoomControl;
@@ -35,10 +43,22 @@ Overlay.Marker = MarkerOverlay;
 Overlay.Popup = PopupOverlay;
 Overlay.Layer = OverlayLayer;
 
+const Format = {};
+Format.Format = FEFormat;
+Format.GeoJSON = GeoJSON;
+
+const Geometry = {};
+Geometry.Geometry = FEGeometry;
+Geometry.Point = Point;
+Geometry.LineString = LineString;
+Geometry.Polygon = Polygon;
+
 export {
     Earth,
     Const,
     Control,
     Interaction,
-    Overlay
+    Overlay,
+    Format,
+    Geometry
 };
