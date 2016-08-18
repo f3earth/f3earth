@@ -1,8 +1,8 @@
 /* geojsonformat.js */
 /* created by Alex */
-/* import { Const } from '../../src/const';*/
-import { Feature } from '../../src/feature/feature';
 import { Format } from './format';
+import { Const } from '../../src/const';
+import { Feature } from '../../src/feature/feature';
 import { Point } from '../../src/feature/point';
 import { LineString } from '../../src/feature/linestring';
 import { Polygon } from '../../src/feature/polygon';
@@ -45,14 +45,14 @@ export class GeoJSON extends Format {
                         this._features.push(new Feature(new LineString(gcoords), attr));
                         break;
                     case 'MultiLineString':
-                        geomtype = 'LineString';
+                        geomtype = Const.GeomType.LINE;
                         this.createLines(gcoords, attr);
                         break;
                     case 'Polygon':
                         this._features.push(new Feature(new Polygon(gcoords), attr));
                         break;
                     case 'MultiPolygon':
-                        geomtype = 'Polygon';
+                        geomtype = Const.GeomType.POLYGON;
                         this.createPolygons(gcoords, attr);
                         break;
                     default:
@@ -60,6 +60,7 @@ export class GeoJSON extends Format {
                 }
             }
         }
+        this._geometryType = geomtype;
         return this;
     }
 

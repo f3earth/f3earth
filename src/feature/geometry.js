@@ -1,6 +1,6 @@
 /* created by Alex 2016/7/29 */
 
-export class Geom {
+export class Geometry {
     constructor(coords) {
         if (coords instanceof Array) {
             this._coords = coords;

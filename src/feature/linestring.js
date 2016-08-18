@@ -1,8 +1,8 @@
 /* created by Alex 2016/7/29 */
 import { Const } from '../const';
-import { Geom } from './geom';
+import { Geometry } from './geometry';
 
-export class LineString extends Geom {
+export class LineString extends Geometry {
     constructor(coords) {
         super(coords);
         if (coords instanceof Array) {

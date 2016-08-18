@@ -1,70 +1,64 @@
 /* created by Alex */
 import { Observable } from '../../src/util/observable';
 import { Const } from '../../src/const';
+import { Feature } from '../../src/feature/feature';
+import { Point } from '../../src/feature/point';
+import { LineString } from '../../src/feature/linestring';
+import { Polygon } from '../../src/feature/polygon';
 
 export class Format extends Observable {
     constructor() {
         super();
         /* map between geomtype and layerType */
         this.TypeTable = {
-            Point: 'point',
-            LineString: 'line',
-            Polygon: 'fill'
+            Point: Const.LayerType.POINT,
+            LineString: Const.LayerType.LINE,
+            Polygon: Const.LayerType.FILL
         };
         this._features = [];
+        this._geometryType = '';
+    }
+
+    /* create layer config obj required by vectorsource. */
+    createLayerConfig() {
+        const layerconfig = {};
+        layerconfig.type = this.TypeTable[this._geometryType];
+        layerconfig.source = {
+            id: 1,
+            features: this._features.concat(),
+            type: layerconfig.type
+        };
+        // clear cache in Formatter.
+        this._features = [];
+        this._geometryType = '';
+        return layerconfig;
     }
 
     /* parse features from datasource */
     readFeatures(data) {
     }
 
-    /* return opt which can be used by VectorSource*/
-    forRender() {
-        const lconfig = {};
-        const features = this._features;
-        let tmpcoords = [];
-        let feature;
-        let geom;
-        let coords;
-        let gtype = null;
-        if (features.length < 1) return null;
-        gtype = features[0].geom.type;
-        for (let i = 0; i < features.length; i++) {
-            feature = features[i];
-            geom = feature.geom;
-            coords = geom.coords;
-            /* coord of one geometry. maybe point[x,y]
-             * line[[x,y],[x,y]], poly[[[x,y],[x,y],[x,y]]]
-            */
-            if (geom.type === Const.GeomType.POINT) {
-                tmpcoords.push(coords);
-            } else if (geom.type === Const.GeomType.LINE) {
-                tmpcoords.push(coords);
-            } else if (geom.type === Const.GeomType.POLYGON) {
-                tmpcoords.push(coords[0]);
-            }
-        }
-        if (geom.type === Const.GeomType.POINT) {
-            const tmp = tmpcoords;
-            tmpcoords = [];
-            tmpcoords.push(tmp);
-        }
-        /* 之前的source 现在对应于 featues */
-        lconfig.type = this.TypeTable[gtype];
-        lconfig.source = {
-            id: 1,
-            coordinates: JSON.stringify(tmpcoords),
-            type: this.TypeTable[gtype]
-        };
-        return lconfig;
+    createPoint(gcoord, attr) {
+        /* parse [x,y] to single Point feature */
+        return new Feature(new Point(gcoord), attr);
     }
 
-    /* parse one multline geometry to single lines */
+    createLine(gcoord, attr) {
+        /* parse [[x,y],[x,y]] to single Line feature */
+        return new Feature(new LineString(gcoord), attr);
+    }
+
+    createPolygon(gcoord, attr) {
+        /* parse [[[x0,y0],[x1,y1] ... [x0,y0]]] to single Line feature */
+        return new Feature(new Polygon(gcoord), attr);
+    }
+
     createLines(gcoords, attr) {
+        /* parse one multline geometry to single lines */
     }
 
-    /* parse one multpolygon geometry to single polygons */
     createPolygons(gcoords, attr) {
+        /* parse one multline geometry to single lines */
     }
 
     /* write2datasource from features */

@@ -90,7 +90,7 @@
 
         function loadJSON2(data) {
             var gformat = new FE.Format.GeoJSON();
-            var lconfig = gformat.readFeatures(data).forRender();
+            var lconfig = gformat.readFeatures(data).createLayerConfig();
             earth.addLayer(lconfig);
         }
 

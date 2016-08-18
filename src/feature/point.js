@@ -1,8 +1,8 @@
 /* created by Alex 2016/7/29 */
 import { Const } from '../const';
-import { Geom } from './geom';
+import { Geometry } from './geometry';
 
-export class Point extends Geom {
+export class Point extends Geometry {
     constructor(coords) {
         super(coords);
         if (coords instanceof Array) {

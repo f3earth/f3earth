@@ -1,12 +1,12 @@
 /* created by Alex 2016/7/29 */
 import { Observable } from '../util/observable';
-import { Geom } from './geom';
+import { Geometry } from './geometry';
 
 export class Feature extends Observable {
-    constructor(geom, attr, fid) {
+    constructor(geometry, attr, fid) {
         super();
         this._fid = fid;
-        this._geom = geom;
+        this._geometry = geometry;
         this._attr = attr;
     }
 
@@ -14,13 +14,13 @@ export class Feature extends Observable {
         return this._fid;
     }
 
-    get geom() {
-        return this._geom;
+    get geometry() {
+        return this._geometry;
     }
 
-    setGeom(geom) {
-        if (geom instanceof Geom) {
-            this._geom = geom;
+    setGeom(geometry) {
+        if (geometry instanceof Geometry) {
+            this._geometry = geometry;
         }
         return this;
     }

@@ -20,7 +20,7 @@ import { OverlayLayer } from './plugins/overlay/overlayLayer';
 import { Format as FEFormat } from './plugins/format/format';
 import { GeoJSON } from './plugins/format/geojson';
 
-import { Geom as FEGeom } from './src/feature/geom';
+import { Geometry as FEGeometry } from './src/feature/geometry';
 import { Point } from './src/feature/point';
 import { LineString } from './src/feature/linestring';
 import { Polygon } from './src/feature/polygon';
@@ -47,11 +47,11 @@ const Format = {};
 Format.Format = FEFormat;
 Format.GeoJSON = GeoJSON;
 
-const Geom = {};
-Geom.Geom = FEGeom;
-Geom.Point = Point;
-Geom.LineString = LineString;
-Geom.Polygon = Polygon;
+const Geometry = {};
+Geometry.Geometry = FEGeometry;
+Geometry.Point = Point;
+Geometry.LineString = LineString;
+Geometry.Polygon = Polygon;
 
 export {
     Earth,
@@ -60,5 +60,5 @@ export {
     Interaction,
     Overlay,
     Format,
-    Geom
+    Geometry
 };
