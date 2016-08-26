@@ -14,7 +14,8 @@ Const.EarthEventType = {
     MOUSEOUT: 'earthMouseout',
     MOUSEMOVE: 'earthMousemove',
     MOUSEWHEEL: 'earthMousewheel',
-    KEYPRESS: 'earthKeypress'
+    KEYPRESS: 'earthKeypress',
+    RENDER_END: 'renderEnd'
 };
 
 Const.SourceEventType = {
