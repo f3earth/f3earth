@@ -13,16 +13,16 @@ export class DragInteraction extends Interaction {
     }
     addHandle() {
         this._earth.on(Const.EarthEventType.MOUSEDOWN, this._onmousedown, this)
-                    .on(Const.EarthEventType.MOUSEUP, this._onmouseup, this)
-                    .on(Const.EarthEventType.MOUSEMOVE, this._onmousemove, this)
-                    .on(Const.EarthEventType.MOUSEOVER, this._onmouseout, this);
+            .on(Const.EarthEventType.MOUSEUP, this._onmouseup, this)
+            .on(Const.EarthEventType.MOUSEMOVE, this._onmousemove, this)
+            .on(Const.EarthEventType.MOUSEOVER, this._onmouseout, this);
         return this;
     }
     removeHandle() {
         this._earth.un(Const.EarthEventType.MOUSEDOWN, this._onmousedown, this)
-                    .un(Const.EarthEventType.MOUSEUP, this._onmouseup, this)
-                    .un(Const.EarthEventType.MOUSEMOVE, this._onmousemove, this)
-                    .un(Const.EarthEventType.MOUSEOVER, this._onmouseout, this);
+            .un(Const.EarthEventType.MOUSEUP, this._onmouseup, this)
+            .un(Const.EarthEventType.MOUSEMOVE, this._onmousemove, this)
+            .un(Const.EarthEventType.MOUSEOVER, this._onmouseout, this);
         return this;
     }
     _onmousedown(e) {

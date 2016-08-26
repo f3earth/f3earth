@@ -1,0 +1,125 @@
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+    <title>F3Earth - Add GeoJSON data</title>
+    <script type="text/javascript" src="../dist/fe.js" charset="
+    utf-8"></script>
+    <!-- <script type="text/javascript" src='data/cities.js'></script>
+    <script type="text/javascript" src='data/line.js'></script>
+    <script type="text/javascript" src='data/lines.js'></script>
+    <script type="text/javascript" src='data/multipoly.js'></script> -->
+    <style>
+        body {
+            margin: 0;
+        }
+        
+        #earth {
+            height: 100vh;
+        }
+        input {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            border: 1px dotted gray;
+            color: white;
+            height: 50px;
+        }
+        input:hover {
+            background-color: darkgray;
+        }
+        span {
+            position: absolute;
+            left: 30px;
+            top: 70px;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="earth"></div>
+    <div id='panel'>
+        <input type="file" id='fileupload' name="fileupload" onchange="fileselect()">
+        <span>drag and drop json file</span>
+    </div>
+    <script type="text/javascript">
+
+        var earth = new FE.Earth("earth");
+        earth.addLayer({
+            type: 'rasterTile',
+            url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
+        });
+
+        function XHR(){
+            this._xhr = new XMLHttpRequest();
+            this._url = '';
+            this._err = null;
+
+            /*
+             * XHR.send
+             * @url: url response data
+             * @err: function to handle err when get data
+            */
+            this.get = function (url, callback, err) {
+                this._url = url;
+                const tmpxhr = this._xhr;
+                this._xhr.onreadystatechange = function () {
+                    if (tmpxhr.readyState === 4) {
+                        if (tmpxhr.status === 200) {
+                            const responseText = tmpxhr.responseText;
+                            if (callback){
+                                callback(responseText);
+                            }
+                            else {
+                                return responseText;
+                            }
+                        }
+                        return err;
+                    }
+                    return err;
+                };
+                tmpxhr.open("GET", url);
+                tmpxhr.send(null);
+            }
+        }
+        var xhr = new XHR();
+        // xhr.get('data/major_cities.json', loadJSON2);
+        // xhr.get('data/JPN_line.json', loadJSON2);
+        xhr.get('data/countries-110m.geojson', loadJSON2);
+
+        function loadJSON2(data) {
+            var gformat = new FE.Format.GeoJSON();
+            var lconfig = gformat.readFeatures(data).createLayerConfig();
+            earth.addLayer(lconfig);
+        }
+
+        // show china
+        earth.setCenter(110, 30);
+
+        var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
+        earth.addInteraction(doubleClickZoomInteraction);
+
+        var dragInteraction=new FE.Interaction.Drag();
+        earth.addInteraction(dragInteraction);
+
+        var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
+        earth.addInteraction(mouseWheelZoomInteraction);
+
+        var files = document.getElementsByName('fileupload')[0];
+        function fileselect(){
+            var f = files.files[0];
+            var reader = new FileReader();
+            var fnames = f.name.split('.');
+            var ftype = fnames[fnames.length - 1];
+            if (ftype === 'json' || ftype === 'geojson') {
+                reader.readAsText(f);
+                reader.onload = function() {
+                    loadJSON2(reader.result);
+                }
+            } else console.log('pls input json file');
+        }
+    </script>
+</body>
+
+</html>
