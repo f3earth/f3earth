@@ -70,6 +70,14 @@ class Earth extends Observable {
         }
     }
 
+    getPixelCoordinate(longitude, latitude) {
+        const openglCoordinate = this._camera.getOpenglCoordinate(longitude, latitude);
+        return {
+            x: ((1 + openglCoordinate.x) / 2.0) * this._context.gl.viewportWidth,
+            y: (1 - ((1 + openglCoordinate.y) / 2.0)) * this._context.gl.viewportHeight
+        };
+    }
+
     addLayer(layer) {
         const sourceLayer = SourceLayer.from(this._context, layer);
         if (sourceLayer) {
@@ -89,6 +97,7 @@ class Earth extends Observable {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         this._sourceLayers.forEach(layer => layer.render(this._camera));
+        this.trigger(Const.EarthEventType.RENDER_END);
     }
 
     _handleDOMEvent(e) {

@@ -139,4 +139,19 @@ export class Camera {
         this._altitude = dfromeq - Const.EARTH_RADIUS;
     }
 
+    getOpenglCoordinate(lng, lat) {
+        const sphere = new Sphere(Const.EARTH_RADIUS);
+        const position = sphere.getXYZ(lng, lat);
+        const vec4Position = glMatrix.vec4.fromValues(position[0], position[1], position[2], 1.0);
+
+        const result = glMatrix.vec4.create();
+        glMatrix.vec4.transformMat4(result, vec4Position, this._modelViewMatrix);
+        glMatrix.vec4.transformMat4(result, result, this._projectionMatrix);
+
+        return {
+            x: result[0] / result[3],
+            y: result[1] / result[3]
+        };
+    }
+
 }
