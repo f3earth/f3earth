@@ -40,11 +40,11 @@ class Earth extends Observable {
 
     panByDelta(longitude, latitude) {
         if (latitude) {
-            this._camera.latitude = this._camera.latitude + latitude;
+            this._camera.setEyeLatitude(this._camera.eyeLatitude + latitude);
         }
 
         if (longitude) {
-            this._camera.longitude = this._camera.longitude + longitude;
+            this._camera.setEyeLongitude(this._camera.eyeLongitude + longitude);
         }
         this.render();
     }
@@ -177,8 +177,8 @@ class Earth extends Observable {
     }
 
     setCenter(lon, lat) {
-        this._camera.latitude = lat;
-        this._camera.longitude = lon;
+        this._camera.eyeLatitude = lat;
+        this._camera.eyeLongitude = lon;
         return this;
     }
 }

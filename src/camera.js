@@ -6,8 +6,8 @@ import { Sphere } from './util/sphere';
 
 export class Camera {
     constructor() {
-        this._lat = 0;
-        this._lon = 0;
+        this._eyeLat = 0;
+        this._eyeLng = 0;
         this._tilt = 0;
 
         this._center = [0, 0, 0];
@@ -42,7 +42,7 @@ export class Camera {
         glMatrix.mat4.identity(this._modelViewMatrix);
 
         const sphere = new Sphere(Const.EARTH_RADIUS + this._altitude);
-        const cartesianPos = sphere.getXYZ(this._lon, this._lat);
+        const cartesianPos = sphere.getXYZ(this._eyeLng, this._eyeLat);
 
         glMatrix.mat4.lookAt(this._modelViewMatrix, cartesianPos, this._center, [0, 0, 1]);
     }
@@ -55,32 +55,40 @@ export class Camera {
         return this._modelViewMatrix;
     }
 
-    get latitude() {
-        return this._lat;
+    get eyeLatitude() {
+        return this._eyeLat;
     }
 
-    set latitude(degree) {
+    setEyeLatitude(degree) {
         let validDegree = degree;
         if (degree < -90) {
             validDegree = -90;
         } else if (degree > 90) {
             validDegree = 90;
         }
-        this._lat = validDegree;
+        this._eyeLat = validDegree;
         this._calcModelViewMatrix();
+        return this;
     }
 
-    get longitude() {
-        return this._lon;
+    get eyeLongitude() {
+        return this._eyeLng;
     }
 
-    set longitude(degree) {
-        this._lon = degree;
+    setEyeLongitude(degree) {
+        this._eyeLng = degree;
         this._calcModelViewMatrix();
+        return this;
     }
 
     get center() {
         return this._center;
+    }
+
+    setCenter(center) {
+        this._center = center;
+        this._calcModelViewMatrix();
+        return this;
     }
 
     _calcTilt(altitude, distance) {
