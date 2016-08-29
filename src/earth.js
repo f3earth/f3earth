@@ -176,9 +176,8 @@ class Earth extends Observable {
         return Dom.getSize(this._container);
     }
 
-    setCenter(lon, lat) {
-        this._camera.eyeLatitude = lat;
-        this._camera.eyeLongitude = lon;
+    setCenter(lng, lat) {
+        this._camera.setTarget(lng, lat);
         return this;
     }
 }

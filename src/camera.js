@@ -6,12 +6,11 @@ import { Sphere } from './util/sphere';
 
 export class Camera {
     constructor() {
-        this._eyeLat = 0;
-        this._eyeLng = 0;
+        this._eyePos = {
+            lat: 0,
+            lng: 0
+        };
         this._tilt = 0;
-
-        this._center = [0, 0, 0];
-        this._up = [0, 1, 0];
 
         this._fov = 45;
         this._aspect = 1;
@@ -42,9 +41,13 @@ export class Camera {
         glMatrix.mat4.identity(this._modelViewMatrix);
 
         const sphere = new Sphere(Const.EARTH_RADIUS + this._altitude);
-        const cartesianPos = sphere.getXYZ(this._eyeLng, this._eyeLat);
+        const cartesianPos = sphere.getXYZ(this._eyePos.lng, this._eyePos.lat);
 
-        glMatrix.mat4.lookAt(this._modelViewMatrix, cartesianPos, this._center, [0, 0, 1]);
+        // TODO: change to real target pos
+        const earthSphere = new Sphere(Const.EARTH_RADIUS);
+        const targetPos = earthSphere.getXYZ(this._eyePos.lng, this._eyePos.lat);
+
+        glMatrix.mat4.lookAt(this._modelViewMatrix, cartesianPos, targetPos, [0, 0, 1]);
     }
 
     get projectionMatrix() {
@@ -56,7 +59,7 @@ export class Camera {
     }
 
     get eyeLatitude() {
-        return this._eyeLat;
+        return this._eyePos.lat;
     }
 
     setEyeLatitude(degree) {
@@ -66,17 +69,17 @@ export class Camera {
         } else if (degree > 90) {
             validDegree = 90;
         }
-        this._eyeLat = validDegree;
+        this._eyePos.lat = validDegree;
         this._calcModelViewMatrix();
         return this;
     }
 
     get eyeLongitude() {
-        return this._eyeLng;
+        return this._eyePos.lng;
     }
 
     setEyeLongitude(degree) {
-        this._eyeLng = degree;
+        this._eyePos.lng = degree;
         this._calcModelViewMatrix();
         return this;
     }
@@ -98,10 +101,6 @@ export class Camera {
         this._tilt = Math.acos(
             (edgeA * edgeA + edgeB * edgeB - edgeC * edgeC) / (2 * edgeA * edgeB));
         return this;
-    }
-
-    get up() {
-        return this._up;
     }
 
     get fov() {
@@ -160,6 +159,13 @@ export class Camera {
             x: result[0] / result[3],
             y: result[1] / result[3]
         };
+    }
+
+    setTarget(lng, lat) {
+        this._eyePos.lng = lng;
+        this._eyePos.lat = lat;
+        this._calcModelViewMatrix();
+        return this;
     }
 
 }
