@@ -20,6 +20,7 @@ import { OverlayLayer } from './plugins/overlay/overlayLayer';
 import { Format as FEFormat } from './plugins/format/format';
 import { GeoJSON } from './plugins/format/geojson';
 
+import { Feature } from './src/feature/feature';
 import { Geometry as FEGeometry } from './src/feature/geometry';
 import { Point } from './src/feature/point';
 import { LineString } from './src/feature/linestring';
@@ -60,5 +61,6 @@ export {
     Interaction,
     Overlay,
     Format,
-    Geometry
+    Geometry,
+    Feature
 };

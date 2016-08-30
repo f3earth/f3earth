@@ -41,7 +41,8 @@
         var earth = new FE.Earth("earth");
         earth.addLayer({
             type: 'rasterTile',
-            url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
+            // url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
+            url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
         });
         var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);
@@ -80,6 +81,11 @@
             border: '1px solid rgb(255,255, 255)',
         });
         defLayer.addOverlay(label);
+
+        earth.on(FE.Const.EarthEventType.RENDER_END, function(){
+            const coordinate = earth.getPixelCoordinate(104.06, 30.67);
+            label.setCoordinate([coordinate.x, coordinate.y]);
+        });
 
         var icon = new FE.Overlay.Icon({
             coordinate :[150,150],
