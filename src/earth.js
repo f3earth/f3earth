@@ -71,7 +71,7 @@ class Earth extends Observable {
     }
 
     getPixelCoordinate(longitude, latitude) {
-        const openglCoordinate = this._camera.getOpenglCoordinate(longitude, latitude);
+        const openglCoordinate = this._camera.getGLCoordinate(longitude, latitude);
         return {
             x: ((1 + openglCoordinate.x) / 2.0) * this._context.gl.viewportWidth,
             y: (1 - ((1 + openglCoordinate.y) / 2.0)) * this._context.gl.viewportHeight

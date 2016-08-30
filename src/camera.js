@@ -146,7 +146,7 @@ export class Camera {
         this._altitude = dfromeq - Const.EARTH_RADIUS;
     }
 
-    getOpenglCoordinate(lng, lat) {
+    getGLCoordinate(lng, lat) {
         const sphere = new Sphere(Const.EARTH_RADIUS);
         const position = sphere.getXYZ(lng, lat);
         const vec4Position = glMatrix.vec4.fromValues(position[0], position[1], position[2], 1.0);
