@@ -8,7 +8,7 @@ export class VectorSource extends Observable {
         this._id = options.id;
         this._type = options.type ? options.type : undefined;
         this._features = options.features
-            ? options.features : undefined;
+            ? options.features : [];
         this._coordinates = [];
 
         /* this._coordinates.push(lineCoordinates);*/

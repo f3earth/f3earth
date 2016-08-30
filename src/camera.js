@@ -6,12 +6,11 @@ import { Sphere } from './util/sphere';
 
 export class Camera {
     constructor() {
-        this._lat = 0;
-        this._lon = 0;
+        this._eyePos = {
+            lat: 0,
+            lng: 0
+        };
         this._tilt = 0;
-
-        this._center = [0, 0, 0];
-        this._up = [0, 1, 0];
 
         this._fov = 45;
         this._aspect = 1;
@@ -42,9 +41,13 @@ export class Camera {
         glMatrix.mat4.identity(this._modelViewMatrix);
 
         const sphere = new Sphere(Const.EARTH_RADIUS + this._altitude);
-        const cartesianPos = sphere.getXYZ(this._lon, this._lat);
+        const cartesianPos = sphere.getXYZ(this._eyePos.lng, this._eyePos.lat);
 
-        glMatrix.mat4.lookAt(this._modelViewMatrix, cartesianPos, this._center, [0, 0, 1]);
+        // TODO: change to real target pos
+        const earthSphere = new Sphere(Const.EARTH_RADIUS);
+        const targetPos = earthSphere.getXYZ(this._eyePos.lng, this._eyePos.lat);
+
+        glMatrix.mat4.lookAt(this._modelViewMatrix, cartesianPos, targetPos, [0, 0, 1]);
     }
 
     get projectionMatrix() {
@@ -55,32 +58,40 @@ export class Camera {
         return this._modelViewMatrix;
     }
 
-    get latitude() {
-        return this._lat;
+    get eyeLatitude() {
+        return this._eyePos.lat;
     }
 
-    set latitude(degree) {
+    setEyeLatitude(degree) {
         let validDegree = degree;
         if (degree < -90) {
             validDegree = -90;
         } else if (degree > 90) {
             validDegree = 90;
         }
-        this._lat = validDegree;
+        this._eyePos.lat = validDegree;
         this._calcModelViewMatrix();
+        return this;
     }
 
-    get longitude() {
-        return this._lon;
+    get eyeLongitude() {
+        return this._eyePos.lng;
     }
 
-    set longitude(degree) {
-        this._lon = degree;
+    setEyeLongitude(degree) {
+        this._eyePos.lng = degree;
         this._calcModelViewMatrix();
+        return this;
     }
 
     get center() {
         return this._center;
+    }
+
+    setCenter(center) {
+        this._center = center;
+        this._calcModelViewMatrix();
+        return this;
     }
 
     _calcTilt(altitude, distance) {
@@ -90,10 +101,6 @@ export class Camera {
         this._tilt = Math.acos(
             (edgeA * edgeA + edgeB * edgeB - edgeC * edgeC) / (2 * edgeA * edgeB));
         return this;
-    }
-
-    get up() {
-        return this._up;
     }
 
     get fov() {
@@ -137,6 +144,28 @@ export class Camera {
         const dfromeq = Math.sqrt(Const.EARTH_RADIUS * Const.EARTH_RADIUS + distance * distance -
             2 * Const.EARTH_RADIUS * distance * Math.cos(Math.PI - tilt));
         this._altitude = dfromeq - Const.EARTH_RADIUS;
+    }
+
+    getGLCoordinate(lng, lat) {
+        const sphere = new Sphere(Const.EARTH_RADIUS);
+        const position = sphere.getXYZ(lng, lat);
+        const vec4Position = glMatrix.vec4.fromValues(position[0], position[1], position[2], 1.0);
+
+        const result = glMatrix.vec4.create();
+        glMatrix.vec4.transformMat4(result, vec4Position, this._modelViewMatrix);
+        glMatrix.vec4.transformMat4(result, result, this._projectionMatrix);
+
+        return {
+            x: result[0] / result[3],
+            y: result[1] / result[3]
+        };
+    }
+
+    setTarget(lng, lat) {
+        this._eyePos.lng = lng;
+        this._eyePos.lat = lat;
+        this._calcModelViewMatrix();
+        return this;
     }
 
 }

@@ -41,7 +41,8 @@
         var earth = new FE.Earth("earth");
         earth.addLayer({
             type: 'rasterTile',
-            url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
+            // url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
+            url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
         });
         var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);
@@ -81,17 +82,22 @@
         });
         defLayer.addOverlay(label);
 
+        earth.on(FE.Const.EarthEventType.RENDER_END, function(){
+            const coordinate = earth.getPixelCoordinate(104.06, 30.67);
+            label.setCoordinate([coordinate.x, coordinate.y]);
+        });
+
         var icon = new FE.Overlay.Icon({
             coordinate :[150,150],
             border: '1px solid rgb(255,255, 255)',
-            imageUrl: '../imgs/logo.jpg',
+            imageUrl: '../imgs/logo.png',
             size: [60,60]
         });
         defLayer.addOverlay(icon);
 
         var friend = {
             name : 'this is laoyu',
-            imageUrl: '../imgs/logo.jpg',
+            imageUrl: '../imgs/logo.png',
         }
         var marker = new FE.Overlay.Marker({
             coordinate :[50,50],
@@ -114,7 +120,7 @@
             alert(this.entity.name + " " +  this.entity.imageUrl)
         })
         var popup = new FE.Overlay.Popup({
-            content: `<table><tr><td>${friend.name}</td></tr><tr><td style="width=64px;height=64px"><img src="${friend.imageUrl}"/></td></tr></table>`
+            content: `<table><tr><td>${friend.name}</td></tr><tr><td><img style="width: 64px; height: 64px;" src="${friend.imageUrl}"/></td></tr></table>`
         })
         defLayer.addOverlay(popup);
         document.body.addEventListener('click',function(e){

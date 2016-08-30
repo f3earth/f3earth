@@ -40,11 +40,11 @@ class Earth extends Observable {
 
     panByDelta(longitude, latitude) {
         if (latitude) {
-            this._camera.latitude = this._camera.latitude + latitude;
+            this._camera.setEyeLatitude(this._camera.eyeLatitude + latitude);
         }
 
         if (longitude) {
-            this._camera.longitude = this._camera.longitude + longitude;
+            this._camera.setEyeLongitude(this._camera.eyeLongitude + longitude);
         }
         this.render();
     }
@@ -70,6 +70,14 @@ class Earth extends Observable {
         }
     }
 
+    getPixelCoordinate(longitude, latitude) {
+        const openglCoordinate = this._camera.getGLCoordinate(longitude, latitude);
+        return {
+            x: ((1 + openglCoordinate.x) / 2.0) * this._context.gl.viewportWidth,
+            y: (1 - ((1 + openglCoordinate.y) / 2.0)) * this._context.gl.viewportHeight
+        };
+    }
+
     addLayer(layer) {
         const sourceLayer = SourceLayer.from(this._context, layer);
         if (sourceLayer) {
@@ -89,6 +97,7 @@ class Earth extends Observable {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         this._sourceLayers.forEach(layer => layer.render(this._camera));
+        this.trigger(Const.EarthEventType.RENDER_END);
     }
 
     _handleDOMEvent(e) {
@@ -167,9 +176,8 @@ class Earth extends Observable {
         return Dom.getSize(this._container);
     }
 
-    setCenter(lon, lat) {
-        this._camera.latitude = lat;
-        this._camera.longitude = lon;
+    setCenter(lng, lat) {
+        this._camera.setTarget(lng, lat);
         return this;
     }
 }
