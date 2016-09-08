@@ -1,0 +1,112 @@
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+    <title>OverlaySample F3Earth</title>
+    <link rel="stylesheet"  href="../css/fe.css">
+    <script type="text/javascript" src="../dist/fe.js" charset="utf-8"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+        
+        #earth {
+            height: 100vh;
+        }
+        #customMarker {
+            width: 200px;
+            height: 30px;
+            border: 1px solid #088;
+            border-radius: 10px;
+            background-color: #0FF;
+            opacity: 0.5;
+        }
+        #customLink {
+            text-decoration: none;
+            color: white;
+            font-size: 11pt;
+            font-weight: bold;
+            text-shadow: black 0.1em 0.1em 0.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="earth"></div>
+    <div id="overlayContainer">
+    </div>
+    <script type="text/javascript">
+        var earth = new FE.Earth("earth");
+        earth.addLayer({
+            type: 'rasterTile',
+            // url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
+            url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        });
+        var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
+        earth.addInteraction(doubleClickZoomInteraction);
+
+        var dragInteraction=new FE.Interaction.Drag();
+        earth.addInteraction(dragInteraction);
+
+        var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
+        earth.addInteraction(mouseWheelZoomInteraction);
+
+        // layer
+        var defLayer =  new FE.Overlay.Layer({
+            container : overlayContainer
+        });
+        earth.addOverlayLayer(defLayer);       
+
+        var friends = [
+           {
+                name : 'Swanky',
+                imageUrl: '../imgs/logo.png',
+                coordinate : [103.9986, 30.6256007]
+            },
+            {
+                name : '扯淡大叔',
+                imageUrl: 'https://avatars0.githubusercontent.com/u/1855738?v=3&s=400',
+                coordinate : [103.9986,30.6254]
+            },
+            {
+                name : '聪明伶俐一休桑',
+                imageUrl: '../imgs/logo.png',
+                coordinate : [121.500, 76.267]
+            },
+
+            {
+                name : '1dent1ty',
+                imageUrl: '../imgs/1dent1ty.jpg',
+                coordinate : [121.444,37.477]
+            },
+            {
+                name : '年少无知小熊',
+                imageUrl: '../imgs/logo.png',
+                coordinate : [114.411020, 30.457747]
+            },
+            {
+                name : '老羽',
+                imageUrl: 'https://avatars1.githubusercontent.com/u/19585880?v=3&s=460',
+                coordinate : [113.954578,22.53089]
+            },
+             {
+                name : '张文金',
+                imageUrl: 'https://avatars2.githubusercontent.com/u/14316092?v=3&s=400',
+                coordinate : [113.457809,23.169968]
+            },            
+        ];
+        friends.forEach(function(friend)
+        {
+            var content = '<table><tr><td>'+ friend.name +'</td></tr><tr><td><img style="width: 36px; height: 36px;" src="' + friend.imageUrl + '\"/></td></tr></table>';
+            var popup = new FE.Overlay.Popup({
+                content: content
+            });
+            console.log(content);
+            defLayer.addOverlay(popup);
+            popup.setCoordinate(friend.coordinate);
+        });        
+
+    </script>
+</body>
+
+</html>

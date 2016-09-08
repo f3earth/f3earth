@@ -14,7 +14,7 @@ export class Control extends Observable {
     setEarth(earth) {
         this._earth = earth;
         if (earth) {
-            this._earth.on('rendered', this.render, this);
+            this._earth.on(Const.EarthEventType.RENDER_END, this.render, this);
         }
         return this;
     }
@@ -23,9 +23,8 @@ export class Control extends Observable {
         return this._element;
     }
 
-    render(camera) {
-        this.trigger(Const.ControlEventType.RENDER, camera);
-        console.log(camera);
+    render() {
+        this.trigger(Const.ControlEventType.RENDER);
     }
 
     dispose() {
