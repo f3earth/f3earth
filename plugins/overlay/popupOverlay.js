@@ -17,7 +17,6 @@ export class PopupOverlay extends Overlay {
         this.setElement(divElement);
         this._closeElement = divElement.getElementsByTagName('a')[0];
         this._contentElement = divElement.getElementsByTagName('div')[0];
-
         DomEvent.on(this._closeElement, Const.DomEventType.CLICK,
             this._handleCloseElementClick, this);
     }
@@ -33,10 +32,5 @@ export class PopupOverlay extends Overlay {
     setContent(content) {
         this._style.content = content;
         this._contentElement.innerHTML = content;
-    }
-
-    openPopup(coordinate, content) {
-        this.setContent(content);
-        this.setCoordinate(coordinate);
     }
 }

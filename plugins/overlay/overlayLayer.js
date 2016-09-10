@@ -1,3 +1,4 @@
+import { Const } from '../../src/const';
 export class OverlayLayer {
     constructor(options) {
         this._id = options.id;
@@ -33,7 +34,7 @@ export class OverlayLayer {
     setEarth(earth) {
         this._earth = earth;
         if (this._earth) {
-            this._earth.on('rendered', this._handleEarthRendered, this);
+            this._earth.on(Const.EarthEventType.RENDER_END, this._handleEarthRendered, this);
         }
         return this;
     }

@@ -53,80 +53,86 @@
         var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
         earth.addInteraction(mouseWheelZoomInteraction);
 
+        //layer1
         var overlayContainer  = document.getElementById('overlayContainer');
         var customLayer = new FE.Overlay.Layer({
             container : overlayContainer
         });
         earth.addOverlayLayer(customLayer);
+        // custom overlay
         customLayer.addOverlay(new FE.Overlay.Overlay({
             element : document.getElementById('customLink'),
-            coordinate :[100,100],
+            coordinate :[114.06, 50.67],
             positioning : 'center-center', //should be used Const.OverlayPositioning
         }));
         customLayer.addOverlay(new FE.Overlay.Overlay({
             element : document.getElementById('customMarker'),
-            coordinate :[200,200],
+            coordinate :[114.06, 40.67],
             positioning : 'center-center', //should be used Const.OverlayPositioning
         })).on('click',function(e){
             alert(this.element.innerText + '  clicked!!!')
         })
 
+        // layer2
         var defLayer =  new FE.Overlay.Layer({
             container : overlayContainer
         });
         earth.addOverlayLayer(defLayer);
+        // label demo
         var label = new FE.Overlay.Label({
-            coordinate :[300,300],
+            coordinate :[104.06, 30.67],
             content: 'this is label of f3earth provide',
             border: '1px solid rgb(255,255, 255)',
         });
         defLayer.addOverlay(label);
 
-        earth.on(FE.Const.EarthEventType.RENDER_END, function(){
-            const coordinate = earth.getPixelCoordinate(104.06, 30.67);
-            label.setCoordinate([coordinate.x, coordinate.y]);
-        });
+        // earth.on(FE.Const.EarthEventType.RENDER_END, function(){
+        //     const coordinate = earth.getPixelCoordinate(104.06, 30.67);
+        //     label.setCoordinate([coordinate.x, coordinate.y]);
+        // });
 
+        // icon demo
         var icon = new FE.Overlay.Icon({
-            coordinate :[150,150],
+            coordinate :[114.06, 30.67],
             border: '1px solid rgb(255,255, 255)',
             imageUrl: '../imgs/logo.png',
             size: [60,60]
         });
         defLayer.addOverlay(icon);
-
-        var friend = {
-            name : 'this is laoyu',
-            imageUrl: '../imgs/logo.png',
-        }
+        
+        //marker demo
         var marker = new FE.Overlay.Marker({
-            coordinate :[50,50],
+            coordinate :[134.06, 30.67],
             border: '1px solid rgb(255,255, 255)',            
             icon: new FE.Overlay.Icon({
-                imageUrl: friend.imageUrl,
+                imageUrl: '../imgs/logo.png',
                 size: [36,36],
                 offset: [1,1],
                 border: '1px solid rgb(255,0, 255)',
             }),
             label : new FE.Overlay.Label({
-               content : friend.name,
+               content : 'marker demo',
                offset: [-10,36],
                border: '1px solid rgb(255,255, 255)',
             })
         });
-        marker.setEntity(friend)
+        marker.setEntity({
+            name : 'michael',
+            age : '99',
+            sex : 'male'
+        })
         defLayer.addOverlay(marker);
         marker.on('click',function(e){
-            alert(this.entity.name + " " +  this.entity.imageUrl)
+            alert(this.entity.name + " " +  this.entity.sex)
         })
+
+        //popup demo
         var popup = new FE.Overlay.Popup({
-            content: `<table><tr><td>${friend.name}</td></tr><tr><td><img style="width: 64px; height: 64px;" src="${friend.imageUrl}"/></td></tr></table>`
+            content: `<table><tr><td>f3earth</td></tr><tr><td><img style="width: 64px; height: 64px;" src="../imgs/logo.png"/></td></tr></table>`
         })
         defLayer.addOverlay(popup);
-        document.body.addEventListener('click',function(e){
-            
-            popup.setCoordinate([e.clientX,e.clientY]);//test popup;
-        });
+        popup.setCoordinate([113.954578,22.53089]);//test popup;
+
     </script>
 </body>
 

@@ -76,7 +76,7 @@ export class Overlay extends Observable {
         if (this._positioning !== positioning) {
             this._positioning = positioning;
             this.render();
-            this._panToViewport();
+            // this._panToViewport();
         }
         return this;
     }
@@ -118,7 +118,8 @@ export class Overlay extends Observable {
         const style = this._element.style;
         const earthContainerSize = this._earth.size;
         // this._coordinate to fixel; todo transform coordinate into pixel
-        const pixel = this._coordinate;
+        const pixel = this._earth.getPixelCoordinate(...this._coordinate);
+        console.log(pixel);
         let offsetX = this._offset[0];
         let offsetY = this._offset[1];
         const elementSize = Dom.getSize(this._element);
@@ -128,7 +129,7 @@ export class Overlay extends Observable {
             if (this._style.left_ !== '') {
                 this._style.left_ = style.left = '';
             }
-            const right = `${Math.round(earthContainerSize[0] - pixel[0] - offsetX)}px`;
+            const right = `${Math.round(earthContainerSize[0] - pixel.x - offsetX)}px`;
             if (this._style.right !== right) {
                 this._style.right = style.right = right;
             }
@@ -141,7 +142,7 @@ export class Overlay extends Observable {
                 this._positioning === Const.OverlayPositioning.TOP_CENTER) {
                 offsetX -= (elementSize[0] / 2);
             }
-            const left = `${Math.round(pixel[0] + offsetX)}px`;
+            const left = `${Math.round(pixel.x + offsetX)}px`;
             if (this._style.left !== left) {
                 this._style.left = style.left = left;
             }
@@ -152,7 +153,7 @@ export class Overlay extends Observable {
             if (this._style.top !== '') {
                 this._style.top = style.top = '';
             }
-            const bottom = `${Math.round(earthContainerSize[1] - pixel[1] - offsetY)}px`;
+            const bottom = `${Math.round(earthContainerSize[1] - pixel.y - offsetY)}px`;
             if (this._style.bottom !== bottom) {
                 this._style.bottom = style.bottom = bottom;
             }
@@ -165,7 +166,7 @@ export class Overlay extends Observable {
                 this._positioning === Const.OverlayPositioning.CENTER_RIGHT) {
                 offsetY -= (elementSize[1] / 2);
             }
-            const top = `${Math.round(pixel[1] + offsetY)}px`;
+            const top = `${Math.round(pixel.y + offsetY)}px`;
 
             if (this._style.top !== top) {
                 this._style.top = style.top = top;
