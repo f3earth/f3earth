@@ -6,7 +6,7 @@ import { LayerShader } from '../shader/layerShader';
 export class PointLayer extends Layer {
     constructor(options) {
         super(options);
-        this._render = new LayerRender(options.context.gl,
+        this._render = new LayerRender(options.view.gl,
             LayerShader.pointVertexSource, LayerShader.pointFragmentSource);
     }
     _buildRenderObjects() {

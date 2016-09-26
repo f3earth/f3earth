@@ -7,12 +7,14 @@ export class ZoomControl extends Control {
         const ele = document.createElement('div');
         ele.className = 'fe-control-zoom fe-control';
         ele.innerHTML = `<button class="fe-zoom-in" type="button" title="Zoom in">+</button>
-            <button class="fe-zoom-out" type="button" title="Zoom out">−</button>`;
+            <button class="fe-zoom-out" type="button" title="Zoom out">−</button>
+            <span id="zoom">3</span>`;
         controlContainers.appendChild(ele);
         super(ele);
         const buttons = ele.getElementsByTagName('button');
         this.btnZoomIn = buttons[0];
         this.btnZoomOut = buttons[1];
+        this.zoomLabel = ele.getElementsByTagName('span')[0];
 
         DomEvent.on(this.btnZoomIn, 'click', this._zoomIn, this);
         DomEvent.on(this.btnZoomOut, 'click', this._zoomOut, this);
@@ -22,10 +24,12 @@ export class ZoomControl extends Control {
         e.preventDefault();
         e.stopPropagation();
         this._earth.setZoom(this._earth.zoom + 1);
+        this.zoomLabel.innerHTML = `${this._earth.zoom}`;
     }
     _zoomOut(e) {
         e.preventDefault();
         e.stopPropagation();
         this._earth.setZoom(this._earth.zoom - 1);
+        this.zoomLabel.innerHTML = `${this._earth.zoom}`;
     }
 }

@@ -23,4 +23,20 @@ export class Proj {
             lng: point[0]
         };
     }
+
+    /*
+     * convert wgs84 coordinate to mercator
+     * @param {Number} lng mercator
+     * @param {Number} lat
+     * @return {x, y}
+     */
+    static wgs842Mercator(lng, lat) {
+        // more detail: https://github.com/proj4js/proj4js
+        //   http://api.geo.admin.ch/main/wsgi/lib/proj4js/proj4js/
+        const point = MERCATOR_PROJ.forward([lng, lat]);
+        return {
+            y: point[1],
+            x: point[0]
+        };
+    }
 }

@@ -42,7 +42,7 @@ export class DragInteraction extends Interaction {
 
             const x = -deltaX / 10 % 360;
             const y = deltaY / 10 % 360;
-            this._earth.panByDelta(x, y);
+            this._earth.view.panByDelta(x, y);
 
             this._prevMouseX = originalEvent.clientX;
             this._prevMouseY = originalEvent.clientY;

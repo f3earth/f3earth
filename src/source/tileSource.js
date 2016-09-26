@@ -7,7 +7,10 @@ export class TileSource extends Observable {
         super();
         this._url = url;
         this._images = {};
-        this._imageLoading = {};
+        this._waitRequests = [];
+        this._waitRequestsKey = {};
+        this._runing = false;
+        this._loadedCount = 0;
     }
 
     getTileImage(zoom, row, col) {
@@ -15,10 +18,24 @@ export class TileSource extends Observable {
 
         if (this._images[key]) {
             return this._images[key];
-        } else if (this._imageLoading[key]) {
+        } else if (this._waitRequestsKey[key]) {
             return null;
         }
 
+        this._waitRequests.push({
+            zoom, row, col
+        });
+        this._waitRequestsKey[key] = true;
+        if (!this._runing) {
+            this._runing = true;
+            const firstTile = this._waitRequests[0];
+            this._loadTileImage(firstTile.zoom, firstTile.row, firstTile.col);
+        }
+        return null;
+    }
+
+    _loadTileImage(zoom, row, col) {
+        const key = `${zoom}-${row}-${col}`;
         const imageUrl = this._url.replace('{x}', col).replace('{y}', row).replace('{z}', zoom);
         new Promise((resolve, reject) => {
             const image = new Image();
@@ -32,10 +49,53 @@ export class TileSource extends Observable {
             image.src = imageUrl;
         }).then(image => {
             this._images[key] = image;
-            delete this._imageLoading[key];
-            this.trigger(Const.SourceEventType.CHANGE, { zoom, row, col, image });
+            this._loadedCount++;
+            if (this._loadedCount >= 4) {
+                this.trigger(Const.SourceEventType.CHANGE, { zoom, row, col, image });
+                this._loadedCount = 0;
+            }
+
+            if (this._waitRequests.length > 0) {
+                const firstTile = this._waitRequests[0];
+                if (firstTile.zoom === zoom && firstTile.row === row && firstTile.col === col) {
+                    this._waitRequests.shift();
+                }
+            }
+            delete this._waitRequestsKey[key];
+
+            if (this._waitRequests.length === 0) {
+                this._runing = false;
+                this.trigger(Const.SourceEventType.CHANGE, { zoom, row, col, image });
+                this._loadedCount = 0;
+            } else {
+                this._runing = true;
+                const firstTile = this._waitRequests[0];
+                this._loadTileImage(firstTile.zoom, firstTile.row, firstTile.col);
+            }
+        }).catch(error => {
+            console.error(error);
+            if (this._waitRequests.length > 0) {
+                const firstTile = this._waitRequests[0];
+                if (firstTile.zoom === zoom && firstTile.row === row && firstTile.col === col) {
+                    this._waitRequests.shift();
+                }
+            }
+            delete this._waitRequestsKey[key];
+
+            if (this._waitRequests.length === 0) {
+                this._runing = false;
+                this.trigger(Const.SourceEventType.CHANGE, { zoom, row, col, image: undefined });
+                this._loadedCount = 0;
+            } else {
+                this._runing = true;
+                const firstTile = this._waitRequests[0];
+                this._loadTileImage(firstTile.zoom, firstTile.row, firstTile.col);
+            }
         });
-        this._imageLoading[key] = true;
-        return null;
+    }
+
+    removeWaitRequests() {
+        this._waitRequests = [];
+        this._waitRequestsKey = {};
     }
 }
