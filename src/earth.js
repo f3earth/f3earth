@@ -5,8 +5,6 @@ import { Observable } from './util/observable';
 import { DomEvent } from './util/domEvent';
 import { Const } from './const';
 import { Dom } from './util/dom';
-// import { FMath } from './util/math';
-// import { Proj } from './util/proj';
 import { View } from './view';
 
 class Earth extends Observable {

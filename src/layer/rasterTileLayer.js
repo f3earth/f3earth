@@ -93,17 +93,6 @@ export class RasterTileLayer extends Observable {
             maxTileY = maxTileY + count;
         }
 
-        // console.log(`minTileX = ${minTileX}, minTileY = ${minTileY}`);
-        // console.log(`maxTileX = ${maxTileX}, maxTileY = ${maxTileY}`);
-
-        // const center = this._view.camera.target;
-        // const mercatorCenter = Proj.wgs842Mercator(center.lng, center.lat);
-        // const centerTileX = Math.floor((mercatorCenter.x + Const.EARTH_RADIUS * Math.PI) /
-        //     perTileRange);
-        // const centerTileY = Math.floor((Const.EARTH_RADIUS * Math.PI - mercatorCenter.y) /
-        //     perTileRange);
-        // console.log(`center tileX = ${centerTileX}, tileY = ${centerTileY}`);
-
         return {
             minTileX,
             minTileY,

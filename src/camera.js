@@ -44,10 +44,10 @@ export class Camera {
         const cartesianPos = sphere.getXYZ(this._eyePos.lng, this._eyePos.lat);
 
         // TODO: change to real target pos
-        // const earthSphere = new Sphere(Const.EARTH_RADIUS);
-        // const targetPos = earthSphere.getXYZ(this._eyePos.lng, this._eyePos.lat);
+        const earthSphere = new Sphere(Const.EARTH_RADIUS);
+        const targetPos = earthSphere.getXYZ(this._eyePos.lng, this._eyePos.lat);
 
-        glMatrix.mat4.lookAt(this._modelViewMatrix, cartesianPos, [0, 0, 0], [0, 0, 1]);
+        glMatrix.mat4.lookAt(this._modelViewMatrix, cartesianPos, targetPos, [0, 0, 1]);
     }
 
     get projectionMatrix() {
@@ -177,15 +177,7 @@ export class Camera {
             return Math.PI;
         }
 
-        // const ctanFov = Math.cos(
-        //     FMath.toRadians(this._fov / 2)) / Math.sin(FMath.toRadians(this._fov / 2));
-        // return Math.asin((this._altitude + Const.EARTH_RADIUS) /
-        //     Const.EARTH_RADIUS / Math.sqrt(1 + ctanFov * ctanFov));
-        // const range1 = Math.atan(this._altitude * Math.tan(FMath.toRadians(this._fov / 2)) /
-        //     Const.EARTH_RADIUS) * 2;
-        const range2 = Math.asin(this._altitude / Const.EARTH_RADIUS) * 2;
-        // console.log(`range1 = ${FMath.toDegrees(range1)}, range2 = ${FMath.toDegrees(range2)}`);
-        return range2;
+        return Math.asin(this._altitude / Const.EARTH_RADIUS) * 2;
     }
 
     calcAltitude(viewRange) {

@@ -15,7 +15,7 @@ export class MouseWheelZoomInteraction extends Interaction {
     }
     _onmousewheel(e) {
         const originalEvent = e.originalEvent;
-        const zoomDelta = -originalEvent.deltaY / 500;
+        const zoomDelta = -originalEvent.deltaY / 400;
         this._earth.view.incZoom(zoomDelta);
     }
 }
