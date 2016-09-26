@@ -32,7 +32,7 @@ export class RasterTileLayer extends Observable {
     }
 
     _prepareTiles() {
-        // only current zoom tile
+        // only the tiles of the current view of current zoom
         this._prepareRenderTiles = [];
         const count = 1 << this._curZoom;
         for (let row = this._tileRange.minTileY; row <= this._tileRange.maxTileY; row++) {
@@ -46,6 +46,7 @@ export class RasterTileLayer extends Observable {
             }
         }
 
+        // render low zoom's tiles firstly.
         this._prepareRenderTiles.sort((a, b) => a.mesh.zoom - b.mesh.zoom);
     }
 
@@ -141,29 +142,6 @@ export class RasterTileLayer extends Observable {
                 this._renderList.push(tile);
             }
         });
-        // for (let row = this._tileRange.minTileY; row <= this._tileRange.maxTileY; row++) {
-        //     const newRow = row % count;
-        //     for (let col = this._tileRange.minTileX; col <= this._tileRange.maxTileX; col++) {
-        //         const newCol = col % count;
-        //         if (this._exist(zoom - 1, newRow, newCol)) {
-        //             continue;
-        //         }
-
-        //         const image = this._source.getTileImage(zoom - 1, newRow, newCol);
-        //         if (!image) {
-        //             continue;
-        //         }
-        //         const tile = new RenderTile({
-        //             mesh: new TileMesh({
-        //                 zoom: zoom - 1,
-        //                 row: newRow,
-        //                 col: newCol
-        //             }),
-        //             material: new ImageMaterial(image)
-        //         });
-        //         this._renderList.push(tile);
-        //     }
-        // }
     }
 
     _buildRenderTilesList(tileRange) {
@@ -258,12 +236,6 @@ export class RasterTileLayer extends Observable {
         }
 
         return tileList;
-    }
-
-    _exist(zoom, row, col) {
-        const findIndex = this._renderList.findIndex(
-            (tile) => tile.mesh.zoom === zoom && tile.mesh.row === row && tile.mesh.col === col);
-        return findIndex !== -1;
     }
 
     _findTile(zoom, row, col) {
