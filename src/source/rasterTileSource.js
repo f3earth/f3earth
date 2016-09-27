@@ -2,14 +2,27 @@
 import { Observable } from '../util/observable';
 import { Const } from '../const';
 
-export class TileSource extends Observable {
-    constructor(url) {
+export class RasterTileSource extends Observable {
+
+    /**
+     * {Object} options: {
+     *  id: {String} source id
+     *  type: {String} source type, include `rasterTile, vector, vectorTile, image, video, geojson`
+     *  url: {String} source url
+     *  }
+     */
+    constructor(options) {
         super();
-        this._url = url;
+        this._id = options.id;
+        this._url = options.url;
         this._images = {};
         this._waitRequests = [];
         this._waitRequestsKey = {};
         this._runing = false;
+    }
+
+    get id() {
+        return this._id;
     }
 
     getTileImage(zoom, row, col) {

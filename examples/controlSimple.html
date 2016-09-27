@@ -4,83 +4,88 @@
     <meta http-equiv="content-type" content="text/html" charset="utf-8" />
     <title>controlSimple F3Earth</title>
     <script type="text/javascript" src="../dist/fe.js" charset="utf-8"></script>
-    <link rel="stylesheet"  href="../css/fe.css">
+    <link rel="stylesheet" href="../css/fe.css">
 
     <style>
         body {
             margin: 0;
         }
+        
         #earth {
             height: 100vh;
         }
-        a{   
-            display:block;   
-            width:120px;   
-            height:30px;   
-            line-height:30px;   
-            text-align:center;   
-            background-color:#60F;   
-            color:white;  
-            margin-top:5px;   
-            text-decoration:none;   
-            position:absolute;
-			top:50;
-			right:0;
-        }   
+        
+        a {
+            display: block;
+            width: 120px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background-color: #60F;
+            color: white;
+            margin-top: 5px;
+            text-decoration: none;
+            position: absolute;
+            top: 50;
+            right: 0;
+        }
     </style>
 </head>
 
 <body>
-<div>
-    <button  onclick="btnReomveMyControlClick()">删除myButtonZoomIn</button>
-    <button  onclick="btnReomveAttributionControlClick()">删除AttributionControl</button>
-</div>
-<div id="earth"></div>
-<div id="fe-controls-container">
-    <a id="myControl" href="#">custom myZoomIn</a>
-</div>
-<script type="text/javascript">
-    var earth = new FE.Earth("earth");
-    earth.addLayer({
-        type: 'rasterTile',
-        // url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
-        url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
-    });
-    var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom(); 
-    earth.addInteraction(doubleClickZoomInteraction); 
-    var dragInteraction=new FE.Interaction.Drag(); 
-    earth.addInteraction(dragInteraction); 
-    var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
-    earth.addInteraction(mouseWheelZoomInteraction);
+    <div>
+        <button onclick="btnReomveMyControlClick()">删除myButtonZoomIn</button>
+        <button onclick="btnReomveAttributionControlClick()">删除AttributionControl</button>
+    </div>
+    <div id="earth"></div>
+    <div id="fe-controls-container">
+        <a id="myControl" href="#">custom myZoomIn</a>
+    </div>
+    <script type="text/javascript">
+        var earth = new FE.Earth("earth");
+        earth.addLayer({
+            id: 'osm',
+            source: {
+                id: 'osm',
+                type: 'rasterTile',
+                url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            },
+            type: 'rasterTile'
+        });
+        var doubleClickZoomInteraction = new FE.Interaction.DoubleClickZoom();
+        earth.addInteraction(doubleClickZoomInteraction);
+        var dragInteraction = new FE.Interaction.Drag();
+        earth.addInteraction(dragInteraction);
+        var mouseWheelZoomInteraction = new FE.Interaction.MouseWheelZoom();
+        earth.addInteraction(mouseWheelZoomInteraction);
 
-    //custom control
-    var myControlElement = document.getElementById('myControl');
-    var myControl = new FE.Control.Control(myControlElement);
-    earth.addControl(myControl);
-    myControlElement.addEventListener('click',function(e){
-        var myEarth = myControl.earth;
-        myEarth.setZoom(myEarth.zoom+1);
-    });
-    myControl.on('render',function(e)
-    {
-        console.log(e);
-    });
-    //fe attributionConttrol;
-    var attributionControl = new FE.Control.Attribution();
-    earth.addControl(attributionControl);
+        //custom control
+        var myControlElement = document.getElementById('myControl');
+        var myControl = new FE.Control.Control(myControlElement);
+        earth.addControl(myControl);
+        myControlElement.addEventListener('click', function(e) {
+            var myEarth = myControl.earth;
+            myEarth.setZoom(myEarth.zoom + 1);
+        });
+        myControl.on('render', function(e) {
+            console.log(e);
+        });
+        //fe attributionConttrol;
+        var attributionControl = new FE.Control.Attribution();
+        earth.addControl(attributionControl);
 
-    //fe zoomControl
-    var zoomControl = new FE.Control.Zoom();
-    earth.addControl(zoomControl);
+        //fe zoomControl
+        var zoomControl = new FE.Control.Zoom();
+        earth.addControl(zoomControl);
 
-    function btnReomveMyControlClick(e) {
-        earth.removeControl(myControl);
-    }
-    function btnReomveAttributionControlClick(e) {
-        earth.removeControl(attributionControl);
-    }
-    
-</script>
+        function btnReomveMyControlClick(e) {
+            earth.removeControl(myControl);
+        }
+
+        function btnReomveAttributionControlClick(e) {
+            earth.removeControl(attributionControl);
+        }
+    </script>
 </body>
 
 </html>

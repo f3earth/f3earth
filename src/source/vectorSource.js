@@ -3,6 +3,13 @@ import { Const } from '../const';
 
 export class VectorSource extends Observable {
 
+    /**
+     * {Object} options: {
+     *  id: {String} source id
+     *  type: {String} source type: vector
+     *  features: {geojson} geojson features
+     *  }
+     */
     constructor(options) {
         super();
         this._id = options.id;

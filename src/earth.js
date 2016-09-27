@@ -1,4 +1,5 @@
 import { SourceLayer } from './source/sourceLayer';
+import { Source } from './source/source';
 import { Context } from './context';
 import { Camera } from './camera';
 import { Observable } from './util/observable';
@@ -56,13 +57,43 @@ class Earth extends Observable {
         };
     }
 
-    addLayer(layer) {
-        const sourceLayer = SourceLayer.from(this._view, layer);
+    /**
+     * @param {Object} layerOptions {{
+     *  id: {String},
+     *  source: {String | {{
+     *                          id: {String},
+     *                          type: {String},
+     *                          url: {String},
+     *                          features: {String} only for vector source,
+     *                      }} },
+     *  type: {String}
+     * }}
+     */
+    addLayer(layerOptions) {
+        if (!layerOptions) {
+            return;
+        }
+        if (!layerOptions.id) {
+            throw new Error('id is requied!');
+        }
+        if (!layerOptions.source) {
+            throw new Error('source is requied!');
+        }
+
+        const sourceLayer = SourceLayer.create(this._view, layerOptions);
         if (sourceLayer) {
             sourceLayer.source.on(Const.SourceEventType.CHANGE, () => this.render());
             this._sourceLayers.push(sourceLayer);
             this.render();
         }
+    }
+
+    addSource(options) {
+        Source.valueOf(options);
+    }
+
+    getSource(id) {
+        return Source.get(id);
     }
 
     render() {

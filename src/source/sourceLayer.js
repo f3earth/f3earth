@@ -5,13 +5,19 @@ import { LineLayer } from '../layer/lineLayer';
 import { PointLayer } from '../layer/pointLayer';
 import { CircleLayer } from '../layer/circleLayer';
 import { CircleFillLayer } from '../layer/circleFillLayer';
-import { TileSource } from './tileSource';
+import { Source } from './source';
 import { VectorSource } from './vectorSource';
+
 export class SourceLayer {
-    static from(view, layerConfig) {
+    static create(view, layerConfig) {
+        const source = Source.valueOf(layerConfig.source);
+        if (!source) {
+            return undefined;
+        }
+
         if (layerConfig.type === Const.LayerType.RASTER_TILE) {
             return new RasterTileLayer({
-                source: new TileSource(layerConfig.url),
+                source,
                 view
             });
         } else if (layerConfig.type === Const.LayerType.LINE) {

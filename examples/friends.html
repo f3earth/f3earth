@@ -38,9 +38,13 @@
     <script type="text/javascript">
         var earth = new FE.Earth("earth");
         earth.addLayer({
-            type: 'rasterTile',
-            // url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
-            url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            id: 'osm',
+            source: {
+                id: 'osm',
+                type: 'rasterTile',
+                url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            },
+            type: 'rasterTile'
         });
         var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);

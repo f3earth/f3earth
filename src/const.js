@@ -46,7 +46,12 @@ Const.LayerType = {
 };
 
 Const.SourceType = {
-    LINE: 'line'
+    IMAGE: 'image',
+    RASTER_TILE: 'rasterTile',
+    VECTOR: 'vector',
+    VECTOR_TILE: 'vectorTile',
+    GEOJSON: 'geojson',
+    VIDEO: 'video'
 };
 
 Const.OverlayPositioning = {
