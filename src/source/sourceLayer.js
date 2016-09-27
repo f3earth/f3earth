@@ -9,40 +9,40 @@ import { Source } from './source';
 import { VectorSource } from './vectorSource';
 
 export class SourceLayer {
-    static create(view, layerConfig) {
-        const source = Source.valueOf(layerConfig.source);
+    static create(view, layerOptions) {
+        const source = Source.valueOf(layerOptions.source);
         if (!source) {
             return undefined;
         }
 
-        if (layerConfig.type === Const.LayerType.RASTER_TILE) {
+        if (layerOptions.type === Const.LayerType.RASTER_TILE) {
             return new RasterTileLayer({
                 source,
                 view
             });
-        } else if (layerConfig.type === Const.LayerType.LINE) {
+        } else if (layerOptions.type === Const.LayerType.LINE) {
             return new LineLayer({
-                source: new VectorSource(layerConfig.source),
+                source: new VectorSource(layerOptions.source),
                 view
             });
-        } else if (layerConfig.type === Const.LayerType.FILL) {
+        } else if (layerOptions.type === Const.LayerType.FILL) {
             return new FillLayer({
-                source: new VectorSource(layerConfig.source),
+                source: new VectorSource(layerOptions.source),
                 view
             });
-        } else if (layerConfig.type === Const.LayerType.POINT) {
+        } else if (layerOptions.type === Const.LayerType.POINT) {
             return new PointLayer({
-                source: new VectorSource(layerConfig.source),
+                source: new VectorSource(layerOptions.source),
                 view
             });
-        } else if (layerConfig.type === Const.LayerType.CIRCLE) {
+        } else if (layerOptions.type === Const.LayerType.CIRCLE) {
             return new CircleLayer({
-                source: new VectorSource(layerConfig.source),
+                source: new VectorSource(layerOptions.source),
                 view
             });
-        } else if (layerConfig.type === Const.LayerType.CIRCLE_FILL) {
+        } else if (layerOptions.type === Const.LayerType.CIRCLE_FILL) {
             return new CircleFillLayer({
-                source: new VectorSource(layerConfig.source),
+                source: new VectorSource(layerOptions.source),
                 view
             });
         }

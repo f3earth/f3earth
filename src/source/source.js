@@ -5,36 +5,36 @@ import { VectorSource } from './vectorSource';
 const ALL_SOURCE = {};
 
 export class Source {
-    static valueOf(params) {
-        if (!params) {
+    static valueOf(options) {
+        if (!options) {
             return undefined;
         }
 
-        if (Object.prototype.toString.call(params) ===
+        if (Object.prototype.toString.call(options) ===
             '[object String]') {
-            return ALL_SOURCE[params];
+            return ALL_SOURCE[options];
         }
 
-        if (!params.id) {
+        if (!options.id) {
             throw new Error('id is required!');
         }
-        if (!params.type) {
+        if (!options.type) {
             throw new Error('type is required!');
         }
-        return this._createSource(params);
+        return this._createSource(options);
     }
 
     static get(id) {
         return ALL_SOURCE[id];
     }
 
-    static _createSource(params) {
-        if (params.type === Const.SourceType.RASTER_TILE) {
-            const source = new RasterTileSource(params);
+    static _createSource(options) {
+        if (options.type === Const.SourceType.RASTER_TILE) {
+            const source = new RasterTileSource(options);
             ALL_SOURCE[source.id] = source;
             return source;
-        } else if (params.type === Const.SourceType.VECTOR) {
-            const source = new VectorSource(params);
+        } else if (options.type === Const.SourceType.VECTOR) {
+            const source = new VectorSource(options);
             ALL_SOURCE[source.id] = source;
             return source;
         }
