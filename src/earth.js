@@ -35,10 +35,12 @@ class Earth extends Observable {
             this._handleDOMEvent, this);
 
         this._view.on(Const.ViewEventType.CHANGE, (obj) => {
-            this.render();
-            if (obj && obj.afterCallback) {
-                obj.afterCallback();
-            }
+            requestAnimationFrame(() => {
+                this.render();
+                if (obj && obj.afterCallback) {
+                    obj.afterCallback();
+                }
+            });
         }, this);
     }
 

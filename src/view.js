@@ -23,6 +23,7 @@ class View extends Observable {
             this._maxZoom = Const.MAX_ZOOM;
         }
         this._resolution = this._resolutions[this._minZoom];
+        this._revision = 0;
     }
 
     get zoom() {
@@ -69,6 +70,7 @@ class View extends Observable {
 
     setResolution(resolution) {
         this._resolution = resolution;
+        this._revision++;
     }
 
     incZoom(delta) {
@@ -129,12 +131,12 @@ class View extends Observable {
 
         // using resolution to calc ranges
         const gl = this.gl;
-        let lngRange = 2 * this._resolution * gl.viewportWidth * 360 /
+        let lngRange = this._resolution * gl.viewportWidth * 360 /
             (2 * Math.PI * Const.EARTH_RADIUS);
         if (lngRange > 180) {
             lngRange = 180;
         }
-        const latRange = 2 * this._resolution * gl.viewportHeight * 360 /
+        const latRange = this._resolution * gl.viewportHeight * 360 /
             (2 * Math.PI * Const.EARTH_RADIUS);
 
         const center = this._camera.target;
@@ -194,6 +196,7 @@ class View extends Observable {
                 longitude * 2 * this.getResolution(this.zoom) * 360 /
                     (Math.PI * Const.EARTH_RADIUS));
         }
+        this._revision++;
         this.trigger(Const.ViewEventType.CHANGE);
     }
 
@@ -231,6 +234,10 @@ class View extends Observable {
 
     getResolution(zoom) {
         return this._resolutions[zoom];
+    }
+
+    get revision() {
+        return this._revision;
     }
 }
 

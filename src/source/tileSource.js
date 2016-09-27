@@ -10,7 +10,6 @@ export class TileSource extends Observable {
         this._waitRequests = [];
         this._waitRequestsKey = {};
         this._runing = false;
-        this._loadedCount = 0;
     }
 
     getTileImage(zoom, row, col) {
@@ -49,11 +48,7 @@ export class TileSource extends Observable {
             image.src = imageUrl;
         }).then(image => {
             this._images[key] = image;
-            this._loadedCount++;
-            if (this._loadedCount >= 4) {
-                this.trigger(Const.SourceEventType.CHANGE, { zoom, row, col, image });
-                this._loadedCount = 0;
-            }
+            this.trigger(Const.SourceEventType.CHANGE, { zoom, row, col, image });
 
             if (this._waitRequests.length > 0) {
                 const firstTile = this._waitRequests[0];
@@ -65,8 +60,6 @@ export class TileSource extends Observable {
 
             if (this._waitRequests.length === 0) {
                 this._runing = false;
-                this.trigger(Const.SourceEventType.CHANGE, { zoom, row, col, image });
-                this._loadedCount = 0;
             } else {
                 this._runing = true;
                 const firstTile = this._waitRequests[0];
@@ -84,8 +77,6 @@ export class TileSource extends Observable {
 
             if (this._waitRequests.length === 0) {
                 this._runing = false;
-                this.trigger(Const.SourceEventType.CHANGE, { zoom, row, col, image: undefined });
-                this._loadedCount = 0;
             } else {
                 this._runing = true;
                 const firstTile = this._waitRequests[0];

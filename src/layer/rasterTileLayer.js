@@ -18,7 +18,8 @@ export class RasterTileLayer extends Observable {
         this._camera = null;
         this._tileRange = {};
         this._curZoom = 0;
-
+        this._curTileList = [];
+        this._oldViewRevision = -1;
         this._prepareRenderTiles = [];
     }
 
@@ -79,11 +80,12 @@ export class RasterTileLayer extends Observable {
         // console.log(` bottomRight = ${JSON.stringify(bottomRight)} `);
 
         const perTileRange = this._view.getResolution(this._view.zoom) * 256;
-        const minTileX = Math.floor((leftTop.x + Const.EARTH_RADIUS * Math.PI) / perTileRange);
-        const minTileY = Math.floor((Const.EARTH_RADIUS * Math.PI - bottomRight.y) / perTileRange);
+        const minTileX = Math.floor((leftTop.x + Const.EARTH_RADIUS * Math.PI) / perTileRange) - 1;
+        const minTileY = Math.floor(
+            (Const.EARTH_RADIUS * Math.PI - bottomRight.y) / perTileRange) - 1;
 
-        let maxTileX = Math.ceil((bottomRight.x + Const.EARTH_RADIUS * Math.PI) / perTileRange);
-        let maxTileY = Math.ceil((Const.EARTH_RADIUS * Math.PI - leftTop.y) / perTileRange);
+        let maxTileX = Math.ceil((bottomRight.x + Const.EARTH_RADIUS * Math.PI) / perTileRange) + 1;
+        let maxTileY = Math.ceil((Const.EARTH_RADIUS * Math.PI - leftTop.y) / perTileRange) + 1;
 
         const count = 1 << this._view.zoom;
         if (maxTileX < minTileX) {
@@ -111,8 +113,12 @@ export class RasterTileLayer extends Observable {
         this._curZoom = zoom;
         this._tileRange = this._calcTileRange(this._view.viewRange);
         this._source.removeWaitRequests();
-        const tileList = this._buildRenderTilesList(this._tileRange);
-        tileList.forEach(tilePos => {
+        if (this._oldViewRevision !== this._view.revision) {
+            this._curTileList = this._buildRenderTilesList(this._tileRange);
+            this._oldViewRevision = this._view.revision;
+        }
+
+        this._curTileList.forEach(tilePos => {
             const newRow = tilePos.row % count;
             const newCol = tilePos.col % count;
             if (newRow < 0 || newCol < 0) {
