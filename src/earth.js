@@ -81,17 +81,27 @@ class Earth extends Observable {
         }
 
         const sourceLayer = SourceLayer.create(this._view, layerOptions);
-        if (sourceLayer) {
+        if (sourceLayer && sourceLayer.source) {
             sourceLayer.source.on(Const.SourceEventType.CHANGE, () => this.render());
             this._sourceLayers.push(sourceLayer);
             this.render();
         }
     }
 
+    /**
+     * @param {{id: {String},
+     *          type: {String},
+     *          format: {String},
+     *          url: {String},
+     *  }} options
+     */
     addSource(options) {
         Source.valueOf(options);
     }
 
+    /**
+     * @param {String} id
+     */
     getSource(id) {
         return Source.get(id);
     }

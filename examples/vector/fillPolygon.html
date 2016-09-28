@@ -29,9 +29,8 @@
             type: 'rasterTile'
         });
 
-        // add countries layer
-        var polygonLayerConfig = {
-            id: 'polygon',
+        var polygonLineLayerConfig = {
+            id: 'polygonLine',
             source: {
                 id: 'polygon',
                 type: 'vector',
@@ -48,9 +47,27 @@
             paint: {
                 color: '#FF0000'
             },
+            type: 'line'
+        };
+        earth.addLayer(polygonLineLayerConfig);
+
+        // add countries layer
+        var polygonFillLayerConfig = {
+            id: 'polygonFill',
+            source: 'polygon',
+            layout: {
+                altitude: {
+                    type: 'relative',
+                    height: 100
+                },
+                width: 2
+            },
+            paint: {
+                color: '#FF0000'
+            },
             type: 'fill'
         };
-        earth.addLayer(polygonLayerConfig);
+        earth.addLayer(polygonFillLayerConfig);
 
         // show china
         earth.setCenter(110, 30);

@@ -6,7 +6,6 @@ import { PointLayer } from '../layer/pointLayer';
 import { CircleLayer } from '../layer/circleLayer';
 import { CircleFillLayer } from '../layer/circleFillLayer';
 import { Source } from './source';
-import { VectorSource } from './vectorSource';
 
 export class SourceLayer {
     static create(view, layerOptions) {
@@ -27,12 +26,12 @@ export class SourceLayer {
             });
         } else if (layerOptions.type === Const.LayerType.FILL) {
             return new FillLayer({
-                source: new VectorSource(layerOptions.source),
+                source,
                 view
             });
         } else if (layerOptions.type === Const.LayerType.POINT) {
             return new PointLayer({
-                source: new VectorSource(layerOptions.source),
+                source,
                 view
             });
         } else if (layerOptions.type === Const.LayerType.CIRCLE) {
