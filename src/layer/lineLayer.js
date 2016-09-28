@@ -10,6 +10,7 @@ export class LineLayer extends Layer {
             LayerShader.lineVertexSource, LayerShader.lineFragmentSource);
     }
     _buildRenderObjects() {
+        this._renderObjects = [];
         this.source.getLines().forEach(line => {
             const renderableLine = new RenderableLine({
                 mesh: new LineMesh(line),

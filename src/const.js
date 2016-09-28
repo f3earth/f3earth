@@ -50,8 +50,11 @@ Const.SourceType = {
     RASTER_TILE: 'rasterTile',
     VECTOR: 'vector',
     VECTOR_TILE: 'vectorTile',
-    GEOJSON: 'geojson',
     VIDEO: 'video'
+};
+
+Const.VectorFormat = {
+    GEO_JSON: 'geojson'
 };
 
 Const.OverlayPositioning = {

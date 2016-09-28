@@ -22,7 +22,7 @@ export class SourceLayer {
             });
         } else if (layerOptions.type === Const.LayerType.LINE) {
             return new LineLayer({
-                source: new VectorSource(layerOptions.source),
+                source,
                 view
             });
         } else if (layerOptions.type === Const.LayerType.FILL) {
@@ -37,12 +37,12 @@ export class SourceLayer {
             });
         } else if (layerOptions.type === Const.LayerType.CIRCLE) {
             return new CircleLayer({
-                source: new VectorSource(layerOptions.source),
+                source,
                 view
             });
         } else if (layerOptions.type === Const.LayerType.CIRCLE_FILL) {
             return new CircleFillLayer({
-                source: new VectorSource(layerOptions.source),
+                source,
                 view
             });
         }

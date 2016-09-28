@@ -6,6 +6,8 @@ import { Point } from '../../src/feature/point';
 import { LineString } from '../../src/feature/linestring';
 import { Polygon } from '../../src/feature/polygon';
 
+const FORMATS = {};
+
 export class Format extends Observable {
     constructor() {
         super();
@@ -17,6 +19,14 @@ export class Format extends Observable {
         };
         this._features = [];
         this._geometryType = '';
+    }
+
+    static register(formatName, format) {
+        FORMATS[formatName] = format;
+    }
+
+    static get(formatName) {
+        return FORMATS[formatName];
     }
 
     /* create layer config obj required by vectorsource. */

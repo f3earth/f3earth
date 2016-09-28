@@ -17,7 +17,7 @@ import { MarkerOverlay } from './plugins/overlay/markerOverlay';
 import { PopupOverlay } from './plugins/overlay/popupOverlay';
 import { OverlayLayer } from './plugins/overlay/overlayLayer';
 
-import { Format as FEFormat } from './plugins/format/format';
+import { Format as FEFormat } from './src/source/format';
 import { GeoJSON } from './plugins/format/geojson';
 
 import { Feature } from './src/feature/feature';

@@ -1,4 +1,6 @@
+import { Const } from '../const';
 import { Observable } from '../util/observable';
+
 export class Layer extends Observable {
     constructor(options) {
         super();
@@ -8,6 +10,7 @@ export class Layer extends Observable {
         this._renderObjects = [];
         this._renderVersion = -1;
         this._camera = null;
+        this._source.on(Const.SourceEventType.CHANGE, () => this._buildRenderObjects());
     }
     render(camera) {
         this._camera = camera;

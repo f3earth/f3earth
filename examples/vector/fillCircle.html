@@ -2,7 +2,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html" charset="utf-8" />
     <title>F3Earth - Add CircleFill</title>
-    <script type="text/javascript" src="../dist/fe.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../../dist/fe.js" charset="utf-8"></script>
     <style>
         body {
             margin: 0;
@@ -29,8 +29,10 @@
         });
 
         var circleLayerConfig = {
+            id: 'circle',
             source: {
-                id: 1,
+                id: 'circle',
+                type: 'vector',
                 center: [113,23],
                 radius: 500000
             },
@@ -47,12 +49,10 @@
             type: 'circle'
         };
         earth.addLayer(circleLayerConfig);
+
         var circleFillLayerConfig = {
-            source: {
-                id: 1,
-                center: [113,23],
-                radius: 500000
-            },
+            id: 'circleFill',
+            source: 'circle',
             layout: {
                 altitude: {
                     type: 'relative',

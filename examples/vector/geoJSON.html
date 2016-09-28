@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html" charset="utf-8" />
     <title>F3Earth - Add GeoJSON data</title>
-    <script type="text/javascript" src="../dist/fe.js" charset="
+    <script type="text/javascript" src="../../dist/fe.js" charset="
     utf-8"></script>
     <!-- <script type="text/javascript" src='data/cities.js'></script>
     <script type="text/javascript" src='data/line.js'></script>
@@ -56,6 +56,15 @@
             type: 'rasterTile'
         });
 
+        earth.addLayer({
+            id: 'geojson',
+            source: {
+                id: 'geojson',
+                type: 'vector'
+            },
+            type: 'line'
+        });
+
         function XHR(){
             this._xhr = new XMLHttpRequest();
             this._url = '';
@@ -91,12 +100,18 @@
         var xhr = new XHR();
         // xhr.get('data/major_cities.json', loadJSON2);
         // xhr.get('data/JPN_line.json', loadJSON2);
-        xhr.get('data/countries-110m.geojson', loadJSON2);
+        // xhr.get('data/countries-110m.geojson', loadJSON2);
 
         function loadJSON2(data) {
             var gformat = new FE.Format.GeoJSON();
-            var lconfig = gformat.readFeatures(data).createLayerConfig();
-            earth.addLayer(lconfig);
+            var features = gformat.readFeatures(data);
+            if (features && features.length > 0) {
+                var source = earth.getSource('geojson');
+                if (source) {
+                    source.removeAllFeatures();
+                    source.addFeatures(features);
+                }
+            }
         }
 
         // show china
