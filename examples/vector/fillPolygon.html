@@ -37,15 +37,13 @@
                 format: 'geojson',
                 url: '../data/countries.geojson'
             },
-            layout: {
+            style: {
                 altitude: {
                     type: 'relative',
                     height: 100
                 },
-                width: 2
-            },
-            paint: {
-                color: '#FF0000'
+                width: 2,
+                color: '#0000FF'
             },
             type: 'line'
         };
@@ -55,15 +53,13 @@
         var polygonFillLayerConfig = {
             id: 'polygonFill',
             source: 'polygon',
-            layout: {
+            style: {
                 altitude: {
                     type: 'relative',
                     height: 100
                 },
-                width: 2
-            },
-            paint: {
-                color: '#FF0000'
+                width: 2,
+                color: '#00FF00A0'
             },
             type: 'fill'
         };

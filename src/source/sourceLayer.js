@@ -14,36 +14,24 @@ export class SourceLayer {
             return undefined;
         }
 
+        const options = {
+            source,
+            view,
+            style: layerOptions.style
+        };
+
         if (layerOptions.type === Const.LayerType.RASTER_TILE) {
-            return new RasterTileLayer({
-                source,
-                view
-            });
+            return new RasterTileLayer(options);
         } else if (layerOptions.type === Const.LayerType.LINE) {
-            return new LineLayer({
-                source,
-                view
-            });
+            return new LineLayer(options);
         } else if (layerOptions.type === Const.LayerType.FILL) {
-            return new FillLayer({
-                source,
-                view
-            });
+            return new FillLayer(options);
         } else if (layerOptions.type === Const.LayerType.POINT) {
-            return new PointLayer({
-                source,
-                view
-            });
+            return new PointLayer(options);
         } else if (layerOptions.type === Const.LayerType.CIRCLE) {
-            return new CircleLayer({
-                source,
-                view
-            });
+            return new CircleLayer(options);
         } else if (layerOptions.type === Const.LayerType.CIRCLE_FILL) {
-            return new CircleFillLayer({
-                source,
-                view
-            });
+            return new CircleFillLayer(options);
         }
 
         return null;

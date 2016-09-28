@@ -62,6 +62,14 @@
                 id: 'geojson',
                 type: 'vector'
             },
+            style: {
+                altitude: {
+                    type: 'relative',
+                    height: 100
+                },
+                width: 2,
+                color: '#0000FF'
+            },
             type: 'line'
         });
 
@@ -103,14 +111,12 @@
         // xhr.get('data/countries-110m.geojson', loadJSON2);
 
         function loadJSON2(data) {
-            var gformat = new FE.Format.GeoJSON();
-            var features = gformat.readFeatures(data);
-            if (features && features.length > 0) {
-                var source = earth.getSource('geojson');
-                if (source) {
-                    source.removeAllFeatures();
-                    source.addFeatures(features);
-                }
+            var format = new FE.Format.GeoJSON();
+            var features = format.readFeatures(data);
+            var source = earth.getSource('geojson');
+            if (features && features.length > 0 && source) {
+                source.removeAllFeatures();
+                source.addFeatures(features);
             }
         }
 

@@ -1,6 +1,7 @@
 import { Layer } from './layer';
 import { Line as RenderableLine } from '../renderable/line';
 import { CircleMesh } from '../mesh/circleMesh';
+import { LineMaterial } from '../material/lineMaterial';
 import { LayerRender } from '../render/layerRender';
 import { LayerShader } from '../shader/layerShader';
 export class CircleLayer extends Layer {
@@ -15,7 +16,7 @@ export class CircleLayer extends Layer {
                 center: this.source.getCenter(),
                 radius: this.source.getRadius()
             }),
-            material: undefined
+            material: new LineMaterial(this.style)
         });
         this._renderObjects.push(renderableCircle);
     }

@@ -6,11 +6,15 @@ export class Layer extends Observable {
         super();
         this._source = options.source;
         this._view = options.view;
-        // this._render = new LineLayerRender(options.context.gl);
+        this._style = options.style;
         this._renderObjects = [];
         this._renderVersion = -1;
         this._camera = null;
         this._source.on(Const.SourceEventType.CHANGE, () => this._buildRenderObjects());
+    }
+
+    get style() {
+        return this._style;
     }
 
     /**
