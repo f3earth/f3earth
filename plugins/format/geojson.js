@@ -4,6 +4,7 @@ import { Format } from '../../src/source/format';
 import { Const } from '../../src/const';
 import { Feature } from '../../src/feature/feature';
 import { Point } from '../../src/feature/point';
+import { MultiPoint } from '../../src/feature/multiPoint';
 import { LineString } from '../../src/feature/linestring';
 import { Polygon } from '../../src/feature/polygon';
 
@@ -41,6 +42,9 @@ export class GeoJSON extends Format {
                 switch (geomtype) {
                     case 'Point':
                         features.push(new Feature(new Point(gcoords), attr));
+                        break;
+                    case 'MultiPoint':
+                        features.push(new Feature(new MultiPoint(gcoords), attr));
                         break;
                     case 'LineString':
                         features.push(new Feature(new LineString(gcoords), attr));

@@ -16,7 +16,7 @@ export class Geometry {
         if (coords instanceof Array) {
             this._coords = coords;
         } else {
-            console.log('input coordinates must be Array');
+            throw new Error('input coordinates must be Array');
         }
         return this;
     }

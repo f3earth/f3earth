@@ -96,6 +96,8 @@ export class VectorSource extends Observable {
             */
             if (geom.type === Const.GeomType.POINT) {
                 this._coordinates.push(coords);
+            } else if (geom.type === Const.GeomType.MULTI_POINT) {
+                this._coordinates.push(coords);
             } else if (geom.type === Const.GeomType.LINE) {
                 this._coordinates.push(coords);
             } else if (geom.type === Const.GeomType.POLYGON) {
@@ -103,9 +105,7 @@ export class VectorSource extends Observable {
             }
         }
         if (geom.type === Const.GeomType.POINT) {
-            const tmp = this._coordinates;
-            this._coordinates = [];
-            this._coordinates.push(tmp);
+            this._coordinates = [this._coordinates];
         }
     }
 

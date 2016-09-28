@@ -32,6 +32,7 @@ Const.ControlEventType = {
 
 Const.GeomType = {
     POINT: 'Point',
+    MULTI_POINT: 'MultiPoint',
     LINE: 'LineString',
     POLYGON: 'Polygon'
 };
