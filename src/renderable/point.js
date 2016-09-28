@@ -19,6 +19,8 @@ export class Point {
             this._material.color.G,
             this._material.color.B,
             this._material.color.A);
+        const pointSizeLoc = gl.getUniformLocation(program, 'uPointSize');
+        gl.uniform1f(pointSizeLoc, this._material.size);
         // this._material.bindTexture(gl, gl.TEXTURE0);
         gl.drawArrays(gl.POINTS, 0, this._mesh.count);
 //        this._material.unBind(gl);
