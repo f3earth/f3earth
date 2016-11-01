@@ -23,6 +23,7 @@ import { GeoJSON } from './plugins/format/geojson';
 import { Feature } from './src/feature/feature';
 import { Geometry as FEGeometry } from './src/feature/geometry';
 import { Point } from './src/feature/point';
+import { MultiPoint } from './src/feature/multiPoint';
 import { LineString } from './src/feature/linestring';
 import { Polygon } from './src/feature/polygon';
 
@@ -51,6 +52,7 @@ Format.GeoJSON = GeoJSON;
 const Geometry = {};
 Geometry.Geometry = FEGeometry;
 Geometry.Point = Point;
+Geometry.MultiPoint = MultiPoint;
 Geometry.LineString = LineString;
 Geometry.Polygon = Polygon;
 

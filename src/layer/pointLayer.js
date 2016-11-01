@@ -9,14 +9,23 @@ export class PointLayer extends Layer {
         super(options);
         this._render = new LayerRender(options.view.gl,
             LayerShader.pointVertexSource, LayerShader.pointFragmentSource);
+        this._pointMaterial = new PointMaterial(this.style);
     }
     _buildRenderObjects() {
-        this.source.getPoints().forEach(point => {
-            const renderableLine = new RenderablePoint({
-                mesh: new PointMesh(point),
-                material: new PointMaterial(this.style)
-            });
-            this._renderObjects.push(renderableLine);
-        });
+        // const imageMaterial = undefined;
+        // if (this.style.image) {
+        //     // load image
+
+        //     // imageMaterial =
+        // }
+        this._renderObjects = [];
+        const points = this.source.getPoints();
+        if (points.length === 0) {
+            return;
+        }
+        this._renderObjects.push(new RenderablePoint({
+            mesh: new PointMesh(this.source.getPoints()[0]),
+            material: this._pointMaterial
+        }));
     }
 }

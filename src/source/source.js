@@ -1,6 +1,7 @@
 import { Const } from '../const';
 import { RasterTileSource } from './rasterTileSource';
 import { VectorSource } from './vectorSource';
+import { StaticImageSource } from './staticImageSource';
 
 const ALL_SOURCE = {};
 
@@ -35,6 +36,10 @@ export class Source {
             return source;
         } else if (options.type === Const.SourceType.VECTOR) {
             const source = new VectorSource(options);
+            ALL_SOURCE[source.id] = source;
+            return source;
+        } else if (options.type === Const.SourceType.IMAGE) {
+            const source = new StaticImageSource(options);
             ALL_SOURCE[source.id] = source;
             return source;
         }

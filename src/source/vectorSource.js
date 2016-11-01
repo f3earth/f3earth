@@ -123,6 +123,13 @@ export class VectorSource extends Observable {
         return this;
     }
 
+    resetFeatures(features) {
+        this._features = features;
+        this._coordinates = [];
+        this.forRender();
+        this.trigger(Const.SourceEventType.CHANGE);
+    }
+
     removeAllFeatures() {
         this._features = [];
         this._coordinates = [];

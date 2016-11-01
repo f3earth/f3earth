@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+    <title>F3Earth - Static Image Example </title>
+    <script type="text/javascript" src="../dist/fe.js" charset="utf-8"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+        
+        #earth {
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="earth"></div>
+    <script type="text/javascript">
+        var earth = new FE.Earth("earth");
+        earth.addLayer({
+            id: 'osm',
+            source: {
+                id: 'image',
+                type: 'image',
+                extent: [-180, -85, 180, 85],
+                url: './images/earth.jpg'
+            },
+            type: 'image'
+        });
+        var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
+        earth.addInteraction(doubleClickZoomInteraction);
+
+        var dragInteraction=new FE.Interaction.Drag();
+        earth.addInteraction(dragInteraction);
+
+        var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
+        earth.addInteraction(mouseWheelZoomInteraction);
+        
+        // show china
+        earth.setCenter(110, 30);
+
+    </script>
+</body>
+
+</html>

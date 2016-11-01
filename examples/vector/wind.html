@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+    <title>F3Earth - Multiple Point</title>
+    <script type="text/javascript" src="../../dist/fe.js" charset="utf-8"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+        
+        #earth {
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="earth"></div>
+    <script type="text/javascript">
+        var earth = new FE.Earth("earth");
+        
+        earth.addLayer({
+            id: 'osm',
+            source: {
+                id: 'image',
+                type: 'image',
+                extent: [-180, -85, 180, 85],
+                url: '../images/earth.jpg'
+            },
+            type: 'image'
+        });
+
+        // var layers = [];
+        // create 10 layers to render different wind
+        for (var index = 0; index < 10; index++) {
+            var cityLayerConfig = {
+                id: 'point' + index,
+                source: {
+                    id: 'point' + index,
+                    type: 'vector',
+                },
+                style: {
+                    altitude: {
+                        type: 'relative',
+                        height: 100
+                    },
+                    size: 1,
+                    color: '#FF00FF'
+                },
+                type: 'point'
+            };
+            earth.addLayer(cityLayerConfig);
+        }
+
+//        var windPoints = [[-176.633, 51.883], [-175.2, -21.133], [-171.833, -13.833], [-170.7, -14.267], [-169.917, -19.05], [-159.767, -21.2]];
+        
+        var windPoints = [];
+        for (var index = 0; index < 50000; index++) {
+            var lng = Math.random() * 360 - 180;
+            var lat = Math.random() * 180 - 90;
+            windPoints.push([lng, lat]);
+        }
+        
+        var doWind = function(){
+            var points = windPoints;
+            for (var windIndex = 0; windIndex < 10; windIndex++) {
+                var featurePoints = [];
+                for (var pointIndex = 0; pointIndex < points.length; pointIndex++) {
+                    var point = points[pointIndex];
+                    var incY = Math.sin(windIndex * 10 / 180);
+                    point[0] += windIndex / 50;
+                    point[1] += incY / 5;
+                    featurePoints.push(point);
+                }
+                var source = earth.getSource('point' + windIndex);
+                source.resetFeatures([new FE.Feature(new FE.Geometry.MultiPoint(featurePoints))]);
+            }
+
+            for (var index = 0; index < points.length; index++) {
+                windPoints[index][0] -= 0.1;
+                windPoints[index][1] -= 0.1;
+            }
+
+            //requestAnimationFrame(doWind);
+        };
+
+        setInterval(doWind, 100);
+        //requestAnimationFrame(doWind);
+
+        // show one of country
+        earth.setCenter(-175.2, -21.133);
+
+        var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
+        earth.addInteraction(doubleClickZoomInteraction);
+
+        var dragInteraction=new FE.Interaction.Drag();
+        earth.addInteraction(dragInteraction);
+
+        var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
+        earth.addInteraction(mouseWheelZoomInteraction);
+    </script>
+</body>
+
+</html>

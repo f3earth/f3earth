@@ -5,6 +5,7 @@ import { LineLayer } from '../layer/lineLayer';
 import { PointLayer } from '../layer/pointLayer';
 import { CircleLayer } from '../layer/circleLayer';
 import { CircleFillLayer } from '../layer/circleFillLayer';
+import { StaticImageLayer } from '../layer/staticImageLayer';
 import { Source } from './source';
 
 export class SourceLayer {
@@ -32,6 +33,8 @@ export class SourceLayer {
             return new CircleLayer(options);
         } else if (layerOptions.type === Const.LayerType.CIRCLE_FILL) {
             return new CircleFillLayer(options);
+        } else if (layerOptions.type === Const.LayerType.IMAGE) {
+            return new StaticImageLayer(options);
         }
 
         return null;

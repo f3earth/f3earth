@@ -21,6 +21,10 @@ export class Point {
             this._material.color.A);
         const pointSizeLoc = gl.getUniformLocation(program, 'uPointSize');
         gl.uniform1f(pointSizeLoc, this._material.size);
+
+        const earthRadiusLoc = gl.getUniformLocation(program, 'uEarthRadius');
+        gl.uniform1f(earthRadiusLoc, this._mesh.radius);
+
         // this._material.bindTexture(gl, gl.TEXTURE0);
         gl.drawArrays(gl.POINTS, 0, this._mesh.count);
 //        this._material.unBind(gl);
