@@ -1,8 +1,9 @@
 <html>
+
 <head>
     <meta http-equiv="content-type" content="text/html" charset="utf-8" />
-    <title>F3Earth - Add CircleFill</title>
-    <script type="text/javascript" src="../dist/fe.js" charset="utf-8"></script>
+    <title>F3Earth - Add Line</title>
+    <script type="text/javascript" src="../../dist/fe.js" charset="utf-8"></script>
     <style>
         body {
             margin: 0;
@@ -19,50 +20,51 @@
     <script type="text/javascript">
         var earth = new FE.Earth("earth");
         earth.addLayer({
-            type: 'rasterTile',
-            // url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
-            url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            id: 'osm',
+            source: {
+                id: 'osm',
+                type: 'rasterTile',
+                url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            },
+            type: 'rasterTile'
         });
 
-        var circleLayerConfig = {
+        var polygonLineLayerConfig = {
+            id: 'polygonLine',
             source: {
-                id: 1,
-                center: [113,23],
-                radius: 500000
+                id: 'polygon',
+                type: 'vector',
+                format: 'geojson',
+                url: '../data/countries.geojson'
             },
-            layout: {
+            style: {
                 altitude: {
                     type: 'relative',
                     height: 100
                 },
-                width: 2
+                width: 2,
+                color: '#0000FF'
             },
-            paint: {
-                color: '#FF0000'
-            },
-            type: 'circle'
+            type: 'line'
         };
-        earth.addLayer(circleLayerConfig);
-        var circleFillLayerConfig = {
-            source: {
-                id: 1,
-                center: [113,23],
-                radius: 500000
-            },
-            layout: {
+        earth.addLayer(polygonLineLayerConfig);
+
+        // add countries layer
+        var polygonFillLayerConfig = {
+            id: 'polygonFill',
+            source: 'polygon',
+            style: {
                 altitude: {
                     type: 'relative',
                     height: 100
                 },
-                width: 2
+                width: 2,
+                color: '#00FF00A0'
             },
-            paint: {
-                color: '#FF0000'
-            },
-            type: 'circleFill'
+            type: 'fill'
         };
-        earth.addLayer(circleFillLayerConfig);
-        
+        earth.addLayer(polygonFillLayerConfig);
+
         // show china
         earth.setCenter(110, 30);
 

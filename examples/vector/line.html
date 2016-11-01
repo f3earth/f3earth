@@ -2,8 +2,8 @@
 
 <head>
     <meta http-equiv="content-type" content="text/html" charset="utf-8" />
-    <title>Simple F3Earth</title>
-    <script type="text/javascript" src="../dist/fe.js" charset="utf-8"></script>
+    <title>F3Earth - Add Line</title>
+    <script type="text/javascript" src="../../dist/fe.js" charset="utf-8"></script>
     <style>
         body {
             margin: 0;
@@ -28,6 +28,31 @@
             },
             type: 'rasterTile'
         });
+
+        // add China's country border
+        var lineLayerConfig = {
+            id: 'line',
+            source: {
+                id: 'line',
+                type: 'vector',
+                format: 'geojson',
+                url: '../data/china_border.json'
+            },
+            style: {
+                altitude: {
+                    type: 'relative',
+                    height: 100
+                },
+                size: 1,
+                color: '#F000FF'
+            },
+            type: 'line'
+        };
+        earth.addLayer(lineLayerConfig);
+        
+        // show china
+        earth.setCenter(110, 30);
+
         var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);
 
@@ -36,10 +61,6 @@
 
         var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
         earth.addInteraction(mouseWheelZoomInteraction);
-        
-        // show china
-        earth.setCenter(110, 30);
-
     </script>
 </body>
 

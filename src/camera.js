@@ -12,7 +12,7 @@ export class Camera {
         };
         this._tilt = 0;
 
-        this._fov = 45;
+        this._fov = 60;
         this._aspect = 1;
         this._distance = 2 * Const.EARTH_RADIUS;
         this._altitude = this._distance;
@@ -161,11 +161,37 @@ export class Camera {
         };
     }
 
+    get target() {
+        return this._eyePos;
+    }
+
     setTarget(lng, lat) {
         this._eyePos.lng = lng;
         this._eyePos.lat = lat;
         this._calcModelViewMatrix();
         return this;
+    }
+
+    getViewRange() {
+        if (this._altitude / Const.EARTH_RADIUS > 1) {
+            return Math.PI;
+        }
+
+        return Math.asin(this._altitude / Const.EARTH_RADIUS) * 2;
+    }
+
+    calcAltitude(viewRange) {
+        // console.log(`viewRange = ${viewRange}`);
+        let range = viewRange;
+        if (viewRange > Math.PI) {
+            range = Math.PI;
+        }
+        const altitude = Math.sin(range / 2) * Const.EARTH_RADIUS;
+        // console.log(`calc altitude = ${altitude}`);
+        this._altitude = altitude;
+
+        this._calcProjectionMatrix();
+        this._calcModelViewMatrix();
     }
 
 }

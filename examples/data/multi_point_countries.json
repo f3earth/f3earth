@@ -1,0 +1,15 @@
+{
+	"type": "FeatureCollection",
+	"features": [{
+		"geometry": {
+			"type": "MultiPoint",
+			"coordinates": [[-176.633, 51.883], [-175.2, -21.133], [-171.833, -13.833], [-170.7, -14.267], [-169.917, -19.05], [-159.767, -21.2]]
+		},
+		"type": "Feature",
+		"properties": {
+			"wikipedia": "Adak,_Alaska",
+			"city": "Adak"
+		},
+		"id": "Adak"
+	}]
+}

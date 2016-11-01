@@ -1,20 +1,22 @@
 import { SourceLayer } from './source/sourceLayer';
+import { Source } from './source/source';
 import { Context } from './context';
 import { Camera } from './camera';
 import { Observable } from './util/observable';
 import { DomEvent } from './util/domEvent';
 import { Const } from './const';
 import { Dom } from './util/dom';
+import { View } from './view';
 
 class Earth extends Observable {
-    constructor(containerId) {
+    constructor(containerId, params) {
         super();
 
         this._container = document.getElementById(containerId);
         this._context = new Context(this._container);
         this._camera = new Camera();
-        this._zoom = 3;
         this._camera.aspect = this._context.gl.viewportWidth / this._context.gl.viewportHeight;
+        this._view = new View(this._context, this._camera, params ? params.View : undefined);
 
         this._sourceLayers = [];
         this._interactions = [];
@@ -32,42 +34,19 @@ class Earth extends Observable {
         ]);
         DomEvent.on(this._context.canvas, Array.from(this._eventType.keys()),
             this._handleDOMEvent, this);
+
+        this._view.on(Const.ViewEventType.CHANGE, (obj) => {
+            requestAnimationFrame(() => {
+                this.render();
+                if (obj && obj.afterCallback) {
+                    obj.afterCallback();
+                }
+            });
+        }, this);
     }
 
     get context() {
         return this._context;
-    }
-
-    panByDelta(longitude, latitude) {
-        if (latitude) {
-            this._camera.setEyeLatitude(this._camera.eyeLatitude + latitude);
-        }
-
-        if (longitude) {
-            this._camera.setEyeLongitude(this._camera.eyeLongitude + longitude);
-        }
-        this.render();
-    }
-
-    get zoom() {
-        return this._zoom;
-    }
-    setZoom(level) {
-        let validLevel = level;
-        if (level > Const.MAX_ZOOM) {
-            validLevel = Const.MAX_ZOOM;
-        } else if (level < Const.MIN_ZOOM) {
-            validLevel = Const.MIN_ZOOM;
-        }
-        if (validLevel !== this._zoom) {
-            this.trigger(Const.EarthEventType.ZOOM_START,
-                { oldLevel: this._zoom, newLevel: validLevel });
-            this._camera.zoomByPercent((validLevel - this._zoom) / 9.0);
-            this._zoom = validLevel;
-            this.render();
-            this.trigger(Const.EarthEventType.ZOOM_END,
-                { oldLevel: this._zoom, newLevel: validLevel });
-        }
     }
 
     getPixelCoordinate(longitude, latitude) {
@@ -78,13 +57,53 @@ class Earth extends Observable {
         };
     }
 
-    addLayer(layer) {
-        const sourceLayer = SourceLayer.from(this._context, layer);
-        if (sourceLayer) {
+    /**
+     * @param {Object} layerOptions {{
+     *  id: {String},
+     *  source: {String | {{
+     *                          id: {String},
+     *                          type: {String},
+     *                          url: {String},
+     *                          features: {String} only for vector source,
+     *                      }} },
+     *  type: {String}
+     * }}
+     */
+    addLayer(layerOptions) {
+        if (!layerOptions) {
+            return;
+        }
+        if (!layerOptions.id) {
+            throw new Error('id is requied!');
+        }
+        if (!layerOptions.source) {
+            throw new Error('source is requied!');
+        }
+
+        const sourceLayer = SourceLayer.create(this._view, layerOptions);
+        if (sourceLayer && sourceLayer.source) {
             sourceLayer.source.on(Const.SourceEventType.CHANGE, () => this.render());
             this._sourceLayers.push(sourceLayer);
             this.render();
         }
+    }
+
+    /**
+     * @param {{id: {String},
+     *          type: {String},
+     *          format: {String},
+     *          url: {String},
+     *  }} options
+     */
+    addSource(options) {
+        Source.valueOf(options);
+    }
+
+    /**
+     * @param {String} id
+     */
+    getSource(id) {
+        return Source.get(id);
     }
 
     render() {
@@ -179,6 +198,10 @@ class Earth extends Observable {
     setCenter(lng, lat) {
         this._camera.setTarget(lng, lat);
         return this;
+    }
+
+    get view() {
+        return this._view;
     }
 }
 export {

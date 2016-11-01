@@ -1,14 +1,43 @@
+import { Const } from '../const';
 import { Observable } from '../util/observable';
+
 export class Layer extends Observable {
     constructor(options) {
         super();
         this._source = options.source;
         this._view = options.view;
-        // this._render = new LineLayerRender(options.context.gl);
+        this._style = options.style;
         this._renderObjects = [];
         this._renderVersion = -1;
         this._camera = null;
+        this._source.on(Const.SourceEventType.CHANGE, () => this._buildRenderObjects());
     }
+
+    get style() {
+        return this._style;
+    }
+
+    /**
+     * @param {Source} source object, not config options
+     */
+    setSource(source) {
+        if (this._source) {
+            this._source.unAll();
+        }
+        this._source = source;
+        if (this._source) {
+            this._buildRenderObjects();
+            this._source.on(Const.SourceEventType.CHANGE, () => this._buildRenderObjects());
+        }
+    }
+
+    removeSource() {
+        if (this._source) {
+            this._source.unAll();
+        }
+        this._source = undefined;
+    }
+
     render(camera) {
         this._camera = camera;
         if (this._renderVersion === -1) {

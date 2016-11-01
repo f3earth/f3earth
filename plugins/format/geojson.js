@@ -1,9 +1,10 @@
 /* geojsonformat.js */
 /* created by Alex */
-import { Format } from './format';
+import { Format } from '../../src/source/format';
 import { Const } from '../../src/const';
 import { Feature } from '../../src/feature/feature';
 import { Point } from '../../src/feature/point';
+import { MultiPoint } from '../../src/feature/multiPoint';
 import { LineString } from '../../src/feature/linestring';
 import { Polygon } from '../../src/feature/polygon';
 
@@ -29,6 +30,7 @@ export class GeoJSON extends Format {
             geodata = data;
         }
         // at least one feature.
+        const features = [];
         if (geodata.type === 'FeatureCollection' && geodata.features.length > 0) {
             for (let i = 0; i < geodata.features.length; i++) {
                 /* according geomtype, call different function */
@@ -39,17 +41,20 @@ export class GeoJSON extends Format {
                 /* switch diff geom */
                 switch (geomtype) {
                     case 'Point':
-                        this._features.push(new Feature(new Point(gcoords), attr));
+                        features.push(new Feature(new Point(gcoords), attr));
+                        break;
+                    case 'MultiPoint':
+                        features.push(new Feature(new MultiPoint(gcoords), attr));
                         break;
                     case 'LineString':
-                        this._features.push(new Feature(new LineString(gcoords), attr));
+                        features.push(new Feature(new LineString(gcoords), attr));
                         break;
                     case 'MultiLineString':
                         geomtype = Const.GeomType.LINE;
                         this.createLines(gcoords, attr);
                         break;
                     case 'Polygon':
-                        this._features.push(new Feature(new Polygon(gcoords), attr));
+                        features.push(new Feature(new Polygon(gcoords), attr));
                         break;
                     case 'MultiPolygon':
                         geomtype = Const.GeomType.POLYGON;
@@ -60,21 +65,27 @@ export class GeoJSON extends Format {
                 }
             }
         }
-        this._geometryType = geomtype;
-        return this;
+        return features;
     }
 
     createLines(gcoords, attr) {
-        gcoords.forEach(gcoord => this._features.push(
+        const features = [];
+        gcoords.forEach(gcoord => features.push(
                             new Feature(new LineString(gcoord), attr)));
+        return features;
     }
 
     createPolygons(gcoords, attr) {
-        gcoords.forEach(gcoord => this._features.push(
+        const features = [];
+        gcoords.forEach(gcoord => features.push(
                             new Feature(new Polygon(gcoord), attr)));
+        return features;
     }
 
     /* write2geojsonstr from features */
     writeFeatures(features) {
+        throw new Error('unsupport!');
     }
 }
+
+Format.register('geojson', new GeoJSON());

@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html" charset="utf-8" />
     <title>F3Earth - Add GeoJSON data</title>
-    <script type="text/javascript" src="../dist/fe.js" charset="
+    <script type="text/javascript" src="../../dist/fe.js" charset="
     utf-8"></script>
     <!-- <script type="text/javascript" src='data/cities.js'></script>
     <script type="text/javascript" src='data/line.js'></script>
@@ -47,8 +47,30 @@
 
         var earth = new FE.Earth("earth");
         earth.addLayer({
-            type: 'rasterTile',
-            url: 'http://mt3.google.cn/vt/lyrs=s@138&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galil'
+            id: 'osm',
+            source: {
+                id: 'osm',
+                type: 'rasterTile',
+                url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            },
+            type: 'rasterTile'
+        });
+
+        earth.addLayer({
+            id: 'geojson',
+            source: {
+                id: 'geojson',
+                type: 'vector'
+            },
+            style: {
+                altitude: {
+                    type: 'relative',
+                    height: 100
+                },
+                width: 2,
+                color: '#0000FF'
+            },
+            type: 'line'
         });
 
         function XHR(){
@@ -86,12 +108,16 @@
         var xhr = new XHR();
         // xhr.get('data/major_cities.json', loadJSON2);
         // xhr.get('data/JPN_line.json', loadJSON2);
-        xhr.get('data/countries-110m.geojson', loadJSON2);
+        // xhr.get('data/countries-110m.geojson', loadJSON2);
 
         function loadJSON2(data) {
-            var gformat = new FE.Format.GeoJSON();
-            var lconfig = gformat.readFeatures(data).createLayerConfig();
-            earth.addLayer(lconfig);
+            var format = new FE.Format.GeoJSON();
+            var features = format.readFeatures(data);
+            var source = earth.getSource('geojson');
+            if (features && features.length > 0 && source) {
+                source.removeAllFeatures();
+                source.addFeatures(features);
+            }
         }
 
         // show china

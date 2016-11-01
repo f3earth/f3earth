@@ -2,8 +2,8 @@
 
 <head>
     <meta http-equiv="content-type" content="text/html" charset="utf-8" />
-    <title>Simple F3Earth</title>
-    <script type="text/javascript" src="../dist/fe.js" charset="utf-8"></script>
+    <title>F3Earth - Multiple Point</title>
+    <script type="text/javascript" src="../../dist/fe.js" charset="utf-8"></script>
     <style>
         body {
             margin: 0;
@@ -28,6 +28,31 @@
             },
             type: 'rasterTile'
         });
+
+        // add major cities layer
+        var cityLayerConfig = {
+            id: 'point',
+            source: {
+                id: 'point',
+                type: 'vector',
+                format: 'geojson',
+                url: '../data/multi_point_countries.json'
+            },
+            style: {
+                altitude: {
+                    type: 'relative',
+                    height: 100
+                },
+                size: 3,
+                color: '#FF00FF'
+            },
+            type: 'point'
+        };
+        earth.addLayer(cityLayerConfig);
+        
+        // show one of country
+        earth.setCenter(-175.2, -21.133);
+
         var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);
 
@@ -36,10 +61,6 @@
 
         var mouseWheelZoomInteraction=new FE.Interaction.MouseWheelZoom();
         earth.addInteraction(mouseWheelZoomInteraction);
-        
-        // show china
-        earth.setCenter(110, 30);
-
     </script>
 </body>
 

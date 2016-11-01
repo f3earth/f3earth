@@ -6,7 +6,7 @@ export class Line {
 
     render(gl, shaderProgram) {
         this._mesh.setup(gl);
-        // this._material.setup(gl);
+        this._material.setup(gl);
 
         const program = shaderProgram;
         const pwgl = {};
@@ -15,9 +15,13 @@ export class Line {
         this._mesh.bindPoint(gl, pwgl.vertexPositionAttributeLoc);
 
         const colorLoc = gl.getUniformLocation(program, 'uColor');
-        gl.uniform4f(colorLoc, 1.0, 0.0, 0.0, 1.0);
+        const color = this._material.color;
+        const oldLineWidth = gl.getParameter(gl.LINE_WIDTH);
+        gl.lineWidth(this._material.size);
+        gl.uniform4f(colorLoc, color.R, color.G, color.B, color.A);
         // this._material.bindTexture(gl, gl.TEXTURE0);
         gl.drawArrays(gl.LINE_STRIP, 0, this._mesh.count);
+        gl.lineWidth(oldLineWidth);
 //        this._material.unBind(gl);
     }
 }

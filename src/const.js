@@ -18,6 +18,10 @@ Const.EarthEventType = {
     RENDER_END: 'renderEnd'
 };
 
+Const.ViewEventType = {
+    CHANGE: 'viewChange'
+};
+
 Const.SourceEventType = {
     CHANGE: 'sourceChange'
 };
@@ -28,6 +32,7 @@ Const.ControlEventType = {
 
 Const.GeomType = {
     POINT: 'Point',
+    MULTI_POINT: 'MultiPoint',
     LINE: 'LineString',
     POLYGON: 'Polygon'
 };
@@ -42,7 +47,15 @@ Const.LayerType = {
 };
 
 Const.SourceType = {
-    LINE: 'line'
+    IMAGE: 'image',
+    RASTER_TILE: 'rasterTile',
+    VECTOR: 'vector',
+    VECTOR_TILE: 'vectorTile',
+    VIDEO: 'video'
+};
+
+Const.VectorFormat = {
+    GEO_JSON: 'geojson'
 };
 
 Const.OverlayPositioning = {
@@ -87,7 +100,7 @@ Const.DomEventType = {
 Const.EARTH_RADIUS = 6378137;
 Const.CIRCLE_BY_STEPS = 64;
 
-Const.MAX_ZOOM = 28;
+Const.MAX_ZOOM = 17;
 Const.MIN_ZOOM = 1;
 
 export {

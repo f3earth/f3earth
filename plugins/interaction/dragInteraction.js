@@ -32,23 +32,26 @@ export class DragInteraction extends Interaction {
         this._prevMouseY = originalEvent.clientY;
     }
     _onmouseup(e) {
+        this._panEarth(e.originalEvent);
         this._isMouseDown = false;
     }
     _onmousemove(e) {
-        const originalEvent = e.originalEvent;
+        this._panEarth(e.originalEvent);
+    }
+    _onmouseout(e) {
+        this._isMouseDown = false;
+    }
+    _panEarth(originalEvent) {
         if (this._isMouseDown) {
             const deltaX = originalEvent.clientX - this._prevMouseX;
             const deltaY = originalEvent.clientY - this._prevMouseY;
 
-            const x = -deltaX / 10 % 360;
-            const y = deltaY / 10 % 360;
-            this._earth.panByDelta(x, y);
+            const x = -deltaX / 10;
+            const y = deltaY / 10;
+            this._earth.view.panByDelta(x, y);
 
             this._prevMouseX = originalEvent.clientX;
             this._prevMouseY = originalEvent.clientY;
         }
-    }
-    _onmouseout(e) {
-        this._isMouseDown = false;
     }
 }
