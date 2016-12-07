@@ -47,7 +47,7 @@ export class Camera {
         const earthSphere = new Sphere(Const.EARTH_RADIUS);
         const targetPos = earthSphere.getXYZ(this._eyePos.lng, this._eyePos.lat);
 
-        glMatrix.mat4.lookAt(this._modelViewMatrix, cartesianPos, targetPos, [0, 0, 1]);
+        glMatrix.mat4.lookAt(this._modelViewMatrix, cartesianPos, targetPos, [0, 1, 0]);
     }
 
     get projectionMatrix() {
@@ -159,6 +159,22 @@ export class Camera {
             x: result[0] / result[3],
             y: result[1] / result[3]
         };
+    }
+
+    get viewWidth() {
+        return this._viewWidth;
+    }
+
+    set viewWidth(width) {
+        this._viewWidth = width;
+    }
+
+    get viewHeight() {
+        return this._viewHeight;
+    }
+
+    set viewHeight(height) {
+        this._viewHeight = height;
     }
 
     get target() {

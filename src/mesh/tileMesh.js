@@ -185,4 +185,10 @@ export class TileMesh {
         return this.VERTEX_INDEX_BUF_NUM_ITEMS;
     }
 
+    destroy(gl) {
+        gl.deleteBuffer(this.vertexIndexBuffer);
+        gl.deleteBuffer(this.vertexTextureCoordinateBuffer);
+        gl.deleteBuffer(this.vertexPosBuffer);
+    }
+
 }

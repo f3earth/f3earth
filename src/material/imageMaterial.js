@@ -1,6 +1,7 @@
 export class ImageMaterial {
-    constructor(image) {
+    constructor(image, bFlipY = true) {
         this._image = image;
+        this._bFlipY = bFlipY;
     }
 
     setup(gl) {
@@ -10,8 +11,11 @@ export class ImageMaterial {
 
         this._texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this._texture);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-
+        if (this._bFlipY) {
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        } else {
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        }
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._image);
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);

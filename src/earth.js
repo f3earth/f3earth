@@ -16,6 +16,8 @@ class Earth extends Observable {
         this._context = new Context(this._container);
         this._camera = new Camera();
         this._camera.aspect = this._context.gl.viewportWidth / this._context.gl.viewportHeight;
+        this._camera.viewWidth = this._context.gl.viewportWidth;
+        this._camera.viewHeight = this._context.gl.viewportHeight;
         this._view = new View(this._context, this._camera, params ? params.View : undefined);
 
         this._sourceLayers = [];
@@ -81,6 +83,9 @@ class Earth extends Observable {
         }
 
         const sourceLayer = SourceLayer.create(this._view, layerOptions);
+        if (sourceLayer) {
+            sourceLayer.on(Const.SourceEventType.CHANGE, () => this.render());
+        }
         if (sourceLayer && sourceLayer.source) {
             sourceLayer.source.on(Const.SourceEventType.CHANGE, () => this.render());
             this._sourceLayers.push(sourceLayer);

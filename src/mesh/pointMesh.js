@@ -1,5 +1,4 @@
 import { Const } from '../const';
-// import { Sphere } from '../util/sphere';
 export class PointMesh {
     constructor(points) {
         this._points = points;
@@ -36,10 +35,14 @@ export class PointMesh {
     }
 
     get count() {
-        return this._vertices.length / 2;
+        return this._points.length;
     }
 
     get radius() {
         return this._radius;
+    }
+
+    destroy(gl) {
+        gl.deleteBuffer(this.vertexPosBuffer);
     }
 }

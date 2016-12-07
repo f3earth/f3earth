@@ -19,13 +19,14 @@
     <div id="earth"></div>
     <script type="text/javascript">
         var earth = new FE.Earth("earth");
-        
+
         earth.addLayer({
             id: 'osm',
             source: {
                 id: 'image',
                 type: 'image',
                 extent: [-180, -85, 180, 85],
+                radius: 6378137,
                 url: '../images/earth.jpg'
             },
             type: 'image'
@@ -53,8 +54,6 @@
             earth.addLayer(cityLayerConfig);
         }
 
-//        var windPoints = [[-176.633, 51.883], [-175.2, -21.133], [-171.833, -13.833], [-170.7, -14.267], [-169.917, -19.05], [-159.767, -21.2]];
-        
         var windPoints = [];
         for (var index = 0; index < 50000; index++) {
             var lng = Math.random() * 360 - 180;
@@ -81,12 +80,9 @@
                 windPoints[index][0] -= 0.1;
                 windPoints[index][1] -= 0.1;
             }
-
-            //requestAnimationFrame(doWind);
         };
 
         setInterval(doWind, 100);
-        //requestAnimationFrame(doWind);
 
         // show one of country
         earth.setCenter(-175.2, -21.133);

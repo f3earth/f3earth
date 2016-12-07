@@ -8,7 +8,7 @@ import {
     Sphere
 } from '../util/sphere';
 
-const EARTH_SPHERE = new Sphere(Const.EARTH_RADIUS);
+// const EARTH_SPHERE = new Sphere(Const.EARTH_RADIUS);
 const ELEMENT_INDEXES = [];
 const SEGMENT_COUNT = 32;
 
@@ -25,7 +25,8 @@ export class ExtentMesh {
     /**
      * @param {Array} extent [minX, minY, maxX, maxY]
      */
-    constructor(extent) {
+    constructor(extent, radius = Const.EARTH_RADIUS) {
+        this._sphere = new Sphere(radius);
         this._extent = extent;
         this._bound = {};
         this._segmentCount = SEGMENT_COUNT;
@@ -34,12 +35,6 @@ export class ExtentMesh {
     }
 
     _calcBound() {
-        // const leftTop = Proj.wgs842Mercator(this._extent[0], this._extent[3]);
-        // const rightBottom = Proj.wgs842Mercator(this._extent[2], this._extent[1]);
-        // this._bound.N = leftTop.y;
-        // this._bound.W = leftTop.x;
-        // this._bound.E = rightBottom.x;
-        // this._bound.S = rightBottom.y;
         this._bound.N = this._extent[3];
         this._bound.W = this._extent[0];
         this._bound.E = this._extent[2];
@@ -63,7 +58,7 @@ export class ExtentMesh {
                     const pointW = this._bound.W + x * intervalX;
                     // const latLng = this._calcLatLng(pointW, pointN);
                     // this._vertices.push(...EARTH_SPHERE.getXYZ(latLng.lng, latLng.lat));
-                    this._vertices.push(...EARTH_SPHERE.getXYZ(pointW, pointN));
+                    this._vertices.push(...this._sphere.getXYZ(pointW, pointN));
                     verticeIndex.push(count);
                     count++;
                 }
@@ -91,7 +86,7 @@ export class ExtentMesh {
                     const pointW = this._bound.W + x * intervalX;
                     // const latLng = this._calcLatLng(pointW, pointN);
                     // this._vertices.push(...EARTH_SPHERE.getXYZ(latLng.lng, latLng.lat));
-                    this._vertices.push(...EARTH_SPHERE.getXYZ(pointW, pointN));
+                    this._vertices.push(...this._sphere.getXYZ(pointW, pointN));
                 }
             }
         }

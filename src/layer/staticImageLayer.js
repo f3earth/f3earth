@@ -28,7 +28,7 @@ export class StaticImageLayer extends Observable {
             const image = this._source.image;
             if (image) {
                 const renderImage = new RenderImage({
-                    mesh: new ExtentMesh(this._source.extent),
+                    mesh: new ExtentMesh(this._source.extent, this._source.radius),
                     material: new ImageMaterial(image)
                 });
                 this._renderImage.push(renderImage);

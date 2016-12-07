@@ -49,6 +49,28 @@
             type: 'point'
         };
         earth.addLayer(cityLayerConfig);
+
+        var imageCityLayerConfig = {
+            id: 'point',
+            source: {
+                id: 'point',
+                type: 'vector',
+                format: 'geojson',
+                url: '../data/multi_point_countries.json'
+            },
+            style: {
+                altitude: {
+                    type: 'relative',
+                    height: 100
+                },
+                rotate: 180,
+                offset: [16, 16],
+                size: [32, 32],
+                image: '../images/flag.png',
+            },
+            type: 'point'
+        };
+        earth.addLayer(imageCityLayerConfig);
         
         // show one of country
         earth.setCenter(-175.2, -21.133);

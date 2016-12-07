@@ -34,6 +34,7 @@ export class SourceLayer {
         } else if (layerOptions.type === Const.LayerType.CIRCLE_FILL) {
             return new CircleFillLayer(options);
         } else if (layerOptions.type === Const.LayerType.IMAGE) {
+            options.source.radius = layerOptions.source.radius;
             return new StaticImageLayer(options);
         }
 
