@@ -2,7 +2,7 @@ import { Const } from '../const';
 import { Proj } from '../util/proj';
 import { Sphere } from '../util/sphere';
 const PIXELS_PER_TILE = 256;
-const SEGMENT_COUNT = 16;
+const SEGMENT_COUNT = 32;
 const EARTH_HALF_METERS = Math.PI * Const.EARTH_RADIUS;
 const EARTH_SPHERE = new Sphere(Const.EARTH_RADIUS);
 
@@ -183,6 +183,12 @@ export class TileMesh {
 
     get triangleCount() {
         return this.VERTEX_INDEX_BUF_NUM_ITEMS;
+    }
+
+    destroy(gl) {
+        gl.deleteBuffer(this.vertexIndexBuffer);
+        gl.deleteBuffer(this.vertexTextureCoordinateBuffer);
+        gl.deleteBuffer(this.vertexPosBuffer);
     }
 
 }

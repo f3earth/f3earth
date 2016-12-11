@@ -1,5 +1,4 @@
 import { Const } from '../const';
-import { Sphere } from '../util/sphere';
 export class PointMesh {
     constructor(points) {
         this._points = points;
@@ -10,9 +9,9 @@ export class PointMesh {
     }
 
     _createMesh() {
-        const sphere = new Sphere(this._radius);
         this._points.forEach(point => {
-            this._vertices.push(...sphere.getXYZ(point[0], point[1]));
+            this._vertices.push(point[0]);
+            this._vertices.push(point[1]);
         });
     }
 
@@ -25,7 +24,7 @@ export class PointMesh {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPosBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._vertices),
             gl.STATIC_DRAW);
-        this.VERTEX_POS_BUF_ITEM_SIZE = 3;
+        this.VERTEX_POS_BUF_ITEM_SIZE = 2;
     }
 
     bindPoint(gl, loc) {
@@ -36,6 +35,14 @@ export class PointMesh {
     }
 
     get count() {
-        return this._vertices.length / 3;
+        return this._points.length;
+    }
+
+    get radius() {
+        return this._radius;
+    }
+
+    destroy(gl) {
+        gl.deleteBuffer(this.vertexPosBuffer);
     }
 }

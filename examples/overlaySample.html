@@ -8,6 +8,8 @@
     <style>
         body {
             margin: 0;
+            overflow-x: hidden;
+            overflow-y: hidden;
         }
         
         #earth {
@@ -38,16 +40,91 @@
         <div id="customMarker" title="Marker">this is customMarker</div>
     </div>
     <script type="text/javascript">
+ var pi = 3.14159265358979324;
+  var a = 6378245.0;
+   var ee = 0.00669342162296594323;
+  function geoTransform(wgLat,wgLng){
+       var transCoords=new Array() ;
+      if(regionOfChina(wgLat,wgLng)){  
+          transCoords['lat'] = wgLat;
+          transCoords['lng'] = wgLng;
+            return transCoords ;
+         }  
+         
+         var dLat=transformLat(wgLng - 105.0,wgLat - 35.0);
+           var dLng=transformLng(wgLng - 105.0,wgLat - 35.0);
+           var radLat = wgLat / 180.0 * pi;
+           var magic = Math.sin(radLat);
+           magic = 1 - ee * magic * magic;
+           sqrtMagic = Math.sqrt(magic);
+           dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * pi);
+           dLng = (dLng * 180.0) / (a / sqrtMagic * Math.cos(radLat) * pi);
+          transCoords['lat'] = wgLat + dLat ;
+          transCoords['lng'] = wgLng + dLng ;
+          return transCoords;
+         
+          }
+
+function regionOfChina(lat,lng){ 
+     if (lng < 72.004 || lng > 137.8347) {   
+        return true  
+     }else if (lat < 0.8293 || lat > 55.8271){ 
+           return true 
+     }else{ 
+           return false  
+    } 
+    }  
+    
+    function transformLat(x,y){ 
+         var ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));  
+        ret += (20.0 * Math.sin(6.0 * x * pi) + 20.0 * Math.sin(2.0 * x * pi)) * 2.0 / 3.0;  
+        ret += (20.0 * Math.sin(y * pi) + 40.0 * Math.sin(y / 3.0 * pi)) * 2.0 / 3.0;  
+        ret += (160.0 * Math.sin(y / 12.0 * pi) + 320 * Math.sin(y * pi / 30.0)) * 2.0 / 3.0;  
+        return ret; 
+    }
+	function transformLng(x,y){
+          var ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
+          ret += (20.0 * Math.sin(6.0 * x * pi) + 20.0 * Math.sin(2.0 * x * pi)) * 2.0 / 3.0; 
+         ret += (20.0 * Math.sin(x * pi) + 40.0 * Math.sin(x / 3.0 * pi)) * 2.0 / 3.0; 
+         ret += (150.0 * Math.sin(x / 12.0 * pi) + 300.0 * Math.sin(x / 30.0 * pi)) * 2.0 / 3.0; 
+         return ret;
+         }
+
+
         var earth = new FE.Earth("earth");
         earth.addLayer({
             id: 'osm',
             source: {
                 id: 'osm',
                 type: 'rasterTile',
-                url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                // url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                url: 'http://www.google.cn/maps/vt/pb=!1m4!1m3!1i{z}!2i{x}!3i{y}!2m3!1e0!2sm!3i345013117!3m8!2szh-CN!3scn!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e0'
             },
             type: 'rasterTile'
         });
+
+        earth.addLayer({
+            id: 'point',
+            source: {
+                id: 'point',
+                type: 'vector'
+            },
+            style: {
+                altitude: {
+                    type: 'relative',
+                    height: 100
+                },
+                size: 4,
+                color: '#FF0000'
+            },
+            type: 'point'
+        });
+
+        var source = earth.getSource('point');
+        source.addFeature(new FE.Feature(new FE.Geometry.MultiPoint(
+            [[104.06, 30.67],[103.9986,30.6254], [103.9467,0]])));
+        var newPoint = geoTransform(30.57936972258302, 103.9467);
+        
         var doubleClickZoomInteraction=new FE.Interaction.DoubleClickZoom();
         earth.addInteraction(doubleClickZoomInteraction);
 
@@ -76,6 +153,8 @@
         })).on('click',function(e){
             alert(this.element.innerText + '  clicked!!!')
         })
+
+
 
         // layer2
         var defLayer =  new FE.Overlay.Layer({

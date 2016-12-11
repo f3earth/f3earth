@@ -25,9 +25,13 @@ export class Sphere {
 
         const radCosLat = this._radius * Math.cos(latRadians);
 
-        const pointX = radCosLat * Math.cos(lonRadians);
-        const pointY = radCosLat * Math.sin(lonRadians);
-        const pointZ = this._radius * Math.sin(latRadians);
+        // const pointX = radCosLat * Math.cos(lonRadians);
+        // const pointY = radCosLat * Math.sin(lonRadians);
+        // const pointZ = this._radius * Math.sin(latRadians);
+        // Y is up
+        const pointX = radCosLat * Math.sin(lonRadians);
+        const pointY = this._radius * Math.sin(latRadians);
+        const pointZ = radCosLat * Math.cos(lonRadians);
         return [pointX, pointY, pointZ];
     }
 }

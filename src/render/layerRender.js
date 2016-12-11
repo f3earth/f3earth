@@ -21,6 +21,7 @@ export class LayerRender {
 
         if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
             console.error('Failed to setup shaders');
+            console.error(gl.getProgramInfoLog(shaderProgram));
         }
         this._shaderProgram = shaderProgram;
     }
@@ -31,7 +32,7 @@ export class LayerRender {
         gl.useProgram(program);
         this._uploadModels(camera);
 
-        objects.forEach(object => object.render(gl, program));
+        objects.forEach(object => object.render(gl, program, camera));
         gl.flush();
     }
 
@@ -46,6 +47,7 @@ export class LayerRender {
             uniformMVMatrixLoc,
             false,
             camera.modelViewMatrix);
+
         gl.uniformMatrix4fv(
             uniformProjMatrixLoc,
             false,

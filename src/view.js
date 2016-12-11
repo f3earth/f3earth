@@ -1,6 +1,5 @@
 
 import { Const } from './const.js';
-// import { FMath } from './util/math.js';
 import { Observable } from './util/observable.js';
 
 class View extends Observable {
@@ -10,8 +9,8 @@ class View extends Observable {
         this._camera = camera;
 
         this._resolutions = [156543.0340, 78271.5170, 39135.7585, 19567.8792, 9783.9396, 4891.9698,
-         2445.9849, 1222.9925, 611.4962, 305.7481, 152.8741, 76.4370, 38.2185, 19.1093,
-         9.5546, 4.7773, 2.3887, 1.1943, 0.5972, 0.2986, 0.1493, 0.0746, 0.0373, 0.0187];
+            2445.9849, 1222.9925, 611.4962, 305.7481, 152.8741, 76.4370, 38.2185, 19.1093,
+            9.5546, 4.7773, 2.3887, 1.1943, 0.5972, 0.2986, 0.1493, 0.0746, 0.0373, 0.0187];
 
         if (params) {
             const minZoom = params.minZoom ? params.minZoom : Const.MIN_ZOOM;
